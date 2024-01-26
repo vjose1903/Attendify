@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "186859224506",
+    "project_id": "carnaval-d2054",
+    "storage_bucket": "carnaval-d2054.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:186859224506:android:f09d92e7dd05665e4bf183",
+        "android_client_info": {
+          "package_name": "com.inspot.technology.attendify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "186859224506-fcghri7cdqq16e0qt18sndp960vrd5au.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inspot.technology.attendify",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "186859224506-k0ccbf164eq3oibr87rorj2bopm8902h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNLAZkm8bAZgHeuTKfPWMiC_qVe5Nbs_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "186859224506-k0ccbf164eq3oibr87rorj2bopm8902h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "186859224506-480lcf4pq3gg4310siocmu941dnobng3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.inspot.technology.attendify"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

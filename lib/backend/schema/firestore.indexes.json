@@ -1,0 +1,36 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "actividad_comentario",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "grupo",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "grupo_actividad_detalle",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "grupo_actividad",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "grupo",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fecha",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ]
+}
