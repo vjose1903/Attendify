@@ -289,7 +289,12 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                       );
                     }
                     return ListView.builder(
-                      padding: EdgeInsets.zero,
+                      padding: const EdgeInsets.fromLTRB(
+                        0,
+                        0,
+                        0,
+                        200.0,
+                      ),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       itemCount: listViewGrupoActividadRecordList.length,

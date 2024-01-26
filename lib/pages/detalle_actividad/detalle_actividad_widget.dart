@@ -1,5 +1,6 @@
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
+import '/components/alert_modal/alert_modal_widget.dart';
 import '/components/delete_modal/delete_modal_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/form_nota/form_nota_widget.dart';
@@ -617,7 +618,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                         )),
                     child: Container(
                       width: double.infinity,
-                      height: 500.0,
+                      height: 550.0,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
                       ),
@@ -707,247 +708,242 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                             const AlignmentDirectional(0.0, -1.0),
                                         child: Container(
                                           width: double.infinity,
-                                          height: 440.0,
+                                          height: 490.0,
                                           decoration: const BoxDecoration(),
                                           child: SingleChildScrollView(
                                             child: Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
-                                                Container(
-                                                  height: 350.0,
-                                                  decoration: const BoxDecoration(),
-                                                  child: Align(
-                                                    alignment:
-                                                        const AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  20.0),
-                                                      child: StreamBuilder<
-                                                          List<
-                                                              ActividadImagenesRecord>>(
-                                                        stream:
-                                                            queryActividadImagenesRecord(
-                                                          queryBuilder:
-                                                              (actividadImagenesRecord) =>
-                                                                  actividadImagenesRecord
-                                                                      .where(
-                                                                        'actividad',
-                                                                        isEqualTo: widget
-                                                                            .actividad
-                                                                            ?.reference,
-                                                                      )
-                                                                      .where(
-                                                                        'isPortada',
-                                                                        isEqualTo:
-                                                                            false,
-                                                                      ),
+                                                Align(
+                                                  alignment:
+                                                      const AlignmentDirectional(
+                                                          0.0, -1.0),
+                                                  child: Container(
+                                                    height: 350.0,
+                                                    decoration: const BoxDecoration(),
+                                                    child: Align(
+                                                      alignment:
+                                                          const AlignmentDirectional(
+                                                              0.0, 0.0),
+                                                      child: Card(
+                                                        clipBehavior: Clip
+                                                            .antiAliasWithSaveLayer,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryImputBackground,
+                                                        elevation: 0.0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
                                                         ),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          // Customize what your widget looks like when it's loading.
-                                                          if (!snapshot
-                                                              .hasData) {
-                                                            return Center(
-                                                              child: SizedBox(
-                                                                width: 60.0,
-                                                                height: 60.0,
-                                                                child:
-                                                                    SpinKitChasingDots(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primary,
-                                                                  size: 60.0,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          }
-                                                          List<ActividadImagenesRecord>
-                                                              pageViewActividadImagenesRecordList =
-                                                              snapshot.data!;
-                                                          if (pageViewActividadImagenesRecordList
-                                                              .isEmpty) {
-                                                            return SizedBox(
-                                                              width: double
-                                                                  .infinity,
-                                                              height: 200.0,
-                                                              child:
-                                                                  EmptyListWidget(
-                                                                icon: FaIcon(
-                                                                  FontAwesomeIcons
-                                                                      .list,
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryImputBackground,
-                                                                  size: 70.0,
-                                                                ),
-                                                                title:
-                                                                    'Sin detalles para mostrar',
-                                                              ),
-                                                            );
-                                                          }
-                                                          return SizedBox(
-                                                            width:
-                                                                double.infinity,
-                                                            height: 370.0,
-                                                            child: Stack(
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          40.0),
-                                                                  child: PageView
-                                                                      .builder(
-                                                                    controller: _model
-                                                                            .pageViewController ??=
-                                                                        PageController(
-                                                                            initialPage:
-                                                                                min(0, pageViewActividadImagenesRecordList.length - 1)),
-                                                                    onPageChanged: (_) =>
-                                                                        setState(
-                                                                            () {}),
-                                                                    scrollDirection:
-                                                                        Axis.horizontal,
-                                                                    itemCount:
-                                                                        pageViewActividadImagenesRecordList
-                                                                            .length,
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            pageViewIndex) {
-                                                                      final pageViewActividadImagenesRecord =
-                                                                          pageViewActividadImagenesRecordList[
-                                                                              pageViewIndex];
-                                                                      return InkWell(
-                                                                        splashColor:
-                                                                            Colors.transparent,
-                                                                        focusColor:
-                                                                            Colors.transparent,
-                                                                        hoverColor:
-                                                                            Colors.transparent,
-                                                                        highlightColor:
-                                                                            Colors.transparent,
-                                                                        onTap:
-                                                                            () async {
-                                                                          await Navigator
-                                                                              .push(
-                                                                            context,
-                                                                            PageTransition(
-                                                                              type: PageTransitionType.fade,
-                                                                              child: FlutterFlowExpandedImageView(
-                                                                                image: OctoImage(
-                                                                                  placeholderBuilder: OctoPlaceholder.blurHash(
-                                                                                    pageViewActividadImagenesRecord.imgBlurPath,
-                                                                                  ),
-                                                                                  image: NetworkImage(
-                                                                                    pageViewActividadImagenesRecord.imgPath != '' ? pageViewActividadImagenesRecord.imgPath : FFAppConstants.noImgUrl,
-                                                                                  ),
-                                                                                  fit: BoxFit.contain,
-                                                                                ),
-                                                                                allowRotation: false,
-                                                                                tag: pageViewActividadImagenesRecord.imgPath != '' ? pageViewActividadImagenesRecord.imgPath : FFAppConstants.noImgUrl,
-                                                                                useHeroAnimation: true,
-                                                                              ),
+                                                        child: Align(
+                                                          alignment:
+                                                              const AlignmentDirectional(
+                                                                  0.0, -1.0),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        5.0,
+                                                                        5.0,
+                                                                        5.0,
+                                                                        20.0),
+                                                            child: StreamBuilder<
+                                                                List<
+                                                                    ActividadImagenesRecord>>(
+                                                              stream:
+                                                                  queryActividadImagenesRecord(
+                                                                queryBuilder:
+                                                                    (actividadImagenesRecord) =>
+                                                                        actividadImagenesRecord
+                                                                            .where(
+                                                                              'actividad',
+                                                                              isEqualTo: widget.actividad?.reference,
+                                                                            )
+                                                                            .where(
+                                                                              'isPortada',
+                                                                              isEqualTo: false,
                                                                             ),
-                                                                          );
-                                                                        },
+                                                              ),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                // Customize what your widget looks like when it's loading.
+                                                                if (!snapshot
+                                                                    .hasData) {
+                                                                  return Center(
+                                                                    child:
+                                                                        SizedBox(
+                                                                      width:
+                                                                          60.0,
+                                                                      height:
+                                                                          60.0,
+                                                                      child:
+                                                                          SpinKitChasingDots(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                        size:
+                                                                            60.0,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }
+                                                                List<ActividadImagenesRecord>
+                                                                    pageViewActividadImagenesRecordList =
+                                                                    snapshot
+                                                                        .data!;
+                                                                if (pageViewActividadImagenesRecordList
+                                                                    .isEmpty) {
+                                                                  return Center(
+                                                                    child:
+                                                                        SizedBox(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height:
+                                                                          300.0,
+                                                                      child:
+                                                                          EmptyListWidget(
+                                                                        icon:
+                                                                            FaIcon(
+                                                                          FontAwesomeIcons
+                                                                              .list,
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                          size:
+                                                                              70.0,
+                                                                        ),
+                                                                        title:
+                                                                            'Sin detalles para mostrar',
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }
+                                                                return SizedBox(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height: double
+                                                                      .infinity,
+                                                                  child: Stack(
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            40.0),
+                                                                        child: PageView
+                                                                            .builder(
+                                                                          controller: _model.pageViewController ??=
+                                                                              PageController(initialPage: min(0, pageViewActividadImagenesRecordList.length - 1)),
+                                                                          onPageChanged: (_) =>
+                                                                              setState(() {}),
+                                                                          scrollDirection:
+                                                                              Axis.horizontal,
+                                                                          itemCount:
+                                                                              pageViewActividadImagenesRecordList.length,
+                                                                          itemBuilder:
+                                                                              (context, pageViewIndex) {
+                                                                            final pageViewActividadImagenesRecord =
+                                                                                pageViewActividadImagenesRecordList[pageViewIndex];
+                                                                            return InkWell(
+                                                                              splashColor: Colors.transparent,
+                                                                              focusColor: Colors.transparent,
+                                                                              hoverColor: Colors.transparent,
+                                                                              highlightColor: Colors.transparent,
+                                                                              onTap: () async {
+                                                                                await Navigator.push(
+                                                                                  context,
+                                                                                  PageTransition(
+                                                                                    type: PageTransitionType.fade,
+                                                                                    child: FlutterFlowExpandedImageView(
+                                                                                      image: OctoImage(
+                                                                                        placeholderBuilder: OctoPlaceholder.blurHash(
+                                                                                          pageViewActividadImagenesRecord.imgBlurPath,
+                                                                                        ),
+                                                                                        image: NetworkImage(
+                                                                                          pageViewActividadImagenesRecord.imgPath != '' ? pageViewActividadImagenesRecord.imgPath : FFAppConstants.noImgUrl,
+                                                                                        ),
+                                                                                        fit: BoxFit.contain,
+                                                                                      ),
+                                                                                      allowRotation: false,
+                                                                                      tag: pageViewActividadImagenesRecord.imgPath != '' ? pageViewActividadImagenesRecord.imgPath : FFAppConstants.noImgUrl,
+                                                                                      useHeroAnimation: true,
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                              child: Hero(
+                                                                                tag: pageViewActividadImagenesRecord.imgPath != '' ? pageViewActividadImagenesRecord.imgPath : FFAppConstants.noImgUrl,
+                                                                                transitionOnUserGestures: true,
+                                                                                child: ClipRRect(
+                                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                                                  child: OctoImage(
+                                                                                    placeholderBuilder: OctoPlaceholder.blurHash(
+                                                                                      pageViewActividadImagenesRecord.imgBlurPath,
+                                                                                    ),
+                                                                                    image: NetworkImage(
+                                                                                      pageViewActividadImagenesRecord.imgPath != '' ? pageViewActividadImagenesRecord.imgPath : FFAppConstants.noImgUrl,
+                                                                                    ),
+                                                                                    width: double.infinity,
+                                                                                    height: double.infinity,
+                                                                                    fit: BoxFit.fitWidth,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                      Align(
+                                                                        alignment: const AlignmentDirectional(
+                                                                            0.0,
+                                                                            1.0),
                                                                         child:
-                                                                            Hero(
-                                                                          tag: pageViewActividadImagenesRecord.imgPath != ''
-                                                                              ? pageViewActividadImagenesRecord.imgPath
-                                                                              : FFAppConstants.noImgUrl,
-                                                                          transitionOnUserGestures:
-                                                                              true,
+                                                                            Padding(
+                                                                          padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                              0.0,
+                                                                              0.0,
+                                                                              0.0,
+                                                                              16.0),
                                                                           child:
-                                                                              ClipRRect(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                            child:
-                                                                                OctoImage(
-                                                                              placeholderBuilder: OctoPlaceholder.blurHash(
-                                                                                pageViewActividadImagenesRecord.imgBlurPath,
-                                                                              ),
-                                                                              image: NetworkImage(
-                                                                                pageViewActividadImagenesRecord.imgPath != '' ? pageViewActividadImagenesRecord.imgPath : FFAppConstants.noImgUrl,
-                                                                              ),
-                                                                              width: double.infinity,
-                                                                              height: double.infinity,
-                                                                              fit: BoxFit.fitWidth,
+                                                                              smooth_page_indicator.SmoothPageIndicator(
+                                                                            controller: _model.pageViewController ??=
+                                                                                PageController(initialPage: min(0, pageViewActividadImagenesRecordList.length - 1)),
+                                                                            count:
+                                                                                pageViewActividadImagenesRecordList.length,
+                                                                            axisDirection:
+                                                                                Axis.horizontal,
+                                                                            onDotClicked:
+                                                                                (i) async {
+                                                                              await _model.pageViewController!.animateToPage(
+                                                                                i,
+                                                                                duration: const Duration(milliseconds: 500),
+                                                                                curve: Curves.ease,
+                                                                              );
+                                                                            },
+                                                                            effect:
+                                                                                smooth_page_indicator.ExpandingDotsEffect(
+                                                                              expansionFactor: 3.0,
+                                                                              spacing: 8.0,
+                                                                              radius: 16.0,
+                                                                              dotWidth: 10.0,
+                                                                              dotHeight: 8.0,
+                                                                              dotColor: FlutterFlowTheme.of(context).accent1,
+                                                                              activeDotColor: FlutterFlowTheme.of(context).primary,
+                                                                              paintStyle: PaintingStyle.fill,
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                                Align(
-                                                                  alignment:
-                                                                      const AlignmentDirectional(
-                                                                          0.0,
-                                                                          1.0),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            16.0),
-                                                                    child: smooth_page_indicator
-                                                                        .SmoothPageIndicator(
-                                                                      controller: _model
-                                                                              .pageViewController ??=
-                                                                          PageController(
-                                                                              initialPage: min(0, pageViewActividadImagenesRecordList.length - 1)),
-                                                                      count: pageViewActividadImagenesRecordList
-                                                                          .length,
-                                                                      axisDirection:
-                                                                          Axis.horizontal,
-                                                                      onDotClicked:
-                                                                          (i) async {
-                                                                        await _model
-                                                                            .pageViewController!
-                                                                            .animateToPage(
-                                                                          i,
-                                                                          duration:
-                                                                              const Duration(milliseconds: 500),
-                                                                          curve:
-                                                                              Curves.ease,
-                                                                        );
-                                                                      },
-                                                                      effect: smooth_page_indicator
-                                                                          .ExpandingDotsEffect(
-                                                                        expansionFactor:
-                                                                            3.0,
-                                                                        spacing:
-                                                                            8.0,
-                                                                        radius:
-                                                                            16.0,
-                                                                        dotWidth:
-                                                                            10.0,
-                                                                        dotHeight:
-                                                                            8.0,
-                                                                        dotColor:
-                                                                            FlutterFlowTheme.of(context).accent1,
-                                                                        activeDotColor:
-                                                                            FlutterFlowTheme.of(context).primary,
-                                                                        paintStyle:
-                                                                            PaintingStyle.fill,
                                                                       ),
-                                                                    ),
+                                                                    ],
                                                                   ),
-                                                                ),
-                                                              ],
+                                                                );
+                                                              },
                                                             ),
-                                                          );
-                                                        },
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -964,7 +960,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                             const AlignmentDirectional(0.0, -1.0),
                                         child: Container(
                                           width: double.infinity,
-                                          height: 440.0,
+                                          height: 490.0,
                                           decoration: const BoxDecoration(),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -1077,9 +1073,10 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                       .fechaFin!)
                                                           ? dateTimeFormat(
                                                               'dd/MM/yyyy',
-                                                              functions
-                                                                  .toInitDayHour(
-                                                                      getCurrentTimestamp),
+                                                              widget
+                                                                  .grupoActividadDetalles!
+                                                                  .first
+                                                                  .fecha!,
                                                               locale: FFLocalizations
                                                                       .of(context)
                                                                   .languageCode,
@@ -1116,11 +1113,12 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                   null &&
                                                               _model.dateAsistenciaChipsValue !=
                                                                   '') &&
-                                                          (getCurrentTimestamp >=
+                                                          (functions.parseDateStringToDateTime(
+                                                                  _model
+                                                                      .dateAsistenciaChipsValue!)! <=
                                                               functions
-                                                                  .parseDateStringToDateTime(
-                                                                      _model
-                                                                          .dateAsistenciaChipsValue!)!)) {
+                                                                  .toInitDayHour(
+                                                                      getCurrentTimestamp))) {
                                                         return Column(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -1286,17 +1284,18 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                             snapshot.data!;
                                                                         if (listViewAsistenciaAsistenciaRecordList
                                                                             .isEmpty) {
-                                                                          return SizedBox(
-                                                                            height:
-                                                                                200.0,
+                                                                          return Center(
                                                                             child:
-                                                                                EmptyListWidget(
-                                                                              icon: FaIcon(
-                                                                                FontAwesomeIcons.userTimes,
-                                                                                color: FlutterFlowTheme.of(context).primaryImputBackground,
-                                                                                size: 75.0,
+                                                                                SizedBox(
+                                                                              height: 290.0,
+                                                                              child: EmptyListWidget(
+                                                                                icon: FaIcon(
+                                                                                  FontAwesomeIcons.userTimes,
+                                                                                  color: FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                                  size: 75.0,
+                                                                                ),
+                                                                                title: 'Sin registros de asistencia',
                                                                               ),
-                                                                              title: 'Sin registros de asistencia',
                                                                             ),
                                                                           );
                                                                         }
@@ -1398,31 +1397,71 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                           alignment:
                                                               const AlignmentDirectional(
                                                                   0.0, -1.0),
-                                                          child: Container(
-                                                            width:
-                                                                double.infinity,
-                                                            height: 200.0,
-                                                            decoration:
-                                                                const BoxDecoration(),
-                                                            child:
-                                                                wrapWithModel(
-                                                              model: _model
-                                                                  .emptyListModel1,
-                                                              updateCallback:
-                                                                  () => setState(
-                                                                      () {}),
-                                                              child:
-                                                                  EmptyListWidget(
-                                                                icon: Icon(
-                                                                  Icons
-                                                                      .calendar_month_rounded,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        65.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            child: Container(
+                                                              width: double
+                                                                  .infinity,
+                                                              height: 290.0,
+                                                              decoration:
+                                                                  const BoxDecoration(),
+                                                              alignment:
+                                                                  const AlignmentDirectional(
+                                                                      0.0, 0.0),
+                                                              child: Align(
+                                                                alignment:
+                                                                    const AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0),
+                                                                child: Card(
+                                                                  clipBehavior:
+                                                                      Clip.antiAliasWithSaveLayer,
                                                                   color: FlutterFlowTheme.of(
                                                                           context)
                                                                       .primaryImputBackground,
-                                                                  size: 75.0,
+                                                                  elevation:
+                                                                      0.0,
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10.0),
+                                                                  ),
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        const AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                    child:
+                                                                        wrapWithModel(
+                                                                      model: _model
+                                                                          .emptyListModel1,
+                                                                      updateCallback:
+                                                                          () =>
+                                                                              setState(() {}),
+                                                                      child:
+                                                                          EmptyListWidget(
+                                                                        icon:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .calendar_month_rounded,
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                          size:
+                                                                              75.0,
+                                                                        ),
+                                                                        title:
+                                                                            'Solo se puede pasar asistencia en una actividad vigente',
+                                                                      ),
+                                                                    ),
+                                                                  ),
                                                                 ),
-                                                                title:
-                                                                    'Solo se puede pasar asistencia en una actividad vigente',
                                                               ),
                                                             ),
                                                           ),
@@ -1442,7 +1481,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                             const AlignmentDirectional(0.0, -1.0),
                                         child: Container(
                                           width: double.infinity,
-                                          height: 440.0,
+                                          height: 490.0,
                                           decoration: const BoxDecoration(),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -1555,9 +1594,10 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                       .fechaFin!)
                                                           ? dateTimeFormat(
                                                               'dd/MM/yyyy',
-                                                              functions
-                                                                  .toInitDayHour(
-                                                                      getCurrentTimestamp),
+                                                              widget
+                                                                  .grupoActividadDetalles!
+                                                                  .first
+                                                                  .fecha!,
                                                               locale: FFLocalizations
                                                                       .of(context)
                                                                   .languageCode,
@@ -1596,11 +1636,12 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                     null &&
                                                                 _model.dateNotasChipsValue !=
                                                                     '') &&
-                                                            (getCurrentTimestamp >=
+                                                            (functions.parseDateStringToDateTime(
+                                                                    _model
+                                                                        .dateNotasChipsValue!)! <=
                                                                 functions
-                                                                    .parseDateStringToDateTime(
-                                                                        _model
-                                                                            .dateNotasChipsValue!)!)) {
+                                                                    .toInitDayHour(
+                                                                        getCurrentTimestamp))) {
                                                           return Column(
                                                             mainAxisSize:
                                                                 MainAxisSize
@@ -1763,11 +1804,11 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                               .isEmpty) {
                                                                             return SizedBox(
                                                                               width: double.infinity,
-                                                                              height: 200.0,
+                                                                              height: 290.0,
                                                                               child: EmptyListWidget(
                                                                                 icon: Icon(
                                                                                   Icons.note_alt_outlined,
-                                                                                  color: FlutterFlowTheme.of(context).primaryImputBackground,
+                                                                                  color: FlutterFlowTheme.of(context).primaryImputBorder,
                                                                                   size: 70.0,
                                                                                 ),
                                                                                 title: 'Sin notas para mostrar',
@@ -2020,35 +2061,70 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                             alignment:
                                                                 const AlignmentDirectional(
                                                                     0.0, -1.0),
-                                                            child: Container(
-                                                              width: double
-                                                                  .infinity,
-                                                              height: 200.0,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondaryBackground,
-                                                              ),
-                                                              child:
-                                                                  wrapWithModel(
-                                                                model: _model
-                                                                    .emptyListModel2,
-                                                                updateCallback:
-                                                                    () => setState(
-                                                                        () {}),
-                                                                child:
-                                                                    EmptyListWidget(
-                                                                  icon: Icon(
-                                                                    Icons
-                                                                        .calendar_month_rounded,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          60.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              child: Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                height: 290.0,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryBackground,
+                                                                ),
+                                                                alignment:
+                                                                    const AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0),
+                                                                child: Align(
+                                                                  alignment:
+                                                                      const AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child: Card(
+                                                                    clipBehavior:
+                                                                        Clip.antiAliasWithSaveLayer,
                                                                     color: FlutterFlowTheme.of(
                                                                             context)
                                                                         .primaryImputBackground,
-                                                                    size: 75.0,
+                                                                    elevation:
+                                                                        0.0,
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10.0),
+                                                                    ),
+                                                                    child:
+                                                                        wrapWithModel(
+                                                                      model: _model
+                                                                          .emptyListModel2,
+                                                                      updateCallback:
+                                                                          () =>
+                                                                              setState(() {}),
+                                                                      child:
+                                                                          EmptyListWidget(
+                                                                        icon:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .calendar_month_rounded,
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                          size:
+                                                                              75.0,
+                                                                        ),
+                                                                        title:
+                                                                            'Solo se puede agregar notas en una actividad vigente',
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                  title:
-                                                                      'Solo se puede agregar notas en una actividad vigente',
                                                                 ),
                                                               ),
                                                             ),
@@ -2104,204 +2180,288 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              16.0, 16.0, 16.0, 0.0),
-                          child: FFButtonWidget(
-                            onPressed: ((functions.toInitDayHour(
-                                            getCurrentTimestamp) <
-                                        widget.actividad!.fechaInicio!) ||
-                                    (functions.toInitDayHour(
-                                            getCurrentTimestamp) >
-                                        widget.actividad!.fechaFin!))
-                                ? null
-                                : () async {
-                                    var shouldSetState = false;
-                                    // scan QR
-                                    _model.scanResponse =
-                                        await FlutterBarcodeScanner.scanBarcode(
-                                      '#C62828', // scanning line color
-                                      'Cancelar', // cancel button text
-                                      true, // whether to show the flash icon
-                                      ScanMode.QR,
-                                    );
+                        Builder(
+                          builder: (context) => Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                16.0, 16.0, 16.0, 0.0),
+                            child: FFButtonWidget(
+                              onPressed: ((functions.toInitDayHour(
+                                              getCurrentTimestamp) <
+                                          widget.actividad!.fechaInicio!) ||
+                                      (functions.toInitDayHour(
+                                              getCurrentTimestamp) >
+                                          widget.actividad!.fechaFin!))
+                                  ? null
+                                  : () async {
+                                      var shouldSetState = false;
+                                      // scan QR
+                                      _model.scanResponse =
+                                          await FlutterBarcodeScanner
+                                              .scanBarcode(
+                                        '#C62828', // scanning line color
+                                        'Cancelar', // cancel button text
+                                        true, // whether to show the flash icon
+                                        ScanMode.QR,
+                                      );
 
-                                    shouldSetState = true;
-                                    if (_model.scanResponse != '-1') {
-                                      if (functions.stringInclude(
-                                          _model.scanResponse,
-                                          FFAppConstants.qrIncludeValidation
-                                              .toList())) {
-                                        // Find Grupo usuario
-                                        _model.findGrupoUsuarioQrResponse =
-                                            await queryGrupoUsuarioRecordOnce(
-                                          queryBuilder: (grupoUsuarioRecord) =>
-                                              grupoUsuarioRecord.where(
-                                            'qr',
-                                            isEqualTo: _model.scanResponse,
-                                          ),
-                                          singleRecord: true,
-                                        ).then((s) => s.firstOrNull);
-                                        shouldSetState = true;
-                                        if (_model.findGrupoUsuarioQrResponse !=
-                                            null) {
-                                          // Get Detalle Access
-                                          _model.detalleAccessResponse =
-                                              await queryAccesoRecordOnce(
-                                            parent: widget
-                                                .grupoActividadDetalles
-                                                ?.where((e) =>
-                                                    e.fecha ==
-                                                    functions.toInitDayHour(
-                                                        getCurrentTimestamp))
-                                                .toList()
-                                                .first
-                                                .reference,
-                                          );
+                                      shouldSetState = true;
+                                      if (_model.scanResponse != '-1') {
+                                        if (functions.stringInclude(
+                                            _model.scanResponse,
+                                            FFAppConstants.qrIncludeValidation
+                                                .toList())) {
+                                          // Find Grupo usuario
+                                          _model.findGrupoUsuarioQrResponse =
+                                              await queryGrupoUsuarioRecordOnce(
+                                            queryBuilder:
+                                                (grupoUsuarioRecord) =>
+                                                    grupoUsuarioRecord.where(
+                                              'qr',
+                                              isEqualTo: _model.scanResponse,
+                                            ),
+                                            singleRecord: true,
+                                          ).then((s) => s.firstOrNull);
                                           shouldSetState = true;
-                                          if (functions.activityAccessIncludeUser(
-                                              _model.findGrupoUsuarioQrResponse!
-                                                  .tipoUsuario!,
-                                              _model.detalleAccessResponse!
-                                                  .map((e) => e.tipoUsuario)
-                                                  .withoutNulls
-                                                  .toList())) {
-                                            // find user info
-                                            _model.findUserInfoResponse =
-                                                await UsuariosRecord
-                                                    .getDocumentOnce(_model
-                                                        .findGrupoUsuarioQrResponse!
-                                                        .usuario!);
+                                          if (_model
+                                                  .findGrupoUsuarioQrResponse !=
+                                              null) {
+                                            // Get Detalle Access
+                                            _model.detalleAccessResponse =
+                                                await queryAccesoRecordOnce(
+                                              parent: widget
+                                                  .grupoActividadDetalles
+                                                  ?.where((e) =>
+                                                      e.fecha ==
+                                                      functions.toInitDayHour(
+                                                          getCurrentTimestamp))
+                                                  .toList()
+                                                  .first
+                                                  .reference,
+                                            );
                                             shouldSetState = true;
-                                            ScaffoldMessenger.of(context)
-                                                .clearSnackBars();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  'Bienvenido: ${_model.findUserInfoResponse?.displayName}',
-                                                  style: TextStyle(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
+                                            if (functions.activityAccessIncludeUser(
+                                                _model
+                                                    .findGrupoUsuarioQrResponse!
+                                                    .tipoUsuario!,
+                                                _model.detalleAccessResponse!
+                                                    .map((e) => e.tipoUsuario)
+                                                    .withoutNulls
+                                                    .toList())) {
+                                              // find user info
+                                              _model.findUserInfoResponse =
+                                                  await UsuariosRecord
+                                                      .getDocumentOnce(_model
+                                                          .findGrupoUsuarioQrResponse!
+                                                          .usuario!);
+                                              shouldSetState = true;
+                                              ScaffoldMessenger.of(context)
+                                                  .clearSnackBars();
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'Bienvenido: ${_model.findUserInfoResponse?.displayName}',
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
                                                   ),
+                                                  duration: const Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .success,
                                                 ),
-                                                duration: const Duration(
-                                                    milliseconds: 4000),
-                                                backgroundColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .success,
-                                              ),
-                                            );
+                                              );
+                                            } else {
+                                              // Show user not access QR msg
+                                              await showDialog(
+                                                context: context,
+                                                builder: (dialogContext) {
+                                                  return Dialog(
+                                                    elevation: 0,
+                                                    insetPadding:
+                                                        EdgeInsets.zero,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    alignment:
+                                                        const AlignmentDirectional(
+                                                                0.0, 0.0)
+                                                            .resolve(
+                                                                Directionality.of(
+                                                                    context)),
+                                                    child: GestureDetector(
+                                                      onTap: () => _model
+                                                              .unfocusNode
+                                                              .canRequestFocus
+                                                          ? FocusScope.of(
+                                                                  context)
+                                                              .requestFocus(_model
+                                                                  .unfocusNode)
+                                                          : FocusScope.of(
+                                                                  context)
+                                                              .unfocus(),
+                                                      child: SizedBox(
+                                                        height: double.infinity,
+                                                        width: double.infinity,
+                                                        child: AlertModalWidget(
+                                                          message:
+                                                              'El usuario no tiene acceso permitido.',
+                                                          icon: FaIcon(
+                                                            FontAwesomeIcons
+                                                                .userTimes,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .error,
+                                                            size: 90.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ).then(
+                                                  (value) => setState(() {}));
+
+                                              if (shouldSetState) {
+                                                setState(() {});
+                                              }
+                                              return;
+                                            }
                                           } else {
-                                            // Show user not access QR msg
-                                            ScaffoldMessenger.of(context)
-                                                .clearSnackBars();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  'Acceso no permitido para este usuario',
-                                                  style: TextStyle(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryText,
+                                            // Show user not follow the group QR msg
+                                            await showDialog(
+                                              context: context,
+                                              builder: (dialogContext) {
+                                                return Dialog(
+                                                  elevation: 0,
+                                                  insetPadding: EdgeInsets.zero,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  alignment:
+                                                      const AlignmentDirectional(
+                                                              0.0, 0.0)
+                                                          .resolve(
+                                                              Directionality.of(
+                                                                  context)),
+                                                  child: GestureDetector(
+                                                    onTap: () => _model
+                                                            .unfocusNode
+                                                            .canRequestFocus
+                                                        ? FocusScope.of(context)
+                                                            .requestFocus(_model
+                                                                .unfocusNode)
+                                                        : FocusScope.of(context)
+                                                            .unfocus(),
+                                                    child: SizedBox(
+                                                      height: double.infinity,
+                                                      width: double.infinity,
+                                                      child: AlertModalWidget(
+                                                        message:
+                                                            'El usuario escaneado no pertenece al grupo',
+                                                        icon: Icon(
+                                                          Icons
+                                                              .person_off_rounded,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .error,
+                                                          size: 90.0,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                                duration: const Duration(
-                                                    milliseconds: 4000),
-                                                backgroundColor:
-                                                    FlutterFlowTheme.of(context)
-                                                        .error,
-                                              ),
-                                            );
+                                                );
+                                              },
+                                            ).then((value) => setState(() {}));
+
                                             if (shouldSetState) {
                                               setState(() {});
                                             }
                                             return;
                                           }
                                         } else {
-                                          // Show user not follow the group QR msg
-                                          ScaffoldMessenger.of(context)
-                                              .clearSnackBars();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'El usuario escaneado no pertenece al grupo',
-                                                style: TextStyle(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
+                                          // Show bad QR msg
+                                          await showDialog(
+                                            context: context,
+                                            builder: (dialogContext) {
+                                              return Dialog(
+                                                elevation: 0,
+                                                insetPadding: EdgeInsets.zero,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                alignment: const AlignmentDirectional(
+                                                        0.0, 0.0)
+                                                    .resolve(Directionality.of(
+                                                        context)),
+                                                child: GestureDetector(
+                                                  onTap: () => _model
+                                                          .unfocusNode
+                                                          .canRequestFocus
+                                                      ? FocusScope.of(context)
+                                                          .requestFocus(_model
+                                                              .unfocusNode)
+                                                      : FocusScope.of(context)
+                                                          .unfocus(),
+                                                  child: SizedBox(
+                                                    height: double.infinity,
+                                                    width: double.infinity,
+                                                    child: AlertModalWidget(
+                                                      message:
+                                                          'El QR escaneado no es valido',
+                                                      icon: Icon(
+                                                        Icons.qr_code_scanner,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .error,
+                                                        size: 90.0,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              duration:
-                                                  const Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .error,
-                                            ),
-                                          );
+                                              );
+                                            },
+                                          ).then((value) => setState(() {}));
+
                                           if (shouldSetState) setState(() {});
                                           return;
                                         }
                                       } else {
-                                        // Show bad QR msg
-                                        ScaffoldMessenger.of(context)
-                                            .clearSnackBars();
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'El QR escaneado no es valido',
-                                              style: TextStyle(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                            ),
-                                            duration:
-                                                const Duration(milliseconds: 4000),
-                                            backgroundColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .error,
-                                          ),
-                                        );
                                         if (shouldSetState) setState(() {});
                                         return;
                                       }
-                                    } else {
-                                      if (shouldSetState) setState(() {});
-                                      return;
-                                    }
 
-                                    if (shouldSetState) setState(() {});
-                                  },
-                            text: 'Tomar asistencia',
-                            icon: const Icon(
-                              Icons.hail_sharp,
-                              size: 15.0,
-                            ),
-                            options: FFButtonOptions(
-                              width: double.infinity,
-                              height: 50.0,
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: FlutterFlowTheme.of(context).primary,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                  ),
-                              borderSide: const BorderSide(
-                                color: Colors.transparent,
-                                width: 1.0,
+                                      if (shouldSetState) setState(() {});
+                                    },
+                              text: 'Tomar asistencia',
+                              icon: const Icon(
+                                Icons.hail_sharp,
+                                size: 15.0,
                               ),
-                              disabledColor: FlutterFlowTheme.of(context)
-                                  .disablePrimaryColor,
+                              options: FFButtonOptions(
+                                width: double.infinity,
+                                height: 50.0,
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                color: FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: Colors.white,
+                                    ),
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1.0,
+                                ),
+                                disabledColor: FlutterFlowTheme.of(context)
+                                    .disablePrimaryColor,
+                              ),
                             ),
                           ),
                         ),
