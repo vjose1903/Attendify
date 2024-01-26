@@ -479,121 +479,130 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                     ).animateOnPageLoad(
                         animationsMap['textOnPageLoadAnimation3']!),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: const BoxDecoration(),
-                      child: Builder(
-                        builder: (context) {
-                          if (FFAppState().tipoUsuarioLoged?.id ==
-                              FFAppState().TAdministrador?.id) {
-                            return FutureBuilder<List<AccesoRecord>>(
-                              future: queryAccesoRecordOnce(
-                                parent: widget.grupoActividadDetalles
-                                    ?.where((e) =>
-                                        e.fecha ==
-                                        functions
-                                            .toInitDayHour(getCurrentTimestamp))
-                                    .toList()
-                                    .first
-                                    .reference,
-                                queryBuilder: (accesoRecord) =>
-                                    accesoRecord.where(
-                                  'grupo',
-                                  isEqualTo: FFAppState().grupoSeleccionado,
+                  if (FFAppState().TAdministrador ==
+                      FFAppState().tipoUsuarioLoged)
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(),
+                        child: FutureBuilder<List<AccesoRecord>>(
+                          future: queryAccesoRecordOnce(
+                            parent: widget.grupoActividadDetalles
+                                ?.where((e) =>
+                                    dateTimeFormat(
+                                      'dd/MM/yyyy',
+                                      e.fecha,
+                                      locale: FFLocalizations.of(context)
+                                          .languageCode,
+                                    ) ==
+                                    ((functions.toInitDayHour(
+                                                    getCurrentTimestamp) <
+                                                widget
+                                                    .actividad!.fechaInicio!) ||
+                                            (functions.toInitDayHour(
+                                                    getCurrentTimestamp) >
+                                                widget.actividad!.fechaFin!)
+                                        ? dateTimeFormat(
+                                            'dd/MM/yyyy',
+                                            widget.actividad?.fechaInicio,
+                                            locale: FFLocalizations.of(context)
+                                                .languageCode,
+                                          )
+                                        : dateTimeFormat(
+                                            'dd/MM/yyyy',
+                                            functions.toInitDayHour(
+                                                getCurrentTimestamp),
+                                            locale: FFLocalizations.of(context)
+                                                .languageCode,
+                                          )))
+                                .toList()
+                                .first
+                                .reference,
+                            queryBuilder: (accesoRecord) => accesoRecord.where(
+                              'grupo',
+                              isEqualTo: FFAppState().grupoSeleccionado,
+                            ),
+                          ),
+                          builder: (context, snapshot) {
+                            // Customize what your widget looks like when it's loading.
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: SizedBox(
+                                  width: 60.0,
+                                  height: 60.0,
+                                  child: SpinKitChasingDots(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    size: 60.0,
+                                  ),
                                 ),
-                              ),
-                              builder: (context, snapshot) {
-                                // Customize what your widget looks like when it's loading.
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: SizedBox(
-                                      width: 60.0,
-                                      height: 60.0,
-                                      child: SpinKitChasingDots(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
-                                        size: 60.0,
-                                      ),
+                              );
+                            }
+                            List<AccesoRecord> accessChipsAccesoRecordList =
+                                snapshot.data!;
+                            return FlutterFlowChoiceChips(
+                              options: accessChipsAccesoRecordList
+                                  .map((e) => e.tipoUsuarioLabel)
+                                  .toList()
+                                  .map((label) => ChipData(label))
+                                  .toList(),
+                              onChanged: true
+                                  ? null
+                                  : (val) => setState(
+                                      () => _model.accessChipsValues = val),
+                              selectedChipStyle: ChipStyle(
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).primary,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                      fontSize: 11.0,
+                                      fontWeight: FontWeight.w300,
                                     ),
-                                  );
-                                }
-                                List<AccesoRecord> accessChipsAccesoRecordList =
-                                    snapshot.data!;
-                                return FlutterFlowChoiceChips(
-                                  options: accessChipsAccesoRecordList
-                                      .map((e) => e.tipoUsuarioLabel)
-                                      .toList()
-                                      .map((label) => ChipData(label))
-                                      .toList(),
-                                  onChanged: true
-                                      ? null
-                                      : (val) => setState(
-                                          () => _model.accessChipsValues = val),
-                                  selectedChipStyle: ChipStyle(
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).primary,
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Inter',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryText,
-                                          fontSize: 11.0,
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                    iconColor: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    iconSize: 18.0,
-                                    elevation: 2.0,
-                                    borderRadius: BorderRadius.circular(16.0),
-                                  ),
-                                  unselectedChipStyle: ChipStyle(
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).alternate,
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Inter',
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryText,
-                                        ),
-                                    iconColor: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    iconSize: 18.0,
-                                    elevation: 0.0,
-                                    borderRadius: BorderRadius.circular(16.0),
-                                  ),
-                                  chipSpacing: 5.0,
-                                  rowSpacing: 5.0,
-                                  multiselect: true,
-                                  initialized: _model.accessChipsValues != null,
-                                  alignment: WrapAlignment.start,
-                                  controller:
-                                      _model.accessChipsValueController ??=
-                                          FormFieldController<List<String>>(
-                                    accessChipsAccesoRecordList
-                                        .map((e) => e.tipoUsuarioLabel)
-                                        .toList(),
-                                  ),
-                                  wrapped: true,
-                                ).animateOnPageLoad(animationsMap[
-                                    'choiceChipsOnPageLoadAnimation1']!);
-                              },
-                            );
-                          } else {
-                            return Container(
-                              width: double.infinity,
-                              height: 0.0,
-                              decoration: const BoxDecoration(),
-                            );
-                          }
-                        },
+                                iconColor:
+                                    FlutterFlowTheme.of(context).primaryText,
+                                iconSize: 18.0,
+                                elevation: 2.0,
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              unselectedChipStyle: ChipStyle(
+                                backgroundColor:
+                                    FlutterFlowTheme.of(context).alternate,
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Inter',
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                    ),
+                                iconColor:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                iconSize: 18.0,
+                                elevation: 0.0,
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              chipSpacing: 5.0,
+                              rowSpacing: 5.0,
+                              multiselect: true,
+                              initialized: _model.accessChipsValues != null,
+                              alignment: WrapAlignment.start,
+                              controller: _model.accessChipsValueController ??=
+                                  FormFieldController<List<String>>(
+                                accessChipsAccesoRecordList
+                                    .map((e) => e.tipoUsuarioLabel)
+                                    .toList(),
+                              ),
+                              wrapped: true,
+                            ).animateOnPageLoad(animationsMap[
+                                'choiceChipsOnPageLoadAnimation1']!);
+                          },
+                        ),
                       ),
                     ),
-                  ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(
                         0.0,
@@ -1215,25 +1224,32 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                               ),
                                                             ),
                                                             Expanded(
-                                                              child: Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                height: 355.0,
-                                                                decoration:
-                                                                    const BoxDecoration(),
-                                                                child: Align(
-                                                                  alignment:
-                                                                      const AlignmentDirectional(
-                                                                          0.0,
-                                                                          -1.0),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsetsDirectional
-                                                                        .fromSTEB(
+                                                              child: Padding(
+                                                                padding: const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        10.0,
+                                                                        0.0,
+                                                                        30.0),
+                                                                child: Card(
+                                                                  clipBehavior:
+                                                                      Clip.antiAliasWithSaveLayer,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryImputBackground,
+                                                                  elevation:
+                                                                      0.0,
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10.0),
+                                                                  ),
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        const AlignmentDirectional(
                                                                             0.0,
-                                                                            10.0,
-                                                                            0.0,
-                                                                            20.0),
+                                                                            -1.0),
                                                                     child: FutureBuilder<
                                                                         List<
                                                                             AsistenciaRecord>>(
@@ -1362,7 +1378,6 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                       color: FlutterFlowTheme.of(context).secondaryText,
                                                                                       size: 20.0,
                                                                                     ),
-                                                                                    tileColor: FlutterFlowTheme.of(context).secondaryBackground,
                                                                                     dense: false,
                                                                                   );
                                                                                 },
@@ -1689,25 +1704,27 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                       const AlignmentDirectional(
                                                                           0.0,
                                                                           -1.0),
-                                                                  child: Card(
-                                                                    clipBehavior:
-                                                                        Clip.antiAliasWithSaveLayer,
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryBackground,
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              0.0),
-                                                                    ),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            10.0,
+                                                                            0.0,
+                                                                            30.0),
+                                                                    child: Card(
+                                                                      clipBehavior:
+                                                                          Clip.antiAliasWithSaveLayer,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primaryImputBackground,
+                                                                      elevation:
                                                                           0.0,
-                                                                          10.0,
-                                                                          0.0,
-                                                                          20.0),
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10.0),
+                                                                      ),
                                                                       child: FutureBuilder<
                                                                           List<
                                                                               ActividadComentarioRecord>>(
@@ -1982,7 +1999,6 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                           color: FlutterFlowTheme.of(context).secondaryText,
                                                                                           size: 20.0,
                                                                                         ),
-                                                                                        tileColor: FlutterFlowTheme.of(context).secondaryBackground,
                                                                                         dense: false,
                                                                                       ),
                                                                                     ),
