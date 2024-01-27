@@ -18,6 +18,8 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   void updateCustomTabsAtIndex(int index, Function(String) updateFn) =>
       customTabs[index] = updateFn(customTabs[index]);
 
+  bool showFullAsistenciaList = true;
+
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
@@ -43,16 +45,27 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   FocusNode? searchAsistenciaFocusNode;
   TextEditingController? searchAsistenciaController;
   String? Function(BuildContext, String?)? searchAsistenciaControllerValidator;
+  List<AsistenciaRecord> simpleSearchResults = [];
   // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
   GrupoUsuarioRecord? editFindGrupoUsuarioResponse;
   // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
   UsuariosRecord? editFindUserInfoResponse;
   // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
-  TipoUsuarioRecord? findTipoUsuarioResponse;
+  TipoUsuarioRecord? editFindTipoUsuarioResponse;
   // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
   List<ActividadObjetoAEntregarRecord>? editFindObjetosAEntregarResponsee;
   // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
   List<ObjetoEntregadoRecord>? editFindObjetosEntregados;
+  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
+  GrupoUsuarioRecord? editFilterFindGrupoUsuarioResponse;
+  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
+  UsuariosRecord? editFilterFindUserInfoResponse;
+  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
+  TipoUsuarioRecord? editFilterfindTipoUsuarioResponse;
+  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
+  List<ActividadObjetoAEntregarRecord>? editFilterFindObjetosAEntregarResponsee;
+  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
+  List<ObjetoEntregadoRecord>? editFilterFindObjetosEntregados;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel1;
   // State field(s) for DateNotasChips widget.

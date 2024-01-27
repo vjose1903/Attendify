@@ -102,6 +102,7 @@ dependencies:
   smooth_page_indicator: 1.1.0
   sqflite: 2.2.6
   stream_transform: 2.1.0
+  text_search: 1.0.1
   timeago: 3.2.2
   url_launcher: 6.1.10
   url_launcher_android: 6.0.27

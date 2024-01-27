@@ -20,6 +20,7 @@ import 'dart:async';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
 import 'package:collection/collection.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +31,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
+import 'package:text_search/text_search.dart';
 import 'detalle_actividad_model.dart';
 export 'detalle_actividad_model.dart';
 
@@ -974,13 +976,13 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                   onChanged: (val) async {
                                                     setState(() => _model
                                                             .dateAsistenciaChipsValue =
-                                                        val?.first);
+                                                        val?.first); // Reload List Asistencia
                                                     setState(() => _model
                                                             .firestoreRequestCompleter1 =
                                                         null);
                                                     await _model
                                                         .waitForFirestoreRequestCompleted1(
-                                                            minWait: 1000,
+                                                            minWait: 5000,
                                                             maxWait: 10000);
                                                   },
                                                   selectedChipStyle: ChipStyle(
@@ -1107,404 +1109,708 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                               functions
                                                                   .toInitDayHour(
                                                                       getCurrentTimestamp))) {
-                                                        return Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          10.0,
-                                                                          10.0,
-                                                                          10.0,
-                                                                          0.0),
-                                                              child: Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                height: 45.0,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryImputBackground,
-                                                                  boxShadow: const [
-                                                                    BoxShadow(
-                                                                      blurRadius:
-                                                                          3.0,
-                                                                      color: Color(
-                                                                          0x33000000),
-                                                                      offset: Offset(
-                                                                          0.0,
-                                                                          1.0),
-                                                                    )
-                                                                  ],
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              40.0),
-                                                                  border: Border
-                                                                      .all(
+                                                        return FutureBuilder<
+                                                            List<
+                                                                AsistenciaRecord>>(
+                                                          future: (_model
+                                                                      .firestoreRequestCompleter1 ??=
+                                                                  Completer<
+                                                                      List<
+                                                                          AsistenciaRecord>>()
+                                                                    ..complete(
+                                                                        queryAsistenciaRecordOnce(
+                                                                      parent: widget
+                                                                          .grupoActividadDetalles
+                                                                          ?.where((e) =>
+                                                                              e.fecha ==
+                                                                              functions.toInitDayHour(functions.parseDateStringToDateTime(_model.dateAsistenciaChipsValue!)!))
+                                                                          .toList()
+                                                                          .first
+                                                                          .reference,
+                                                                      queryBuilder:
+                                                                          (asistenciaRecord) =>
+                                                                              asistenciaRecord.where(
+                                                                        'grupo',
+                                                                        isEqualTo:
+                                                                            FFAppState().grupoSeleccionado,
+                                                                      ),
+                                                                    )))
+                                                              .future,
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            // Customize what your widget looks like when it's loading.
+                                                            if (!snapshot
+                                                                .hasData) {
+                                                              return Center(
+                                                                child: SizedBox(
+                                                                  width: 60.0,
+                                                                  height: 60.0,
+                                                                  child:
+                                                                      SpinKitChasingDots(
                                                                     color: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .alternate,
+                                                                        .primary,
+                                                                    size: 60.0,
                                                                   ),
                                                                 ),
-                                                                child: Padding(
-                                                                  padding: const EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          16.0,
-                                                                          0.0,
-                                                                          12.0,
-                                                                          0.0),
-                                                                  child: Row(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    children: [
-                                                                      Icon(
-                                                                        Icons
-                                                                            .search_rounded,
+                                                              );
+                                                            }
+                                                            List<AsistenciaRecord>
+                                                                containerAsistenciaAsistenciaRecordList =
+                                                                snapshot.data!;
+                                                            return Container(
+                                                              decoration:
+                                                                  const BoxDecoration(),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            10.0,
+                                                                            10.0,
+                                                                            10.0,
+                                                                            0.0),
+                                                                    child:
+                                                                        Container(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height:
+                                                                          50.0,
+                                                                      decoration:
+                                                                          BoxDecoration(
                                                                         color: FlutterFlowTheme.of(context)
-                                                                            .secondaryText,
-                                                                        size:
-                                                                            24.0,
-                                                                      ),
-                                                                      Expanded(
-                                                                        child:
-                                                                            Padding(
-                                                                          padding: const EdgeInsetsDirectional.fromSTEB(
-                                                                              4.0,
-                                                                              0.0,
-                                                                              0.0,
-                                                                              0.0),
-                                                                          child:
-                                                                              SizedBox(
-                                                                            width:
-                                                                                double.infinity,
-                                                                            child:
-                                                                                TextFormField(
-                                                                              controller: _model.searchAsistenciaController,
-                                                                              focusNode: _model.searchAsistenciaFocusNode,
-                                                                              obscureText: false,
-                                                                              decoration: InputDecoration(
-                                                                                labelText: 'Busqueda...',
-                                                                                labelStyle: FlutterFlowTheme.of(context).labelMedium,
-                                                                                hintStyle: FlutterFlowTheme.of(context).labelMedium,
-                                                                                enabledBorder: InputBorder.none,
-                                                                                focusedBorder: InputBorder.none,
-                                                                                errorBorder: InputBorder.none,
-                                                                                focusedErrorBorder: InputBorder.none,
-                                                                                filled: true,
-                                                                              ),
-                                                                              style: FlutterFlowTheme.of(context).bodyMedium,
-                                                                              cursorColor: FlutterFlowTheme.of(context).primary,
-                                                                              validator: _model.searchAsistenciaControllerValidator.asValidator(context),
-                                                                            ),
-                                                                          ),
+                                                                            .primaryImputBackground,
+                                                                        boxShadow: const [
+                                                                          BoxShadow(
+                                                                            blurRadius:
+                                                                                3.0,
+                                                                            color:
+                                                                                Color(0x33000000),
+                                                                            offset:
+                                                                                Offset(0.0, 1.0),
+                                                                          )
+                                                                        ],
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(40.0),
+                                                                        border:
+                                                                            Border.all(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).alternate,
                                                                         ),
                                                                       ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Padding(
-                                                                padding: const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        10.0,
-                                                                        0.0,
-                                                                        30.0),
-                                                                child: Card(
-                                                                  clipBehavior:
-                                                                      Clip.antiAliasWithSaveLayer,
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryImputBackground,
-                                                                  elevation:
-                                                                      0.0,
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10.0),
-                                                                  ),
-                                                                  child: Align(
-                                                                    alignment:
-                                                                        const AlignmentDirectional(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                            16.0,
                                                                             0.0,
-                                                                            -1.0),
-                                                                    child: FutureBuilder<
-                                                                        List<
-                                                                            AsistenciaRecord>>(
-                                                                      future: (_model
-                                                                              .firestoreRequestCompleter1 ??= Completer<List<AsistenciaRecord>>()
-                                                                            ..complete(queryAsistenciaRecordOnce(
-                                                                              parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.parseDateStringToDateTime(_model.dateAsistenciaChipsValue!)).toList().first.reference,
-                                                                              queryBuilder: (asistenciaRecord) => asistenciaRecord.where(
-                                                                                'grupo',
-                                                                                isEqualTo: FFAppState().grupoSeleccionado,
-                                                                              ),
-                                                                            )))
-                                                                          .future,
-                                                                      builder:
-                                                                          (context,
-                                                                              snapshot) {
-                                                                        // Customize what your widget looks like when it's loading.
-                                                                        if (!snapshot
-                                                                            .hasData) {
-                                                                          return Center(
-                                                                            child:
-                                                                                SizedBox(
-                                                                              width: 60.0,
-                                                                              height: 60.0,
-                                                                              child: SpinKitChasingDots(
-                                                                                color: FlutterFlowTheme.of(context).primary,
-                                                                                size: 60.0,
-                                                                              ),
+                                                                            12.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Row(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.max,
+                                                                          children: [
+                                                                            Icon(
+                                                                              Icons.search_rounded,
+                                                                              color: FlutterFlowTheme.of(context).secondaryText,
+                                                                              size: 24.0,
                                                                             ),
-                                                                          );
-                                                                        }
-                                                                        List<AsistenciaRecord>
-                                                                            listViewAsistenciaAsistenciaRecordList =
-                                                                            snapshot.data!;
-                                                                        if (listViewAsistenciaAsistenciaRecordList
-                                                                            .isEmpty) {
-                                                                          return Center(
-                                                                            child:
-                                                                                SizedBox(
-                                                                              height: 290.0,
-                                                                              child: EmptyListWidget(
-                                                                                icon: FaIcon(
-                                                                                  FontAwesomeIcons.userTimes,
-                                                                                  color: FlutterFlowTheme.of(context).primaryImputBorder,
-                                                                                  size: 75.0,
+                                                                            Expanded(
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 0.0, 0.0),
+                                                                                child: SizedBox(
+                                                                                  width: double.infinity,
+                                                                                  child: TextFormField(
+                                                                                    controller: _model.searchAsistenciaController,
+                                                                                    focusNode: _model.searchAsistenciaFocusNode,
+                                                                                    onChanged: (_) => EasyDebounce.debounce(
+                                                                                      '_model.searchAsistenciaController',
+                                                                                      const Duration(milliseconds: 500),
+                                                                                      () async {
+                                                                                        if (_model.searchAsistenciaController.text != '') {
+                                                                                          // filter asistencia
+                                                                                          safeSetState(() {
+                                                                                            _model.simpleSearchResults = TextSearch(
+                                                                                              containerAsistenciaAsistenciaRecordList
+                                                                                                  .map(
+                                                                                                    (record) => TextSearchItem.fromTerms(record, [record.usuarioName]),
+                                                                                                  )
+                                                                                                  .toList(),
+                                                                                            ).search(_model.searchAsistenciaController.text).map((r) => r.object).toList();
+                                                                                          });
+                                                                                          // change To Filter list
+                                                                                          setState(() {
+                                                                                            _model.showFullAsistenciaList = false;
+                                                                                          });
+                                                                                          await actions.consoleLog(
+                                                                                            null,
+                                                                                            'filtrando',
+                                                                                            null,
+                                                                                          );
+                                                                                        } else {
+                                                                                          // change To Full list
+                                                                                          setState(() {
+                                                                                            _model.showFullAsistenciaList = true;
+                                                                                          });
+                                                                                          await actions.consoleLog(
+                                                                                            null,
+                                                                                            'lista completa',
+                                                                                            null,
+                                                                                          );
+                                                                                        }
+                                                                                      },
+                                                                                    ),
+                                                                                    obscureText: false,
+                                                                                    decoration: InputDecoration(
+                                                                                      labelText: 'Busqueda...',
+                                                                                      labelStyle: FlutterFlowTheme.of(context).labelMedium,
+                                                                                      hintStyle: FlutterFlowTheme.of(context).labelMedium,
+                                                                                      enabledBorder: InputBorder.none,
+                                                                                      focusedBorder: InputBorder.none,
+                                                                                      errorBorder: InputBorder.none,
+                                                                                      focusedErrorBorder: InputBorder.none,
+                                                                                      filled: true,
+                                                                                      suffixIcon: _model.searchAsistenciaController!.text.isNotEmpty
+                                                                                          ? InkWell(
+                                                                                              onTap: () async {
+                                                                                                _model.searchAsistenciaController?.clear();
+                                                                                                if (_model.searchAsistenciaController.text != '') {
+                                                                                                  // filter asistencia
+                                                                                                  safeSetState(() {
+                                                                                                    _model.simpleSearchResults = TextSearch(
+                                                                                                      containerAsistenciaAsistenciaRecordList
+                                                                                                          .map(
+                                                                                                            (record) => TextSearchItem.fromTerms(record, [record.usuarioName]),
+                                                                                                          )
+                                                                                                          .toList(),
+                                                                                                    ).search(_model.searchAsistenciaController.text).map((r) => r.object).toList();
+                                                                                                  });
+                                                                                                  // change To Filter list
+                                                                                                  setState(() {
+                                                                                                    _model.showFullAsistenciaList = false;
+                                                                                                  });
+                                                                                                  await actions.consoleLog(
+                                                                                                    null,
+                                                                                                    'filtrando',
+                                                                                                    null,
+                                                                                                  );
+                                                                                                } else {
+                                                                                                  // change To Full list
+                                                                                                  setState(() {
+                                                                                                    _model.showFullAsistenciaList = true;
+                                                                                                  });
+                                                                                                  await actions.consoleLog(
+                                                                                                    null,
+                                                                                                    'lista completa',
+                                                                                                    null,
+                                                                                                  );
+                                                                                                }
+
+                                                                                                setState(() {});
+                                                                                              },
+                                                                                              child: Icon(
+                                                                                                Icons.clear,
+                                                                                                color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                size: 20.0,
+                                                                                              ),
+                                                                                            )
+                                                                                          : null,
+                                                                                    ),
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium,
+                                                                                    cursorColor: FlutterFlowTheme.of(context).primary,
+                                                                                    validator: _model.searchAsistenciaControllerValidator.asValidator(context),
+                                                                                  ),
                                                                                 ),
-                                                                                title: 'Sin registros de asistencia',
                                                                               ),
                                                                             ),
-                                                                          );
-                                                                        }
-                                                                        return RefreshIndicator(
-                                                                          key: const Key(
-                                                                              'RefreshIndicator_m9m7vciq'),
-                                                                          onRefresh:
-                                                                              () async {
-                                                                            setState(() =>
-                                                                                _model.firestoreRequestCompleter1 = null);
-                                                                            await _model.waitForFirestoreRequestCompleted1();
-                                                                          },
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          0.0,
+                                                                          10.0,
+                                                                          0.0,
+                                                                          30.0),
+                                                                      child:
+                                                                          Card(
+                                                                        clipBehavior:
+                                                                            Clip.antiAliasWithSaveLayer,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryImputBackground,
+                                                                        elevation:
+                                                                            0.0,
+                                                                        shape:
+                                                                            RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10.0),
+                                                                        ),
+                                                                        child:
+                                                                            Align(
+                                                                          alignment: const AlignmentDirectional(
+                                                                              0.0,
+                                                                              -1.0),
                                                                           child:
-                                                                              ListView.separated(
-                                                                            padding:
-                                                                                EdgeInsets.zero,
-                                                                            shrinkWrap:
-                                                                                true,
-                                                                            scrollDirection:
-                                                                                Axis.vertical,
-                                                                            itemCount:
-                                                                                listViewAsistenciaAsistenciaRecordList.length,
-                                                                            separatorBuilder: (_, __) =>
-                                                                                const SizedBox(height: 8.0),
-                                                                            itemBuilder:
-                                                                                (context, listViewAsistenciaIndex) {
-                                                                              final listViewAsistenciaAsistenciaRecord = listViewAsistenciaAsistenciaRecordList[listViewAsistenciaIndex];
-                                                                              return StreamBuilder<List<ObjetoEntregadoRecord>>(
-                                                                                stream: queryObjetoEntregadoRecord(
-                                                                                  parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.parseDateStringToDateTime(_model.dateAsistenciaChipsValue!)).toList().first.reference,
-                                                                                  queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
-                                                                                      .where(
-                                                                                        'grupo',
-                                                                                        isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                      )
-                                                                                      .where(
-                                                                                        'grupo_usuario',
-                                                                                        isEqualTo: listViewAsistenciaAsistenciaRecord.grupoUsuario,
-                                                                                      ),
-                                                                                  singleRecord: true,
-                                                                                ),
-                                                                                builder: (context, snapshot) {
-                                                                                  // Customize what your widget looks like when it's loading.
-                                                                                  if (!snapshot.hasData) {
-                                                                                    return Center(
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 2.0),
+                                                                              Builder(
+                                                                            builder:
+                                                                                (context) {
+                                                                              if (_model.showFullAsistenciaList) {
+                                                                                return Builder(
+                                                                                  builder: (context) {
+                                                                                    final actividadAsistencia = containerAsistenciaAsistenciaRecordList.toList();
+                                                                                    if (actividadAsistencia.isEmpty) {
+                                                                                      return Center(
                                                                                         child: SizedBox(
-                                                                                          width: 60.0,
-                                                                                          height: 60.0,
-                                                                                          child: SpinKitChasingDots(
-                                                                                            color: FlutterFlowTheme.of(context).primary,
-                                                                                            size: 60.0,
+                                                                                          height: 290.0,
+                                                                                          child: EmptyListWidget(
+                                                                                            icon: FaIcon(
+                                                                                              FontAwesomeIcons.userTimes,
+                                                                                              color: FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                                              size: 75.0,
+                                                                                            ),
+                                                                                            title: 'Sin registros de asistencia',
                                                                                           ),
                                                                                         ),
+                                                                                      );
+                                                                                    }
+                                                                                    return RefreshIndicator(
+                                                                                      key: const Key('RefreshIndicator_m9m7vciq'),
+                                                                                      onRefresh: () async {
+                                                                                        // Reload List Asistencia
+                                                                                        setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                        await _model.waitForFirestoreRequestCompleted1(minWait: 5000, maxWait: 10000);
+                                                                                      },
+                                                                                      child: ListView.separated(
+                                                                                        padding: EdgeInsets.zero,
+                                                                                        shrinkWrap: true,
+                                                                                        scrollDirection: Axis.vertical,
+                                                                                        itemCount: actividadAsistencia.length,
+                                                                                        separatorBuilder: (_, __) => const SizedBox(height: 8.0),
+                                                                                        itemBuilder: (context, actividadAsistenciaIndex) {
+                                                                                          final actividadAsistenciaItem = actividadAsistencia[actividadAsistenciaIndex];
+                                                                                          return StreamBuilder<List<ObjetoEntregadoRecord>>(
+                                                                                            stream: queryObjetoEntregadoRecord(
+                                                                                              parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.parseDateStringToDateTime(_model.dateAsistenciaChipsValue!)).toList().first.reference,
+                                                                                              queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
+                                                                                                  .where(
+                                                                                                    'grupo',
+                                                                                                    isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                  )
+                                                                                                  .where(
+                                                                                                    'grupo_usuario',
+                                                                                                    isEqualTo: actividadAsistenciaItem.grupoUsuario,
+                                                                                                  ),
+                                                                                              singleRecord: true,
+                                                                                            ),
+                                                                                            builder: (context, snapshot) {
+                                                                                              // Customize what your widget looks like when it's loading.
+                                                                                              if (!snapshot.hasData) {
+                                                                                                return Center(
+                                                                                                  child: Padding(
+                                                                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 2.0),
+                                                                                                    child: SizedBox(
+                                                                                                      width: 60.0,
+                                                                                                      height: 60.0,
+                                                                                                      child: SpinKitChasingDots(
+                                                                                                        color: FlutterFlowTheme.of(context).primary,
+                                                                                                        size: 60.0,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                );
+                                                                                              }
+                                                                                              List<ObjetoEntregadoRecord> listTileObjetoEntregadoRecordList = snapshot.data!;
+                                                                                              // Return an empty Container when the item does not exist.
+                                                                                              if (snapshot.data!.isEmpty) {
+                                                                                                return Container();
+                                                                                              }
+                                                                                              final listTileObjetoEntregadoRecord = listTileObjetoEntregadoRecordList.isNotEmpty ? listTileObjetoEntregadoRecordList.first : null;
+                                                                                              return Slidable(
+                                                                                                endActionPane: ActionPane(
+                                                                                                  motion: const ScrollMotion(),
+                                                                                                  extentRatio: 0.5,
+                                                                                                  children: [
+                                                                                                    SlidableAction(
+                                                                                                      label: 'Editar',
+                                                                                                      backgroundColor: FlutterFlowTheme.of(context).primaryText,
+                                                                                                      icon: FontAwesomeIcons.pencilAlt,
+                                                                                                      onPressed: (_) async {
+                                                                                                        if (dateTimeFormat(
+                                                                                                              'dd/MM/yyyy',
+                                                                                                              functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                              locale: FFLocalizations.of(context).languageCode,
+                                                                                                            ) ==
+                                                                                                            _model.dateAsistenciaChipsValue) {
+                                                                                                          // Find Grupo Usuario
+                                                                                                          _model.editFindGrupoUsuarioResponse = await GrupoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord!.grupoUsuario!);
+                                                                                                          // find user info
+                                                                                                          _model.editFindUserInfoResponse = await UsuariosRecord.getDocumentOnce(_model.editFindGrupoUsuarioResponse!.usuario!);
+                                                                                                          // Find tipo usuario
+                                                                                                          _model.editFindTipoUsuarioResponse = await TipoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord.tipoUsuario!);
+                                                                                                          // find objetos a entregar
+                                                                                                          _model.editFindObjetosAEntregarResponsee = await queryActividadObjetoAEntregarRecordOnce(
+                                                                                                            parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                            queryBuilder: (actividadObjetoAEntregarRecord) => actividadObjetoAEntregarRecord
+                                                                                                                .where(
+                                                                                                                  'grupo',
+                                                                                                                  isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                                )
+                                                                                                                .where(
+                                                                                                                  'tipo_usuario',
+                                                                                                                  isEqualTo: listTileObjetoEntregadoRecord.tipoUsuario,
+                                                                                                                )
+                                                                                                                .where(
+                                                                                                                  'grupo_actividad',
+                                                                                                                  isEqualTo: widget.grupoActividad?.reference,
+                                                                                                                ),
+                                                                                                          );
+                                                                                                          // Find Objetos Entregados
+                                                                                                          _model.editFindObjetosEntregados = await queryObjetoEntregadoRecordOnce(
+                                                                                                            parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                            queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
+                                                                                                                .where(
+                                                                                                                  'asistencia',
+                                                                                                                  isEqualTo: listTileObjetoEntregadoRecord.asistencia,
+                                                                                                                )
+                                                                                                                .where(
+                                                                                                                  'grupo',
+                                                                                                                  isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                                ),
+                                                                                                          );
+                                                                                                          // open form asistencia
+                                                                                                          await showModalBottomSheet(
+                                                                                                            isScrollControlled: true,
+                                                                                                            backgroundColor: Colors.transparent,
+                                                                                                            isDismissible: false,
+                                                                                                            enableDrag: false,
+                                                                                                            context: context,
+                                                                                                            builder: (context) {
+                                                                                                              return GestureDetector(
+                                                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                                child: Padding(
+                                                                                                                  padding: MediaQuery.viewInsetsOf(context),
+                                                                                                                  child: SizedBox(
+                                                                                                                    height: MediaQuery.sizeOf(context).height * 0.55,
+                                                                                                                    child: FormAsistenciaWidget(
+                                                                                                                      user: _model.editFindUserInfoResponse,
+                                                                                                                      action: FormAction.edit,
+                                                                                                                      grupoUsuario: _model.editFindGrupoUsuarioResponse,
+                                                                                                                      tipoUsuario: _model.editFindTipoUsuarioResponse!,
+                                                                                                                      actividadObjetosAEntregar: _model.editFindObjetosAEntregarResponsee,
+                                                                                                                      grupoActividadDetalle: widget.grupoActividadDetalles!.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first,
+                                                                                                                      objetosEntregados: _model.editFindObjetosEntregados,
+                                                                                                                      reloadChip: () async {
+                                                                                                                        if (_model.showFullAsistenciaList) {
+                                                                                                                          // Reload List Asistencia
+                                                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 5000, maxWait: 10000);
+                                                                                                                        }
+                                                                                                                      },
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                              );
+                                                                                                            },
+                                                                                                          ).then((value) => safeSetState(() {}));
+                                                                                                        } else {
+                                                                                                          // show msg error
+                                                                                                          ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                            SnackBar(
+                                                                                                              content: Text(
+                                                                                                                'Solo puede editar asistencia del dia actual',
+                                                                                                                style: TextStyle(
+                                                                                                                  color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                              duration: const Duration(milliseconds: 4000),
+                                                                                                              backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                            ),
+                                                                                                          );
+                                                                                                        }
+
+                                                                                                        setState(() {});
+                                                                                                      },
+                                                                                                    ),
+                                                                                                    SlidableAction(
+                                                                                                      label: 'Eliminar',
+                                                                                                      backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                      icon: FontAwesomeIcons.solidTrashAlt,
+                                                                                                      onPressed: (_) {
+                                                                                                        print('SlidableActionWidget pressed ...');
+                                                                                                      },
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                                child: ListTile(
+                                                                                                  title: Text(
+                                                                                                    actividadAsistenciaItem.usuarioName,
+                                                                                                    style: FlutterFlowTheme.of(context).titleLarge.override(
+                                                                                                          fontFamily: 'Readex Pro',
+                                                                                                          fontSize: 16.0,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                  subtitle: Text(
+                                                                                                    listTileObjetoEntregadoRecord != null ? 'Entregado: ${listTileObjetoEntregadoRecord.cantidad.toString()}  ${listTileObjetoEntregadoRecord.objetoAEntregarLabel}' : '',
+                                                                                                    style: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                                          fontFamily: 'Inter',
+                                                                                                          fontSize: 12.0,
+                                                                                                          fontWeight: FontWeight.normal,
+                                                                                                          lineHeight: 1.5,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                  trailing: Icon(
+                                                                                                    Icons.arrow_forward_ios,
+                                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                    size: 20.0,
+                                                                                                  ),
+                                                                                                  dense: false,
+                                                                                                ),
+                                                                                              );
+                                                                                            },
+                                                                                          );
+                                                                                        },
                                                                                       ),
                                                                                     );
-                                                                                  }
-                                                                                  List<ObjetoEntregadoRecord> listTileObjetoEntregadoRecordList = snapshot.data!;
-                                                                                  // Return an empty Container when the item does not exist.
-                                                                                  if (snapshot.data!.isEmpty) {
-                                                                                    return Container();
-                                                                                  }
-                                                                                  final listTileObjetoEntregadoRecord = listTileObjetoEntregadoRecordList.isNotEmpty ? listTileObjetoEntregadoRecordList.first : null;
-                                                                                  return Slidable(
-                                                                                    endActionPane: ActionPane(
-                                                                                      motion: const ScrollMotion(),
-                                                                                      extentRatio: 0.5,
-                                                                                      children: [
-                                                                                        SlidableAction(
-                                                                                          label: 'Editar',
-                                                                                          backgroundColor: FlutterFlowTheme.of(context).primaryText,
-                                                                                          icon: FontAwesomeIcons.pencilAlt,
-                                                                                          onPressed: (_) async {
-                                                                                            if (dateTimeFormat(
-                                                                                                  'dd/MM/yyyy',
-                                                                                                  functions.toInitDayHour(getCurrentTimestamp),
-                                                                                                  locale: FFLocalizations.of(context).languageCode,
-                                                                                                ) ==
-                                                                                                _model.dateAsistenciaChipsValue) {
-                                                                                              // Find Grupo Usuario
-                                                                                              _model.editFindGrupoUsuarioResponse = await GrupoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord!.grupoUsuario!);
-                                                                                              // find user info
-                                                                                              _model.editFindUserInfoResponse = await UsuariosRecord.getDocumentOnce(_model.editFindGrupoUsuarioResponse!.usuario!);
-                                                                                              // Find tipo usuario
-                                                                                              _model.findTipoUsuarioResponse = await TipoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord.tipoUsuario!);
-                                                                                              // find objetos a entregar
-                                                                                              _model.editFindObjetosAEntregarResponsee = await queryActividadObjetoAEntregarRecordOnce(
-                                                                                                parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
-                                                                                                queryBuilder: (actividadObjetoAEntregarRecord) => actividadObjetoAEntregarRecord
-                                                                                                    .where(
-                                                                                                      'grupo',
-                                                                                                      isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                                    )
-                                                                                                    .where(
-                                                                                                      'tipo_usuario',
-                                                                                                      isEqualTo: listTileObjetoEntregadoRecord.tipoUsuario,
-                                                                                                    )
-                                                                                                    .where(
-                                                                                                      'grupo_actividad',
-                                                                                                      isEqualTo: widget.grupoActividad?.reference,
-                                                                                                    ),
-                                                                                              );
-                                                                                              // Find Objetos Entregados
-                                                                                              _model.editFindObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                  },
+                                                                                );
+                                                                              } else {
+                                                                                return Align(
+                                                                                  alignment: const AlignmentDirectional(0.0, -1.0),
+                                                                                  child: Builder(
+                                                                                    builder: (context) {
+                                                                                      final asistenciaFilter = _model.simpleSearchResults.toList();
+                                                                                      if (asistenciaFilter.isEmpty) {
+                                                                                        return Center(
+                                                                                          child: SizedBox(
+                                                                                            height: 290.0,
+                                                                                            child: EmptyListWidget(
+                                                                                              icon: FaIcon(
+                                                                                                FontAwesomeIcons.userTimes,
+                                                                                                color: FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                                                size: 75.0,
+                                                                                              ),
+                                                                                              title: 'Sin registros de asistencia',
+                                                                                            ),
+                                                                                          ),
+                                                                                        );
+                                                                                      }
+                                                                                      return RefreshIndicator(
+                                                                                        key: const Key('RefreshIndicator_0ar6n21m'),
+                                                                                        onRefresh: () async {
+                                                                                          // Reload List Asistencia
+                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 5000, maxWait: 10000);
+                                                                                        },
+                                                                                        child: ListView.separated(
+                                                                                          padding: EdgeInsets.zero,
+                                                                                          shrinkWrap: true,
+                                                                                          scrollDirection: Axis.vertical,
+                                                                                          itemCount: asistenciaFilter.length,
+                                                                                          separatorBuilder: (_, __) => const SizedBox(height: 8.0),
+                                                                                          itemBuilder: (context, asistenciaFilterIndex) {
+                                                                                            final asistenciaFilterItem = asistenciaFilter[asistenciaFilterIndex];
+                                                                                            return StreamBuilder<List<ObjetoEntregadoRecord>>(
+                                                                                              stream: queryObjetoEntregadoRecord(
+                                                                                                parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.parseDateStringToDateTime(_model.dateAsistenciaChipsValue!)).toList().first.reference,
                                                                                                 queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
                                                                                                     .where(
-                                                                                                      'asistencia',
-                                                                                                      isEqualTo: listTileObjetoEntregadoRecord.asistencia,
-                                                                                                    )
-                                                                                                    .where(
                                                                                                       'grupo',
                                                                                                       isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                    )
+                                                                                                    .where(
+                                                                                                      'grupo_usuario',
+                                                                                                      isEqualTo: asistenciaFilterItem.grupoUsuario,
                                                                                                     ),
-                                                                                              );
-                                                                                              await actions.consoleLog(
-                                                                                                null,
-                                                                                                'ANDO AQUIII',
-                                                                                                null,
-                                                                                              );
-                                                                                              // open form asistencia
-                                                                                              await showModalBottomSheet(
-                                                                                                isScrollControlled: true,
-                                                                                                backgroundColor: Colors.transparent,
-                                                                                                isDismissible: false,
-                                                                                                enableDrag: false,
-                                                                                                context: context,
-                                                                                                builder: (context) {
-                                                                                                  return GestureDetector(
-                                                                                                    onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                singleRecord: true,
+                                                                                              ),
+                                                                                              builder: (context, snapshot) {
+                                                                                                // Customize what your widget looks like when it's loading.
+                                                                                                if (!snapshot.hasData) {
+                                                                                                  return Center(
                                                                                                     child: Padding(
-                                                                                                      padding: MediaQuery.viewInsetsOf(context),
+                                                                                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 2.0),
                                                                                                       child: SizedBox(
-                                                                                                        height: MediaQuery.sizeOf(context).height * 0.55,
-                                                                                                        child: FormAsistenciaWidget(
-                                                                                                          user: _model.editFindUserInfoResponse,
-                                                                                                          action: FormAction.edit,
-                                                                                                          grupoUsuario: _model.editFindGrupoUsuarioResponse,
-                                                                                                          tipoUsuario: _model.findTipoUsuarioResponse!,
-                                                                                                          actividadObjetosAEntregar: _model.editFindObjetosAEntregarResponsee,
-                                                                                                          grupoActividadDetalle: widget.grupoActividadDetalles!.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first,
-                                                                                                          objetosEntregados: _model.editFindObjetosEntregados,
-                                                                                                          reloadChip: () async {
-                                                                                                            // Reload List Asistencia
-                                                                                                            setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                                            await _model.waitForFirestoreRequestCompleted1(minWait: 5000, maxWait: 10000);
-                                                                                                          },
+                                                                                                        width: 60.0,
+                                                                                                        height: 60.0,
+                                                                                                        child: SpinKitChasingDots(
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          size: 60.0,
                                                                                                         ),
                                                                                                       ),
                                                                                                     ),
                                                                                                   );
-                                                                                                },
-                                                                                              ).then((value) => safeSetState(() {}));
-                                                                                            } else {
-                                                                                              // show msg error
-                                                                                              ScaffoldMessenger.of(context).clearSnackBars();
-                                                                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                SnackBar(
-                                                                                                  content: Text(
-                                                                                                    'Solo puede editar asistencia del dia actual',
-                                                                                                    style: TextStyle(
-                                                                                                      color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  duration: const Duration(milliseconds: 4000),
-                                                                                                  backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                ),
-                                                                                              );
-                                                                                            }
+                                                                                                }
+                                                                                                List<ObjetoEntregadoRecord> listTileObjetoEntregadoRecordList = snapshot.data!;
+                                                                                                // Return an empty Container when the item does not exist.
+                                                                                                if (snapshot.data!.isEmpty) {
+                                                                                                  return Container();
+                                                                                                }
+                                                                                                final listTileObjetoEntregadoRecord = listTileObjetoEntregadoRecordList.isNotEmpty ? listTileObjetoEntregadoRecordList.first : null;
+                                                                                                return Slidable(
+                                                                                                  endActionPane: ActionPane(
+                                                                                                    motion: const ScrollMotion(),
+                                                                                                    extentRatio: 0.5,
+                                                                                                    children: [
+                                                                                                      SlidableAction(
+                                                                                                        label: 'Editar',
+                                                                                                        backgroundColor: FlutterFlowTheme.of(context).primaryText,
+                                                                                                        icon: FontAwesomeIcons.pencilAlt,
+                                                                                                        onPressed: (_) async {
+                                                                                                          if (dateTimeFormat(
+                                                                                                                'dd/MM/yyyy',
+                                                                                                                functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                                locale: FFLocalizations.of(context).languageCode,
+                                                                                                              ) ==
+                                                                                                              _model.dateAsistenciaChipsValue) {
+                                                                                                            // Find Grupo Usuario
+                                                                                                            _model.editFilterFindGrupoUsuarioResponse = await GrupoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord!.grupoUsuario!);
+                                                                                                            // find user info
+                                                                                                            _model.editFilterFindUserInfoResponse = await UsuariosRecord.getDocumentOnce(_model.editFilterFindGrupoUsuarioResponse!.usuario!);
+                                                                                                            // Find tipo usuario
+                                                                                                            _model.editFilterfindTipoUsuarioResponse = await TipoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord.tipoUsuario!);
+                                                                                                            // find objetos a entregar
+                                                                                                            _model.editFilterFindObjetosAEntregarResponsee = await queryActividadObjetoAEntregarRecordOnce(
+                                                                                                              parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                              queryBuilder: (actividadObjetoAEntregarRecord) => actividadObjetoAEntregarRecord
+                                                                                                                  .where(
+                                                                                                                    'grupo',
+                                                                                                                    isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                                  )
+                                                                                                                  .where(
+                                                                                                                    'tipo_usuario',
+                                                                                                                    isEqualTo: listTileObjetoEntregadoRecord.tipoUsuario,
+                                                                                                                  )
+                                                                                                                  .where(
+                                                                                                                    'grupo_actividad',
+                                                                                                                    isEqualTo: widget.grupoActividad?.reference,
+                                                                                                                  ),
+                                                                                                            );
+                                                                                                            // Find Objetos Entregados
+                                                                                                            _model.editFilterFindObjetosEntregados = await queryObjetoEntregadoRecordOnce(
+                                                                                                              parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                              queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
+                                                                                                                  .where(
+                                                                                                                    'asistencia',
+                                                                                                                    isEqualTo: listTileObjetoEntregadoRecord.asistencia,
+                                                                                                                  )
+                                                                                                                  .where(
+                                                                                                                    'grupo',
+                                                                                                                    isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                                  ),
+                                                                                                            );
+                                                                                                            // open form asistencia
+                                                                                                            await showModalBottomSheet(
+                                                                                                              isScrollControlled: true,
+                                                                                                              backgroundColor: Colors.transparent,
+                                                                                                              isDismissible: false,
+                                                                                                              enableDrag: false,
+                                                                                                              context: context,
+                                                                                                              builder: (context) {
+                                                                                                                return GestureDetector(
+                                                                                                                  onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                                  child: Padding(
+                                                                                                                    padding: MediaQuery.viewInsetsOf(context),
+                                                                                                                    child: SizedBox(
+                                                                                                                      height: MediaQuery.sizeOf(context).height * 0.55,
+                                                                                                                      child: FormAsistenciaWidget(
+                                                                                                                        user: _model.editFilterFindUserInfoResponse,
+                                                                                                                        action: FormAction.edit,
+                                                                                                                        grupoUsuario: _model.editFilterFindGrupoUsuarioResponse,
+                                                                                                                        tipoUsuario: _model.editFilterfindTipoUsuarioResponse!,
+                                                                                                                        actividadObjetosAEntregar: _model.editFilterFindObjetosAEntregarResponsee,
+                                                                                                                        grupoActividadDetalle: widget.grupoActividadDetalles!.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first,
+                                                                                                                        objetosEntregados: _model.editFilterFindObjetosEntregados,
+                                                                                                                        reloadChip: () async {
+                                                                                                                          if (_model.showFullAsistenciaList) {}
+                                                                                                                        },
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                );
+                                                                                                              },
+                                                                                                            ).then((value) => safeSetState(() {}));
+                                                                                                          } else {
+                                                                                                            // show msg error
+                                                                                                            ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                              SnackBar(
+                                                                                                                content: Text(
+                                                                                                                  'Solo puede editar asistencia del dia actual',
+                                                                                                                  style: TextStyle(
+                                                                                                                    color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                                duration: const Duration(milliseconds: 4000),
+                                                                                                                backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                              ),
+                                                                                                            );
+                                                                                                          }
 
-                                                                                            setState(() {});
+                                                                                                          setState(() {});
+                                                                                                        },
+                                                                                                      ),
+                                                                                                      SlidableAction(
+                                                                                                        label: 'Eliminar',
+                                                                                                        backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                        icon: FontAwesomeIcons.solidTrashAlt,
+                                                                                                        onPressed: (_) {
+                                                                                                          print('SlidableActionWidget pressed ...');
+                                                                                                        },
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  ),
+                                                                                                  child: ListTile(
+                                                                                                    title: Text(
+                                                                                                      asistenciaFilterItem.usuarioName,
+                                                                                                      style: FlutterFlowTheme.of(context).titleLarge.override(
+                                                                                                            fontFamily: 'Readex Pro',
+                                                                                                            fontSize: 16.0,
+                                                                                                          ),
+                                                                                                    ),
+                                                                                                    subtitle: Text(
+                                                                                                      listTileObjetoEntregadoRecord != null ? 'Entregado: ${listTileObjetoEntregadoRecord.cantidad.toString()}  ${listTileObjetoEntregadoRecord.objetoAEntregarLabel}' : '',
+                                                                                                      style: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                                            fontFamily: 'Inter',
+                                                                                                            fontSize: 12.0,
+                                                                                                            fontWeight: FontWeight.normal,
+                                                                                                            lineHeight: 1.5,
+                                                                                                          ),
+                                                                                                    ),
+                                                                                                    trailing: Icon(
+                                                                                                      Icons.arrow_forward_ios,
+                                                                                                      color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                                      size: 20.0,
+                                                                                                    ),
+                                                                                                    dense: false,
+                                                                                                  ),
+                                                                                                );
+                                                                                              },
+                                                                                            );
                                                                                           },
                                                                                         ),
-                                                                                        SlidableAction(
-                                                                                          label: 'Eliminar',
-                                                                                          backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                          icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                          onPressed: (_) {
-                                                                                            print('SlidableActionWidget pressed ...');
-                                                                                          },
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                    child: ListTile(
-                                                                                      title: Text(
-                                                                                        listViewAsistenciaAsistenciaRecord.usuarioName,
-                                                                                        style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                                                              fontFamily: 'Readex Pro',
-                                                                                              fontSize: 16.0,
-                                                                                            ),
-                                                                                      ),
-                                                                                      subtitle: Text(
-                                                                                        listTileObjetoEntregadoRecord != null ? 'Entregado: ${listTileObjetoEntregadoRecord.cantidad.toString()}  ${listTileObjetoEntregadoRecord.objetoAEntregarLabel}' : '',
-                                                                                        style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                              fontFamily: 'Inter',
-                                                                                              fontSize: 12.0,
-                                                                                              fontWeight: FontWeight.normal,
-                                                                                              lineHeight: 1.5,
-                                                                                            ),
-                                                                                      ),
-                                                                                      trailing: Icon(
-                                                                                        Icons.arrow_forward_ios,
-                                                                                        color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                        size: 20.0,
-                                                                                      ),
-                                                                                      dense: false,
-                                                                                    ),
-                                                                                  );
-                                                                                },
-                                                                              );
+                                                                                      );
+                                                                                    },
+                                                                                  ),
+                                                                                );
+                                                                              }
                                                                             },
                                                                           ),
-                                                                        );
-                                                                      },
+                                                                        ),
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
+                                                                ],
                                                               ),
-                                                            ),
-                                                          ],
+                                                            );
+                                                          },
                                                         );
                                                       } else {
                                                         return Align(
@@ -2468,18 +2774,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                           getCurrentTimestamp))
                                                               .toList()
                                                               .first,
-                                                          reloadChip: () async {
-                                                            // Reload List Asistencia
-                                                            setState(() => _model
-                                                                    .firestoreRequestCompleter1 =
-                                                                null);
-                                                            await _model
-                                                                .waitForFirestoreRequestCompleted1(
-                                                                    minWait:
-                                                                        5000,
-                                                                    maxWait:
-                                                                        10000);
-                                                          },
+                                                          reloadChip:
+                                                              () async {},
                                                         ),
                                                       ),
                                                     ),
