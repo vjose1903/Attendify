@@ -56,6 +56,8 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   List<ActividadObjetoAEntregarRecord>? editFindObjetosAEntregarResponsee;
   // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
   List<ObjetoEntregadoRecord>? editFindObjetosEntregados;
+  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
+  List<ObjetoEntregadoRecord>? deleteObjetosEntregados;
   // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
   GrupoUsuarioRecord? editFilterFindGrupoUsuarioResponse;
   // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
@@ -66,6 +68,8 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   List<ActividadObjetoAEntregarRecord>? editFilterFindObjetosAEntregarResponsee;
   // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
   List<ObjetoEntregadoRecord>? editFilterFindObjetosEntregados;
+  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
+  List<ObjetoEntregadoRecord>? deleteFilterObjetosEntregados;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel1;
   // State field(s) for DateNotasChips widget.

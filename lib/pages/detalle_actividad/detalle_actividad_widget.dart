@@ -982,7 +982,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                         null);
                                                     await _model
                                                         .waitForFirestoreRequestCompleted1(
-                                                            minWait: 5000,
+                                                            minWait: 2000,
                                                             maxWait: 10000);
                                                   },
                                                   selectedChipStyle: ChipStyle(
@@ -1507,11 +1507,9 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                                       grupoActividadDetalle: widget.grupoActividadDetalles!.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first,
                                                                                                                       objetosEntregados: _model.editFindObjetosEntregados,
                                                                                                                       reloadChip: () async {
-                                                                                                                        if (_model.showFullAsistenciaList) {
-                                                                                                                          // Reload List Asistencia
-                                                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 5000, maxWait: 10000);
-                                                                                                                        }
+                                                                                                                        // Reload List Asistencia
+                                                                                                                        setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                                                        await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
                                                                                                                       },
                                                                                                                     ),
                                                                                                                   ),
@@ -1543,8 +1541,58 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                       label: 'Eliminar',
                                                                                                       backgroundColor: FlutterFlowTheme.of(context).error,
                                                                                                       icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                                      onPressed: (_) {
-                                                                                                        print('SlidableActionWidget pressed ...');
+                                                                                                      onPressed: (_) async {
+                                                                                                        if (dateTimeFormat(
+                                                                                                              'dd/MM/yyyy',
+                                                                                                              functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                              locale: FFLocalizations.of(context).languageCode,
+                                                                                                            ) ==
+                                                                                                            _model.dateAsistenciaChipsValue) {
+                                                                                                          // find objetos entregados
+                                                                                                          _model.deleteObjetosEntregados = await queryObjetoEntregadoRecordOnce(
+                                                                                                            parent: actividadAsistenciaItem.parentReference,
+                                                                                                            queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
+                                                                                                                .where(
+                                                                                                                  'grupo',
+                                                                                                                  isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                                )
+                                                                                                                .where(
+                                                                                                                  'grupo_usuario',
+                                                                                                                  isEqualTo: actividadAsistenciaItem.grupoUsuario,
+                                                                                                                ),
+                                                                                                          );
+                                                                                                          if (_model.deleteFilterObjetosEntregados != null && (_model.deleteFilterObjetosEntregados)!.isNotEmpty) {
+                                                                                                            while (FFAppState().contador < _model.deleteFilterObjetosEntregados!.length) {
+                                                                                                              // delete objeto entregado
+                                                                                                              await _model.deleteFilterObjetosEntregados![FFAppState().contador].reference.delete();
+                                                                                                              // increment Contador
+                                                                                                              FFAppState().contador = FFAppState().contador + 1;
+                                                                                                            }
+                                                                                                            FFAppState().contador = 0;
+                                                                                                          }
+                                                                                                          // delete asistencia
+                                                                                                          await actividadAsistenciaItem.reference.delete();
+                                                                                                          // Reload List Asistencia
+                                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
+                                                                                                        } else {
+                                                                                                          // show msg error
+                                                                                                          ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                            SnackBar(
+                                                                                                              content: Text(
+                                                                                                                'Solo puede eliminar asistencia del dia actual',
+                                                                                                                style: TextStyle(
+                                                                                                                  color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                              duration: const Duration(milliseconds: 4000),
+                                                                                                              backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                            ),
+                                                                                                          );
+                                                                                                        }
+
+                                                                                                        setState(() {});
                                                                                                       },
                                                                                                     ),
                                                                                                   ],
@@ -1729,7 +1777,9 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                                         grupoActividadDetalle: widget.grupoActividadDetalles!.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first,
                                                                                                                         objetosEntregados: _model.editFilterFindObjetosEntregados,
                                                                                                                         reloadChip: () async {
-                                                                                                                          if (_model.showFullAsistenciaList) {}
+                                                                                                                          // Reload List Asistencia
+                                                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
                                                                                                                         },
                                                                                                                       ),
                                                                                                                     ),
@@ -1761,8 +1811,58 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                         label: 'Eliminar',
                                                                                                         backgroundColor: FlutterFlowTheme.of(context).error,
                                                                                                         icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                                        onPressed: (_) {
-                                                                                                          print('SlidableActionWidget pressed ...');
+                                                                                                        onPressed: (_) async {
+                                                                                                          if (dateTimeFormat(
+                                                                                                                'dd/MM/yyyy',
+                                                                                                                functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                                locale: FFLocalizations.of(context).languageCode,
+                                                                                                              ) ==
+                                                                                                              _model.dateAsistenciaChipsValue) {
+                                                                                                            // find objetos entregados
+                                                                                                            _model.deleteFilterObjetosEntregados = await queryObjetoEntregadoRecordOnce(
+                                                                                                              parent: asistenciaFilterItem.parentReference,
+                                                                                                              queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
+                                                                                                                  .where(
+                                                                                                                    'grupo',
+                                                                                                                    isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                                  )
+                                                                                                                  .where(
+                                                                                                                    'grupo_usuario',
+                                                                                                                    isEqualTo: asistenciaFilterItem.grupoUsuario,
+                                                                                                                  ),
+                                                                                                            );
+                                                                                                            if (_model.deleteFilterObjetosEntregados != null && (_model.deleteFilterObjetosEntregados)!.isNotEmpty) {
+                                                                                                              while (FFAppState().contador < _model.deleteFilterObjetosEntregados!.length) {
+                                                                                                                // delete objeto entregado
+                                                                                                                await _model.deleteFilterObjetosEntregados![FFAppState().contador].reference.delete();
+                                                                                                                // increment Contador
+                                                                                                                FFAppState().contador = FFAppState().contador + 1;
+                                                                                                              }
+                                                                                                              FFAppState().contador = 0;
+                                                                                                            }
+                                                                                                            // delete asistencia
+                                                                                                            await asistenciaFilterItem.reference.delete();
+                                                                                                            // Reload List Asistencia
+                                                                                                            setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                                            await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
+                                                                                                          } else {
+                                                                                                            // show msg error
+                                                                                                            ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                              SnackBar(
+                                                                                                                content: Text(
+                                                                                                                  'Solo puede eliminar asistencia del dia actual',
+                                                                                                                  style: TextStyle(
+                                                                                                                    color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                                  ),
+                                                                                                                ),
+                                                                                                                duration: const Duration(milliseconds: 4000),
+                                                                                                                backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                              ),
+                                                                                                            );
+                                                                                                          }
+
+                                                                                                          setState(() {});
                                                                                                         },
                                                                                                       ),
                                                                                                     ],
@@ -2774,8 +2874,18 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                           getCurrentTimestamp))
                                                               .toList()
                                                               .first,
-                                                          reloadChip:
-                                                              () async {},
+                                                          reloadChip: () async {
+                                                            // Reload List Asistencia
+                                                            setState(() => _model
+                                                                    .firestoreRequestCompleter1 =
+                                                                null);
+                                                            await _model
+                                                                .waitForFirestoreRequestCompleted1(
+                                                                    minWait:
+                                                                        2000,
+                                                                    maxWait:
+                                                                        10000);
+                                                          },
                                                         ),
                                                       ),
                                                     ),
