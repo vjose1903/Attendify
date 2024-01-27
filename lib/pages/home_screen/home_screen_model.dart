@@ -17,7 +17,6 @@ class HomeScreenModel extends FlutterFlowModel<HomeScreenWidget> {
   GrupoRecord? findGrupoSelectedResult;
   // Stores action output result for [Firestore Query - Query a collection] action in homeScreen widget.
   GrupoUsuarioRecord? grupoUsuarioResponse;
-  var scanedtest = '';
 
   /// Initialization and disposal methods.
 

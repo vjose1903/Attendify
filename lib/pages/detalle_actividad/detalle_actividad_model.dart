@@ -18,13 +18,18 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   void updateCustomTabsAtIndex(int index, Function(String) updateFn) =>
       customTabs[index] = updateFn(customTabs[index]);
 
-  bool hasObjetosAEntregar = false;
-
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // Stores action output result for [Firestore Query - Query a collection] action in DetalleActividad widget.
-  List<ActividadObjetoAEntregarRecord>? objetosAEntregarResponse;
+  // Stores action output result for [Backend Call - Read Document] action in Button widget.
+  UsuariosRecord? findUserResponse;
+  // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
+  GrupoUsuarioRecord? findGrupoUsuarioResponse;
+  // Stores action output result for [Backend Call - Read Document] action in Button widget.
+  TipoUsuarioRecord? finTipoUsuarioResponse;
+  // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
+  List<ActividadObjetoAEntregarRecord>? findObjetosAEntregarResponse;
+  Completer<List<AsistenciaRecord>>? firestoreRequestCompleter1;
   // State field(s) for accessChips widget.
   List<String>? accessChipsValues;
   FormFieldController<List<String>>? accessChipsValueController;
@@ -42,7 +47,6 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   // State field(s) for DateAsistenciaChips widget.
   String? dateAsistenciaChipsValue;
   FormFieldController<List<String>>? dateAsistenciaChipsValueController;
-  Completer<List<AsistenciaRecord>>? firestoreRequestCompleter1;
   // State field(s) for searchAsistencia widget.
   FocusNode? searchAsistenciaFocusNode;
   TextEditingController? searchAsistenciaController;

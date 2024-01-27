@@ -4,15 +4,12 @@ import '/components/select_group/select_group_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/permissions_util.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'home_screen_model.dart';
@@ -176,6 +173,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
             // Find Group
             _model.findGrupoSelectedResult = await GrupoRecord.getDocumentOnce(
                 FFAppState().gruposSeguidos.first);
+            // find Grupo Usuario
             _model.grupoUsuarioResponse = await queryGrupoUsuarioRecordOnce(
               queryBuilder: (grupoUsuarioRecord) => grupoUsuarioRecord
                   .where(
@@ -196,6 +194,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                   _model.grupoUsuarioResponse?.reference;
               FFAppState().tipoUsuarioLoged =
                   _model.grupoUsuarioResponse?.tipoUsuario;
+              FFAppState().grupoSeleccionadoName =
+                  _model.findGrupoSelectedResult!.nombre;
             });
           } else {
             if (!(FFAppState().grupoSeleccionado != null)) {
@@ -319,11 +319,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                 },
                 child: AutoSizeText(
                   valueOrDefault<String>(
-                    FFAppState().grupoSeleccionado?.id != null &&
-                            FFAppState().grupoSeleccionado?.id != ''
-                        ? _model.findGrupoSelectedResult?.nombre
-                        : 'Seleccione grupo',
-                    'Seleccione grupo',
+                    FFAppState().grupoSeleccionadoName,
+                    'Seleccione Grupo',
                   ).maybeHandleOverflow(
                     maxChars: 22,
                     replacement: '…',
@@ -407,59 +404,9 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                 width: double.infinity,
                 height: double.infinity,
                 decoration: const BoxDecoration(),
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
-                          await requestPermission(cameraPermission);
-                          _model.scanedtest =
-                              await FlutterBarcodeScanner.scanBarcode(
-                            '#C62828', // scanning line color
-                            'Cancelar', // cancel button text
-                            true, // whether to show the flash icon
-                            ScanMode.QR,
-                          );
-
-                          setState(() {});
-                        },
-                        text: 'Button',
-                        options: FFButtonOptions(
-                          height: 40.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Inter',
-                                    color: Colors.white,
-                                  ),
-                          elevation: 3.0,
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      valueOrDefault<String>(
-                        _model.scanedtest,
-                        'nada escaneado',
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyMedium,
-                    ),
-                    Text(
-                      'ultmio cambio 11/01/2024',
-                      style: FlutterFlowTheme.of(context).bodyMedium,
-                    ),
-                  ],
+                  children: [],
                 ),
               ),
               Padding(

@@ -45,6 +45,9 @@ abstract class FlutterFlowTheme {
   late Color lightT50;
   late Color lightT30;
   late Color lightT10;
+  late Color errorSecondary;
+  late Color successSecondary;
+  late Color warningSecondary;
 
   @Deprecated('Use displaySmallFamily instead')
   String get title1Family => displaySmallFamily;
@@ -147,6 +150,9 @@ class LightModeTheme extends FlutterFlowTheme {
   late Color lightT50 = const Color(0x80FFFFFF);
   late Color lightT30 = const Color(0x4CFFFFFF);
   late Color lightT10 = const Color(0x19FFFFFF);
+  late Color errorSecondary = const Color(0xFFD18484);
+  late Color successSecondary = const Color(0xFF8ACCA7);
+  late Color warningSecondary = const Color(0xFFC9A489);
 }
 
 abstract class Typography {

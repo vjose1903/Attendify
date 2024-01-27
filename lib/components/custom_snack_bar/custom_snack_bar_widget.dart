@@ -2,6 +2,7 @@ import '/backend/schema/enums/enums.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -65,14 +66,17 @@ class _CustomSnackBarWidgetState extends State<CustomSnackBarWidget>
             .forward();
       }
       if (widget.automaticHide) {
-        await Future.delayed(const Duration(milliseconds: 4000));
+        await Future.delayed(const Duration(milliseconds: 2000));
         // hide custom snack bar
         if (animationsMap['containerOnActionTriggerAnimation'] != null) {
           await animationsMap['containerOnActionTriggerAnimation']!
               .controller
               .reverse();
         }
-        Navigator.pop(context);
+        // Close Dialog
+        await actions.tryDissmissModal(
+          context,
+        );
       }
     });
 

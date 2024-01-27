@@ -288,6 +288,8 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                       _model.grupoUsuaruiResponse?.reference;
                                   FFAppState().grupoSeleccionado =
                                       gridViewGrupoRecord.reference;
+                                  FFAppState().grupoSeleccionadoName =
+                                      gridViewGrupoRecord.nombre;
                                 });
                                 // Clase Bottom Sheet
                                 Navigator.pop(context);

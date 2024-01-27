@@ -51,6 +51,10 @@ class FFAppState extends ChangeNotifier {
       _TUsuarioRegular =
           prefs.getString('ff_TUsuarioRegular')?.ref ?? _TUsuarioRegular;
     });
+    _safeInit(() {
+      _grupoSeleccionadoName =
+          prefs.getString('ff_grupoSeleccionadoName') ?? _grupoSeleccionadoName;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -189,6 +193,13 @@ class FFAppState extends ChangeNotifier {
   String get victor => _victor;
   set victor(String value) {
     _victor = value;
+  }
+
+  String _grupoSeleccionadoName = '';
+  String get grupoSeleccionadoName => _grupoSeleccionadoName;
+  set grupoSeleccionadoName(String value) {
+    _grupoSeleccionadoName = value;
+    prefs.setString('ff_grupoSeleccionadoName', value);
   }
 }
 

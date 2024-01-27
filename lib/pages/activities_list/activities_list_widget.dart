@@ -484,7 +484,7 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                                                     transitionType:
                                                         PageTransitionType.fade,
                                                     duration: Duration(
-                                                        milliseconds: 0),
+                                                        milliseconds: 500),
                                                   ),
                                                 },
                                               );

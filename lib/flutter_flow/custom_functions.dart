@@ -49,3 +49,41 @@ bool activityAccessIncludeUser(
 ) {
   return access.contains(grupoUsuarioFund);
 }
+
+ObjetoAEntregarStruct parseObjetoAEntregarDataType(dynamic json) {
+  ObjetoAEntregarStruct obj = ObjetoAEntregarStruct();
+  obj.cantidadMaxima = double.parse("${json['cantidadMaxima']}");
+  obj.objetoAEntregar = json['objetoAEntregar'];
+  obj.objetoAEntregarLabel = json['objetoAEntregarLabel'];
+  obj.cantidadAEntregar = double.parse("${json['cantidadAEntregar']}");
+  obj.actividadObjetoAEntregar = json['actividadObjetoAEntregar'];
+
+  return obj;
+}
+
+FirestoreDefaultResponseStruct evaluateObjetosAEntregar(
+    List<dynamic> objetosAEntregar) {
+  FirestoreDefaultResponseStruct response = FirestoreDefaultResponseStruct();
+  response.error = false;
+  response.message = "";
+
+  for (var index = 0; index < objetosAEntregar.length; index++) {
+    dynamic obj = objetosAEntregar[index];
+
+    ObjetoAEntregarStruct objParsed = ObjetoAEntregarStruct.fromMap(obj);
+
+    // ignore: unnecessary_null_comparison
+    if (objParsed.cantidadAEntregar != null &&
+        objParsed.cantidadAEntregar > 0 &&
+        objParsed.cantidadAEntregar != "") {
+      if (objParsed.cantidadAEntregar > objParsed.cantidadMaxima) {
+        response.error = true;
+        response.message =
+            'La cantidad maxima de ${objParsed.objetoAEntregarLabel} son: ${objParsed.cantidadMaxima}';
+        return response;
+      }
+    }
+  }
+
+  return response;
+}
