@@ -1,4 +1,3 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/components/alert_modal/alert_modal_widget.dart';
@@ -15,6 +14,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'dart:async';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
@@ -408,128 +408,6 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(15.0, 15.0, 0.0, 0.0),
-                    child: FFButtonWidget(
-                      onPressed: () async {
-                        _model.findUserResponse =
-                            await UsuariosRecord.getDocumentOnce(
-                                currentUserReference!);
-                        _model.findGrupoUsuarioResponse =
-                            await queryGrupoUsuarioRecordOnce(
-                          queryBuilder: (grupoUsuarioRecord) =>
-                              grupoUsuarioRecord
-                                  .where(
-                                    'grupo',
-                                    isEqualTo: FFAppState().grupoSeleccionado,
-                                  )
-                                  .where(
-                                    'usuario',
-                                    isEqualTo: currentUserReference,
-                                  ),
-                          singleRecord: true,
-                        ).then((s) => s.firstOrNull);
-                        _model.finTipoUsuarioResponse =
-                            await TipoUsuarioRecord.getDocumentOnce(
-                                FFAppState().tipoUsuarioLoged!);
-                        _model.findObjetosAEntregarResponse =
-                            await queryActividadObjetoAEntregarRecordOnce(
-                          parent: widget.grupoActividadDetalles
-                              ?.where((e) =>
-                                  e.fecha ==
-                                  functions.toInitDayHour(getCurrentTimestamp))
-                              .toList()
-                              .first
-                              .reference,
-                          queryBuilder: (actividadObjetoAEntregarRecord) =>
-                              actividadObjetoAEntregarRecord
-                                  .where(
-                                    'grupo',
-                                    isEqualTo: FFAppState().grupoSeleccionado,
-                                  )
-                                  .where(
-                                    'tipo_usuario',
-                                    isEqualTo: _model
-                                        .finTipoUsuarioResponse?.reference,
-                                  )
-                                  .where(
-                                    'grupo_actividad',
-                                    isEqualTo: widget.grupoActividad?.reference,
-                                  ),
-                        );
-                        await showModalBottomSheet(
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          isDismissible: false,
-                          enableDrag: false,
-                          context: context,
-                          builder: (context) {
-                            return GestureDetector(
-                              onTap: () => _model.unfocusNode.canRequestFocus
-                                  ? FocusScope.of(context)
-                                      .requestFocus(_model.unfocusNode)
-                                  : FocusScope.of(context).unfocus(),
-                              child: Padding(
-                                padding: MediaQuery.viewInsetsOf(context),
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.55,
-                                  child: FormAsistenciaWidget(
-                                    user: _model.findUserResponse,
-                                    action: FormAction.create,
-                                    grupoUsuario:
-                                        _model.findGrupoUsuarioResponse,
-                                    tipoUsuario: _model.finTipoUsuarioResponse!,
-                                    actividadObjetosAEntregar:
-                                        _model.findObjetosAEntregarResponse,
-                                    grupoActividadDetalle: widget
-                                        .grupoActividadDetalles!
-                                        .where((e) =>
-                                            e.fecha ==
-                                            functions.toInitDayHour(
-                                                getCurrentTimestamp))
-                                        .toList()
-                                        .first,
-                                    reloadChip: () async {
-                                      // Reload List Asistencia
-                                      setState(() => _model
-                                          .firestoreRequestCompleter1 = null);
-                                      await _model
-                                          .waitForFirestoreRequestCompleted1(
-                                              minWait: 5000, maxWait: 10000);
-                                    },
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ).then((value) => safeSetState(() {}));
-
-                        setState(() {});
-                      },
-                      text: 'asistencia test',
-                      options: FFButtonOptions(
-                        height: 40.0,
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        iconPadding:
-                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primary,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
-                                ),
-                        elevation: 3.0,
-                        borderSide: const BorderSide(
-                          color: Colors.transparent,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
                     ),
                   ),
                   Padding(
@@ -1470,29 +1348,150 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                     return Container();
                                                                                   }
                                                                                   final listTileObjetoEntregadoRecord = listTileObjetoEntregadoRecordList.isNotEmpty ? listTileObjetoEntregadoRecordList.first : null;
-                                                                                  return ListTile(
-                                                                                    title: Text(
-                                                                                      listViewAsistenciaAsistenciaRecord.usuarioName,
-                                                                                      style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                                                            fontFamily: 'Readex Pro',
-                                                                                            fontSize: 16.0,
-                                                                                          ),
+                                                                                  return Slidable(
+                                                                                    endActionPane: ActionPane(
+                                                                                      motion: const ScrollMotion(),
+                                                                                      extentRatio: 0.5,
+                                                                                      children: [
+                                                                                        SlidableAction(
+                                                                                          label: 'Editar',
+                                                                                          backgroundColor: FlutterFlowTheme.of(context).primaryText,
+                                                                                          icon: FontAwesomeIcons.pencilAlt,
+                                                                                          onPressed: (_) async {
+                                                                                            if (dateTimeFormat(
+                                                                                                  'dd/MM/yyyy',
+                                                                                                  functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                  locale: FFLocalizations.of(context).languageCode,
+                                                                                                ) ==
+                                                                                                _model.dateAsistenciaChipsValue) {
+                                                                                              // Find Grupo Usuario
+                                                                                              _model.editFindGrupoUsuarioResponse = await GrupoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord!.grupoUsuario!);
+                                                                                              // find user info
+                                                                                              _model.editFindUserInfoResponse = await UsuariosRecord.getDocumentOnce(_model.editFindGrupoUsuarioResponse!.usuario!);
+                                                                                              // Find tipo usuario
+                                                                                              _model.findTipoUsuarioResponse = await TipoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord.tipoUsuario!);
+                                                                                              // find objetos a entregar
+                                                                                              _model.editFindObjetosAEntregarResponsee = await queryActividadObjetoAEntregarRecordOnce(
+                                                                                                parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                queryBuilder: (actividadObjetoAEntregarRecord) => actividadObjetoAEntregarRecord
+                                                                                                    .where(
+                                                                                                      'grupo',
+                                                                                                      isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                    )
+                                                                                                    .where(
+                                                                                                      'tipo_usuario',
+                                                                                                      isEqualTo: listTileObjetoEntregadoRecord.tipoUsuario,
+                                                                                                    )
+                                                                                                    .where(
+                                                                                                      'grupo_actividad',
+                                                                                                      isEqualTo: widget.grupoActividad?.reference,
+                                                                                                    ),
+                                                                                              );
+                                                                                              // Find Objetos Entregados
+                                                                                              _model.editFindObjetosEntregados = await queryObjetoEntregadoRecordOnce(
+                                                                                                parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
+                                                                                                    .where(
+                                                                                                      'asistencia',
+                                                                                                      isEqualTo: listTileObjetoEntregadoRecord.asistencia,
+                                                                                                    )
+                                                                                                    .where(
+                                                                                                      'grupo',
+                                                                                                      isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                                    ),
+                                                                                              );
+                                                                                              await actions.consoleLog(
+                                                                                                null,
+                                                                                                'ANDO AQUIII',
+                                                                                                null,
+                                                                                              );
+                                                                                              // open form asistencia
+                                                                                              await showModalBottomSheet(
+                                                                                                isScrollControlled: true,
+                                                                                                backgroundColor: Colors.transparent,
+                                                                                                isDismissible: false,
+                                                                                                enableDrag: false,
+                                                                                                context: context,
+                                                                                                builder: (context) {
+                                                                                                  return GestureDetector(
+                                                                                                    onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                    child: Padding(
+                                                                                                      padding: MediaQuery.viewInsetsOf(context),
+                                                                                                      child: SizedBox(
+                                                                                                        height: MediaQuery.sizeOf(context).height * 0.55,
+                                                                                                        child: FormAsistenciaWidget(
+                                                                                                          user: _model.editFindUserInfoResponse,
+                                                                                                          action: FormAction.edit,
+                                                                                                          grupoUsuario: _model.editFindGrupoUsuarioResponse,
+                                                                                                          tipoUsuario: _model.findTipoUsuarioResponse!,
+                                                                                                          actividadObjetosAEntregar: _model.editFindObjetosAEntregarResponsee,
+                                                                                                          grupoActividadDetalle: widget.grupoActividadDetalles!.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first,
+                                                                                                          objetosEntregados: _model.editFindObjetosEntregados,
+                                                                                                          reloadChip: () async {
+                                                                                                            // Reload List Asistencia
+                                                                                                            setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                                            await _model.waitForFirestoreRequestCompleted1(minWait: 5000, maxWait: 10000);
+                                                                                                          },
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  );
+                                                                                                },
+                                                                                              ).then((value) => safeSetState(() {}));
+                                                                                            } else {
+                                                                                              // show msg error
+                                                                                              ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                SnackBar(
+                                                                                                  content: Text(
+                                                                                                    'Solo puede editar asistencia del dia actual',
+                                                                                                    style: TextStyle(
+                                                                                                      color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  duration: const Duration(milliseconds: 4000),
+                                                                                                  backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                ),
+                                                                                              );
+                                                                                            }
+
+                                                                                            setState(() {});
+                                                                                          },
+                                                                                        ),
+                                                                                        SlidableAction(
+                                                                                          label: 'Eliminar',
+                                                                                          backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                          icon: FontAwesomeIcons.solidTrashAlt,
+                                                                                          onPressed: (_) {
+                                                                                            print('SlidableActionWidget pressed ...');
+                                                                                          },
+                                                                                        ),
+                                                                                      ],
                                                                                     ),
-                                                                                    subtitle: Text(
-                                                                                      listTileObjetoEntregadoRecord != null ? 'Entregado: ${listTileObjetoEntregadoRecord.cantidad.toString()}  ${listTileObjetoEntregadoRecord.objetoAEntregarLabel}' : '',
-                                                                                      style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                            fontFamily: 'Inter',
-                                                                                            fontSize: 12.0,
-                                                                                            fontWeight: FontWeight.normal,
-                                                                                            lineHeight: 1.5,
-                                                                                          ),
+                                                                                    child: ListTile(
+                                                                                      title: Text(
+                                                                                        listViewAsistenciaAsistenciaRecord.usuarioName,
+                                                                                        style: FlutterFlowTheme.of(context).titleLarge.override(
+                                                                                              fontFamily: 'Readex Pro',
+                                                                                              fontSize: 16.0,
+                                                                                            ),
+                                                                                      ),
+                                                                                      subtitle: Text(
+                                                                                        listTileObjetoEntregadoRecord != null ? 'Entregado: ${listTileObjetoEntregadoRecord.cantidad.toString()}  ${listTileObjetoEntregadoRecord.objetoAEntregarLabel}' : '',
+                                                                                        style: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                              fontFamily: 'Inter',
+                                                                                              fontSize: 12.0,
+                                                                                              fontWeight: FontWeight.normal,
+                                                                                              lineHeight: 1.5,
+                                                                                            ),
+                                                                                      ),
+                                                                                      trailing: Icon(
+                                                                                        Icons.arrow_forward_ios,
+                                                                                        color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                        size: 20.0,
+                                                                                      ),
+                                                                                      dense: false,
                                                                                     ),
-                                                                                    trailing: Icon(
-                                                                                      Icons.arrow_forward_ios,
-                                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                      size: 20.0,
-                                                                                    ),
-                                                                                    dense: false,
                                                                                   );
                                                                                 },
                                                                               );
@@ -2354,6 +2353,12 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                   .toList()
                                                   .first
                                                   .reference,
+                                              queryBuilder: (accesoRecord) =>
+                                                  accesoRecord.where(
+                                                'grupo',
+                                                isEqualTo: FFAppState()
+                                                    .grupoSeleccionado,
+                                              ),
                                             );
                                             shouldSetState = true;
                                             if (functions.activityAccessIncludeUser(
@@ -2365,34 +2370,123 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                     .withoutNulls
                                                     .toList())) {
                                               // find user info
-                                              _model.findUserInfoResponse =
+                                              _model.qrfindUserInfoResponse =
                                                   await UsuariosRecord
                                                       .getDocumentOnce(_model
                                                           .findGrupoUsuarioQrResponse!
                                                           .usuario!);
                                               shouldSetState = true;
-                                              ScaffoldMessenger.of(context)
-                                                  .clearSnackBars();
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'Bienvenido: ${_model.findUserInfoResponse?.displayName}',
-                                                    style: TextStyle(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                    ),
-                                                  ),
-                                                  duration: const Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .success,
-                                                ),
+                                              // Find tipo usuario
+                                              _model.qrfindTipoUsuarioResponse =
+                                                  await TipoUsuarioRecord
+                                                      .getDocumentOnce(_model
+                                                          .findGrupoUsuarioQrResponse!
+                                                          .tipoUsuario!);
+                                              shouldSetState = true;
+                                              // find objetos a entregar
+                                              _model.qrfindObjetosAEntregarResponsee =
+                                                  await queryActividadObjetoAEntregarRecordOnce(
+                                                parent: widget
+                                                    .grupoActividadDetalles
+                                                    ?.where((e) =>
+                                                        e.fecha ==
+                                                        functions.toInitDayHour(
+                                                            getCurrentTimestamp))
+                                                    .toList()
+                                                    .first
+                                                    .reference,
+                                                queryBuilder:
+                                                    (actividadObjetoAEntregarRecord) =>
+                                                        actividadObjetoAEntregarRecord
+                                                            .where(
+                                                              'grupo',
+                                                              isEqualTo:
+                                                                  FFAppState()
+                                                                      .grupoSeleccionado,
+                                                            )
+                                                            .where(
+                                                              'tipo_usuario',
+                                                              isEqualTo: _model
+                                                                  .findGrupoUsuarioQrResponse
+                                                                  ?.tipoUsuario,
+                                                            )
+                                                            .where(
+                                                              'grupo_actividad',
+                                                              isEqualTo: widget
+                                                                  .grupoActividad
+                                                                  ?.reference,
+                                                            ),
                                               );
+                                              shouldSetState = true;
+                                              // open form asistencia
+                                              await showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                isDismissible: false,
+                                                enableDrag: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return GestureDetector(
+                                                    onTap: () => _model
+                                                            .unfocusNode
+                                                            .canRequestFocus
+                                                        ? FocusScope.of(context)
+                                                            .requestFocus(_model
+                                                                .unfocusNode)
+                                                        : FocusScope.of(context)
+                                                            .unfocus(),
+                                                    child: Padding(
+                                                      padding: MediaQuery
+                                                          .viewInsetsOf(
+                                                              context),
+                                                      child: SizedBox(
+                                                        height:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .height *
+                                                                0.55,
+                                                        child:
+                                                            FormAsistenciaWidget(
+                                                          user: _model
+                                                              .qrfindUserInfoResponse,
+                                                          action:
+                                                              FormAction.create,
+                                                          grupoUsuario: _model
+                                                              .findGrupoUsuarioQrResponse,
+                                                          tipoUsuario: _model
+                                                              .qrfindTipoUsuarioResponse!,
+                                                          actividadObjetosAEntregar:
+                                                              _model
+                                                                  .qrfindObjetosAEntregarResponsee,
+                                                          grupoActividadDetalle: widget
+                                                              .grupoActividadDetalles!
+                                                              .where((e) =>
+                                                                  e.fecha ==
+                                                                  functions
+                                                                      .toInitDayHour(
+                                                                          getCurrentTimestamp))
+                                                              .toList()
+                                                              .first,
+                                                          reloadChip: () async {
+                                                            // Reload List Asistencia
+                                                            setState(() => _model
+                                                                    .firestoreRequestCompleter1 =
+                                                                null);
+                                                            await _model
+                                                                .waitForFirestoreRequestCompleted1(
+                                                                    minWait:
+                                                                        5000,
+                                                                    maxWait:
+                                                                        10000);
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ).then((value) =>
+                                                  safeSetState(() {}));
                                             } else {
                                               // Show user not access QR msg
                                               await showDialog(

@@ -24,6 +24,7 @@ class FormAsistenciaWidget extends StatefulWidget {
     required this.tipoUsuario,
     this.actividadObjetosAEntregar,
     required this.grupoActividadDetalle,
+    this.objetosEntregados,
   });
 
   final UsuariosRecord? user;
@@ -33,6 +34,7 @@ class FormAsistenciaWidget extends StatefulWidget {
   final TipoUsuarioRecord? tipoUsuario;
   final List<ActividadObjetoAEntregarRecord>? actividadObjetosAEntregar;
   final GrupoActividadDetalleRecord? grupoActividadDetalle;
+  final List<ObjetoEntregadoRecord>? objetosEntregados;
 
   @override
   State<FormAsistenciaWidget> createState() => _FormAsistenciaWidgetState();
@@ -54,31 +56,84 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (widget.actividadObjetosAEntregar!.isNotEmpty) {
-        while (
-            FFAppState().contador < widget.actividadObjetosAEntregar!.length) {
-          _model.addToObjetosEntregados(
-              ObjetoAEntregarStruct.maybeFromMap(<String, dynamic>{
-            'cantidadMaxima': widget
-                .actividadObjetosAEntregar?[FFAppState().contador].cantidad,
-            'objetoAEntregar': widget
-                .actividadObjetosAEntregar?[FFAppState().contador]
-                .objetoAEntregar,
-            'objetoAEntregarLabel': widget
-                .actividadObjetosAEntregar?[FFAppState().contador]
-                .objetoAEntregarLabel,
-            'cantidadAEntregar': FFAppConstants.cero,
-            'actividadObjetoAEntregar': widget
-                .actividadObjetosAEntregar?[FFAppState().contador].reference,
-          })!
-                  .toMap());
-          // Increment Contador
-          FFAppState().contador = FFAppState().contador + 1;
+      if (widget.action == FormAction.create) {
+        if (widget.actividadObjetosAEntregar!.isNotEmpty) {
+          while (FFAppState().contador <
+              widget.actividadObjetosAEntregar!.length) {
+            _model.addToObjetosEntregados(
+                ObjetoAEntregarStruct.maybeFromMap(<String, dynamic>{
+              'cantidadMaxima': widget
+                  .actividadObjetosAEntregar?[FFAppState().contador].cantidad,
+              'objetoAEntregar': widget
+                  .actividadObjetosAEntregar?[FFAppState().contador]
+                  .objetoAEntregar,
+              'objetoAEntregarLabel': widget
+                  .actividadObjetosAEntregar?[FFAppState().contador]
+                  .objetoAEntregarLabel,
+              'cantidadAEntregar': FFAppConstants.cero,
+              'actividadObjetoAEntregar': widget
+                  .actividadObjetosAEntregar?[FFAppState().contador].reference,
+            })!
+                    .toMap());
+            // Increment Contador
+            FFAppState().contador = FFAppState().contador + 1;
+          }
+          // Reset Contador
+          setState(() {
+            FFAppState().contador = 0;
+          });
         }
-        // Reset Contador
-        setState(() {
-          FFAppState().contador = 0;
-        });
+      } else {
+        if (widget.objetosEntregados!.isNotEmpty) {
+          while (FFAppState().contador < widget.objetosEntregados!.length) {
+            _model.addToObjetosEntregados(
+                ObjetoAEntregarStruct.maybeFromMap(<String, dynamic>{
+              'cantidadMaxima': widget.actividadObjetosAEntregar
+                  ?.where((e) =>
+                      e.objetoAEntregar ==
+                      widget.objetosEntregados?[FFAppState().contador]
+                          .objetoAEntregar)
+                  .toList()
+                  .first
+                  .cantidad,
+              'objetoAEntregar': widget.actividadObjetosAEntregar
+                  ?.where((e) =>
+                      e.objetoAEntregar ==
+                      widget.objetosEntregados?[FFAppState().contador]
+                          .objetoAEntregar)
+                  .toList()
+                  .first
+                  .objetoAEntregar,
+              'objetoAEntregarLabel': widget.actividadObjetosAEntregar
+                  ?.where((e) =>
+                      e.objetoAEntregar ==
+                      widget.objetosEntregados?[FFAppState().contador]
+                          .objetoAEntregar)
+                  .toList()
+                  .first
+                  .objetoAEntregarLabel,
+              'cantidadAEntregar':
+                  widget.objetosEntregados?[FFAppState().contador].cantidad,
+              'actividadObjetoAEntregar': widget.actividadObjetosAEntregar
+                  ?.where((e) =>
+                      e.objetoAEntregar ==
+                      widget.objetosEntregados?[FFAppState().contador]
+                          .objetoAEntregar)
+                  .toList()
+                  .first
+                  .reference,
+              'objetoEntregadoReference':
+                  widget.objetosEntregados?[FFAppState().contador].reference,
+            })!
+                    .toMap());
+            // Increment Contador
+            FFAppState().contador = FFAppState().contador + 1;
+          }
+          // Reset Contador
+          setState(() {
+            FFAppState().contador = 0;
+          });
+        }
       }
     });
   }
@@ -257,35 +312,55 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                                             final actividadObjetoAEntregarItem =
                                                 actividadObjetoAEntregar[
                                                     actividadObjetoAEntregarIndex];
-                                            return Padding(
-                                              padding: const EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      16.0, 15.0, 16.0, 0.0),
-                                              child: wrapWithModel(
-                                                model: _model
-                                                    .asistenciaObjetoAEntregarModels
-                                                    .getModel(
-                                                  getJsonField(
-                                                    actividadObjetoAEntregarItem,
-                                                    r'''$.actividadObjetoAEntregar''',
-                                                  ).toString(),
-                                                  actividadObjetoAEntregarIndex,
-                                                ),
-                                                updateCallback: () =>
-                                                    setState(() {}),
-                                                updateOnChange: true,
-                                                child:
-                                                    AsistenciaObjetoAEntregarWidget(
-                                                  key: Key(
-                                                    'Key4er_${getJsonField(
-                                                      actividadObjetoAEntregarItem,
-                                                      r'''$.actividadObjetoAEntregar''',
-                                                    ).toString()}',
+                                            return Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                16.0,
+                                                                15.0,
+                                                                valueOrDefault<
+                                                                    double>(
+                                                                  widget.action ==
+                                                                          FormAction
+                                                                              .create
+                                                                      ? 16.0
+                                                                      : 5.0,
+                                                                  0.0,
+                                                                ),
+                                                                0.0),
+                                                    child: wrapWithModel(
+                                                      model: _model
+                                                          .asistenciaObjetoAEntregarModels
+                                                          .getModel(
+                                                        getJsonField(
+                                                          actividadObjetoAEntregarItem,
+                                                          r'''$.actividadObjetoAEntregar''',
+                                                        ).toString(),
+                                                        actividadObjetoAEntregarIndex,
+                                                      ),
+                                                      updateCallback: () =>
+                                                          setState(() {}),
+                                                      updateOnChange: true,
+                                                      child:
+                                                          AsistenciaObjetoAEntregarWidget(
+                                                        key: Key(
+                                                          'Keyb6u_${getJsonField(
+                                                            actividadObjetoAEntregarItem,
+                                                            r'''$.actividadObjetoAEntregar''',
+                                                          ).toString()}',
+                                                        ),
+                                                        actividadObjetoEntregar:
+                                                            actividadObjetoAEntregarItem,
+                                                        action: widget.action!,
+                                                      ),
+                                                    ),
                                                   ),
-                                                  parameter1:
-                                                      actividadObjetoAEntregarItem,
                                                 ),
-                                              ),
+                                              ],
                                             );
                                           }),
                                         ),
@@ -467,18 +542,7 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                           } else {
                             while (FFAppState().contador <
                                 _model.objetosEntregados.length) {
-                              if ((functions
-                                          .parseObjetoAEntregarDataType(
-                                              _model.objetosEntregados[
-                                                  FFAppState().contador])
-                                          .cantidadAEntregar !=
-                                      null) &&
-                                  (functions
-                                          .parseObjetoAEntregarDataType(
-                                              _model.objetosEntregados[
-                                                  FFAppState().contador])
-                                          .cantidadAEntregar >
-                                      FFAppConstants.cero)) {
+                              if (widget.action == FormAction.create) {
                                 // Create Objeto Response
 
                                 var objetoEntregadoRecordReference =
@@ -506,6 +570,7 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                                               FFAppState().contador])
                                       .cantidadAEntregar,
                                   grupo: FFAppState().grupoSeleccionado,
+                                  tipoUsuario: widget.tipoUsuario?.reference,
                                 ));
                                 _model.createObjetoEntregadoResponse =
                                     ObjetoEntregadoRecord.getDocumentFromData(
@@ -532,15 +597,38 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                                                       FFAppState().contador])
                                               .cantidadAEntregar,
                                           grupo: FFAppState().grupoSeleccionado,
+                                          tipoUsuario:
+                                              widget.tipoUsuario?.reference,
                                         ),
                                         objetoEntregadoRecordReference);
                                 shouldSetState = true;
+                              } else {
+                                // edit Objeto Response
+
+                                await functions
+                                    .parseObjetoAEntregarDataType(
+                                        _model.objetosEntregados[
+                                            FFAppState().contador])
+                                    .objetoEntregadoReference!
+                                    .update(createObjetoEntregadoRecordData(
+                                      cantidad: functions
+                                          .parseObjetoAEntregarDataType(
+                                              _model.objetosEntregados[
+                                                  FFAppState().contador])
+                                          .cantidadAEntregar,
+                                    ));
                               }
+
                               // Increment Contador
                               FFAppState().contador = FFAppState().contador + 1;
                             }
                             FFAppState().contador = 0;
                           }
+                        }
+                        if (widget.action == FormAction.edit) {
+                          // Delete asistencia
+                          await _model.createAsistenciaResponse!.reference
+                              .delete();
                         }
                         // Hide Bottom Sheet
                         Navigator.pop(context);

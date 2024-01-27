@@ -15,6 +15,10 @@ class AsistenciaObjetoAEntregarModel
   FocusNode? objetoTxtFocusNode;
   TextEditingController? objetoTxtController;
   String? Function(BuildContext, String?)? objetoTxtControllerValidator;
+  // Stores action output result for [Custom Action - updateObjetoAEntregarJson] action in addButton widget.
+  dynamic addResponse;
+  // Stores action output result for [Custom Action - updateObjetoAEntregarJson] action in reduceButton widget.
+  dynamic reduceResponse;
 
   /// Initialization and disposal methods.
 

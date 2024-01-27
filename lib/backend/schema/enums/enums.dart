@@ -24,6 +24,11 @@ enum ItemsDescriptionCollection {
   objeto_a_entregar,
 }
 
+enum MathAction {
+  add,
+  substract,
+}
+
 extension FFEnumExtensions<T extends Enum> on T {
   String serialize() => name;
 }
@@ -43,6 +48,8 @@ T? deserializeEnum<T>(String? value) {
       return ToastType.values.deserialize(value) as T?;
     case (ItemsDescriptionCollection):
       return ItemsDescriptionCollection.values.deserialize(value) as T?;
+    case (MathAction):
+      return MathAction.values.deserialize(value) as T?;
     default:
       return null;
   }

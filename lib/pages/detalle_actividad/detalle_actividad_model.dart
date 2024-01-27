@@ -21,15 +21,6 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // Stores action output result for [Backend Call - Read Document] action in Button widget.
-  UsuariosRecord? findUserResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
-  GrupoUsuarioRecord? findGrupoUsuarioResponse;
-  // Stores action output result for [Backend Call - Read Document] action in Button widget.
-  TipoUsuarioRecord? finTipoUsuarioResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
-  List<ActividadObjetoAEntregarRecord>? findObjetosAEntregarResponse;
-  Completer<List<AsistenciaRecord>>? firestoreRequestCompleter1;
   // State field(s) for accessChips widget.
   List<String>? accessChipsValues;
   FormFieldController<List<String>>? accessChipsValueController;
@@ -47,10 +38,21 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   // State field(s) for DateAsistenciaChips widget.
   String? dateAsistenciaChipsValue;
   FormFieldController<List<String>>? dateAsistenciaChipsValueController;
+  Completer<List<AsistenciaRecord>>? firestoreRequestCompleter1;
   // State field(s) for searchAsistencia widget.
   FocusNode? searchAsistenciaFocusNode;
   TextEditingController? searchAsistenciaController;
   String? Function(BuildContext, String?)? searchAsistenciaControllerValidator;
+  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
+  GrupoUsuarioRecord? editFindGrupoUsuarioResponse;
+  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
+  UsuariosRecord? editFindUserInfoResponse;
+  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
+  TipoUsuarioRecord? findTipoUsuarioResponse;
+  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
+  List<ActividadObjetoAEntregarRecord>? editFindObjetosAEntregarResponsee;
+  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
+  List<ObjetoEntregadoRecord>? editFindObjetosEntregados;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel1;
   // State field(s) for DateNotasChips widget.
@@ -69,7 +71,11 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
   List<AccesoRecord>? detalleAccessResponse;
   // Stores action output result for [Backend Call - Read Document] action in Button widget.
-  UsuariosRecord? findUserInfoResponse;
+  UsuariosRecord? qrfindUserInfoResponse;
+  // Stores action output result for [Backend Call - Read Document] action in Button widget.
+  TipoUsuarioRecord? qrfindTipoUsuarioResponse;
+  // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
+  List<ActividadObjetoAEntregarRecord>? qrfindObjetosAEntregarResponsee;
 
   /// Initialization and disposal methods.
 

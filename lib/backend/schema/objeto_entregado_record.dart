@@ -50,6 +50,11 @@ class ObjetoEntregadoRecord extends FirestoreRecord {
   DocumentReference? get grupo => _grupo;
   bool hasGrupo() => _grupo != null;
 
+  // "tipo_usuario" field.
+  DocumentReference? _tipoUsuario;
+  DocumentReference? get tipoUsuario => _tipoUsuario;
+  bool hasTipoUsuario() => _tipoUsuario != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -60,6 +65,7 @@ class ObjetoEntregadoRecord extends FirestoreRecord {
     _usuarioName = snapshotData['usuario_name'] as String?;
     _cantidad = castToType<double>(snapshotData['cantidad']);
     _grupo = snapshotData['grupo'] as DocumentReference?;
+    _tipoUsuario = snapshotData['tipo_usuario'] as DocumentReference?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -109,6 +115,7 @@ Map<String, dynamic> createObjetoEntregadoRecordData({
   String? usuarioName,
   double? cantidad,
   DocumentReference? grupo,
+  DocumentReference? tipoUsuario,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -119,6 +126,7 @@ Map<String, dynamic> createObjetoEntregadoRecordData({
       'usuario_name': usuarioName,
       'cantidad': cantidad,
       'grupo': grupo,
+      'tipo_usuario': tipoUsuario,
     }.withoutNulls,
   );
 
@@ -137,7 +145,8 @@ class ObjetoEntregadoRecordDocumentEquality
         e1?.grupoUsuario == e2?.grupoUsuario &&
         e1?.usuarioName == e2?.usuarioName &&
         e1?.cantidad == e2?.cantidad &&
-        e1?.grupo == e2?.grupo;
+        e1?.grupo == e2?.grupo &&
+        e1?.tipoUsuario == e2?.tipoUsuario;
   }
 
   @override
@@ -148,7 +157,8 @@ class ObjetoEntregadoRecordDocumentEquality
         e?.grupoUsuario,
         e?.usuarioName,
         e?.cantidad,
-        e?.grupo
+        e?.grupo,
+        e?.tipoUsuario
       ]);
 
   @override

@@ -1,3 +1,5 @@
+import '/backend/schema/enums/enums.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/actions/index.dart' as actions;
@@ -5,6 +7,7 @@ import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'asistencia_objeto_a_entregar_model.dart';
 export 'asistencia_objeto_a_entregar_model.dart';
@@ -12,10 +15,12 @@ export 'asistencia_objeto_a_entregar_model.dart';
 class AsistenciaObjetoAEntregarWidget extends StatefulWidget {
   const AsistenciaObjetoAEntregarWidget({
     super.key,
-    required this.parameter1,
+    required this.actividadObjetoEntregar,
+    required this.action,
   });
 
-  final dynamic parameter1;
+  final dynamic actividadObjetoEntregar;
+  final FormAction? action;
 
   @override
   State<AsistenciaObjetoAEntregarWidget> createState() =>
@@ -37,12 +42,16 @@ class _AsistenciaObjetoAEntregarWidgetState
     super.initState();
     _model = createModel(context, () => AsistenciaObjetoAEntregarModel());
 
-    _model.cantidadTxtController ??= TextEditingController();
+    _model.cantidadTxtController ??= TextEditingController(
+        text: getJsonField(
+      widget.actividadObjetoEntregar,
+      r'''$.cantidadAEntregar''',
+    ).toString().toString());
     _model.cantidadTxtFocusNode ??= FocusNode();
     _model.cantidadTxtFocusNode!.addListener(
       () async {
         await actions.updateObjetoAEntregarJson(
-          widget.parameter1!,
+          widget.actividadObjetoEntregar!,
           <String, dynamic>{
             'cantidadAEntregar': _model.cantidadTxtController.text,
           },
@@ -53,7 +62,7 @@ class _AsistenciaObjetoAEntregarWidgetState
     );
     _model.objetoTxtController ??= TextEditingController(
         text: getJsonField(
-      widget.parameter1,
+      widget.actividadObjetoEntregar,
       r'''$.objetoAEntregarLabel''',
     ).toString().toString());
     _model.objetoTxtFocusNode ??= FocusNode();
@@ -88,8 +97,13 @@ class _AsistenciaObjetoAEntregarWidgetState
                     '_model.cantidadTxtController',
                     const Duration(milliseconds: 2000),
                     () async {
+                      await actions.consoleLog(
+                        null,
+                        'cambiando input',
+                        null,
+                      );
                       await actions.updateObjetoAEntregarJson(
-                        widget.parameter1!,
+                        widget.actividadObjetoEntregar!,
                         <String, dynamic>{
                           'cantidadAEntregar':
                               _model.cantidadTxtController.text,
@@ -100,6 +114,7 @@ class _AsistenciaObjetoAEntregarWidgetState
                     },
                   ),
                   textCapitalization: TextCapitalization.words,
+                  readOnly: widget.action == FormAction.edit,
                   obscureText: false,
                   decoration: InputDecoration(
                     labelText: 'Cantidad',
@@ -114,11 +129,11 @@ class _AsistenciaObjetoAEntregarWidgetState
                       borderSide: BorderSide(
                         color: functions
                                     .parseObjetoAEntregarDataType(
-                                        widget.parameter1!)
+                                        widget.actividadObjetoEntregar!)
                                     .cantidadAEntregar >
                                 functions
                                     .parseObjetoAEntregarDataType(
-                                        widget.parameter1!)
+                                        widget.actividadObjetoEntregar!)
                                     .cantidadMaxima
                             ? FlutterFlowTheme.of(context).error
                             : FlutterFlowTheme.of(context).primaryImputBorder,
@@ -212,18 +227,137 @@ class _AsistenciaObjetoAEntregarWidgetState
                 ),
               ),
             ),
+            if (widget.action == FormAction.edit)
+              Align(
+                alignment: const AlignmentDirectional(0.0, 0.0),
+                child: Container(
+                  width: 90.0,
+                  height: 47.0,
+                  decoration: const BoxDecoration(),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      FlutterFlowIconButton(
+                        borderColor: Colors.transparent,
+                        borderRadius: 20.0,
+                        borderWidth: 1.0,
+                        buttonSize: 35.0,
+                        fillColor: FlutterFlowTheme.of(context).success,
+                        disabledColor:
+                            FlutterFlowTheme.of(context).successSecondary,
+                        icon: Icon(
+                          Icons.add,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          size: 20.0,
+                        ),
+                        onPressed: (functions
+                                    .parseObjetoAEntregarDataType(
+                                        widget.actividadObjetoEntregar!)
+                                    .cantidadAEntregar
+                                    .toString() ==
+                                functions
+                                    .parseObjetoAEntregarDataType(
+                                        widget.actividadObjetoEntregar!)
+                                    .cantidadMaxima
+                                    .toString())
+                            ? null
+                            : () async {
+                                // Add Deliver item
+                                _model.addResponse =
+                                    await actions.updateObjetoAEntregarJson(
+                                  widget.actividadObjetoEntregar!,
+                                  <String, dynamic>{
+                                    'cantidadAEntregar': _model.cantidadTxtController.text !=
+                                                ''
+                                        ? functions.addReduceNumber(
+                                            functions.parseDouble(_model
+                                                .cantidadTxtController.text),
+                                            MathAction.add,
+                                            1.0)
+                                        : FFAppConstants.cero,
+                                  },
+                                );
+                                // Set field
+                                setState(() {
+                                  _model.cantidadTxtController?.text = functions
+                                      .parseObjetoAEntregarDataType(
+                                          _model.addResponse!)
+                                      .cantidadAEntregar
+                                      .toString();
+                                });
+
+                                setState(() {});
+                              },
+                      ),
+                      FlutterFlowIconButton(
+                        borderColor: Colors.transparent,
+                        borderRadius: 20.0,
+                        borderWidth: 1.0,
+                        buttonSize: 35.0,
+                        fillColor: FlutterFlowTheme.of(context).error,
+                        disabledColor:
+                            FlutterFlowTheme.of(context).errorSecondary,
+                        icon: FaIcon(
+                          FontAwesomeIcons.minus,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          size: 20.0,
+                        ),
+                        onPressed: ((functions
+                                        .parseObjetoAEntregarDataType(
+                                            widget.actividadObjetoEntregar!)
+                                        .cantidadAEntregar
+                                        .toString() ==
+                                    '0') ||
+                                (functions
+                                            .parseObjetoAEntregarDataType(
+                                                widget.actividadObjetoEntregar!)
+                                            .cantidadAEntregar
+                                            .toString() ==
+                                        ''))
+                            ? null
+                            : () async {
+                                // Reduce Deliver item
+                                _model.reduceResponse =
+                                    await actions.updateObjetoAEntregarJson(
+                                  widget.actividadObjetoEntregar!,
+                                  <String, dynamic>{
+                                    'cantidadAEntregar':
+                                        functions.addReduceNumber(
+                                            functions.parseDouble(_model
+                                                .cantidadTxtController.text),
+                                            MathAction.substract,
+                                            1.0),
+                                  },
+                                );
+                                // set field
+                                setState(() {
+                                  _model.cantidadTxtController?.text = functions
+                                      .parseObjetoAEntregarDataType(
+                                          _model.reduceResponse!)
+                                      .cantidadAEntregar
+                                      .toString();
+                                });
+
+                                setState(() {});
+                              },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
         if (functions
-                .parseObjetoAEntregarDataType(widget.parameter1!)
+                .parseObjetoAEntregarDataType(widget.actividadObjetoEntregar!)
                 .cantidadAEntregar >
             functions
-                .parseObjetoAEntregarDataType(widget.parameter1!)
+                .parseObjetoAEntregarDataType(widget.actividadObjetoEntregar!)
                 .cantidadMaxima)
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(5.0, 3.0, 0.0, 0.0),
             child: Text(
-              'Max. ${functions.parseObjetoAEntregarDataType(widget.parameter1!).objetoAEntregarLabel}:  ${functions.parseObjetoAEntregarDataType(widget.parameter1!).cantidadMaxima.toString()}',
+              'Max. ${functions.parseObjetoAEntregarDataType(widget.actividadObjetoEntregar!).objetoAEntregarLabel}:  ${functions.parseObjetoAEntregarDataType(widget.actividadObjetoEntregar!).cantidadMaxima.toString()}',
               style: FlutterFlowTheme.of(context).bodyMedium.override(
                     fontFamily: 'Inter',
                     color: FlutterFlowTheme.of(context).error,

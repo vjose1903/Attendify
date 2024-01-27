@@ -15,12 +15,14 @@ class ObjetoAEntregarStruct extends FFFirebaseStruct {
     String? objetoAEntregarLabel,
     double? cantidadAEntregar,
     DocumentReference? actividadObjetoAEntregar,
+    DocumentReference? objetoEntregadoReference,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _cantidadMaxima = cantidadMaxima,
         _objetoAEntregar = objetoAEntregar,
         _objetoAEntregarLabel = objetoAEntregarLabel,
         _cantidadAEntregar = cantidadAEntregar,
         _actividadObjetoAEntregar = actividadObjetoAEntregar,
+        _objetoEntregadoReference = objetoEntregadoReference,
         super(firestoreUtilData);
 
   // "cantidadMaxima" field.
@@ -58,6 +60,13 @@ class ObjetoAEntregarStruct extends FFFirebaseStruct {
       _actividadObjetoAEntregar = val;
   bool hasActividadObjetoAEntregar() => _actividadObjetoAEntregar != null;
 
+  // "objetoEntregadoReference" field.
+  DocumentReference? _objetoEntregadoReference;
+  DocumentReference? get objetoEntregadoReference => _objetoEntregadoReference;
+  set objetoEntregadoReference(DocumentReference? val) =>
+      _objetoEntregadoReference = val;
+  bool hasObjetoEntregadoReference() => _objetoEntregadoReference != null;
+
   static ObjetoAEntregarStruct fromMap(Map<String, dynamic> data) =>
       ObjetoAEntregarStruct(
         cantidadMaxima: castToType<double>(data['cantidadMaxima']),
@@ -66,6 +75,8 @@ class ObjetoAEntregarStruct extends FFFirebaseStruct {
         cantidadAEntregar: castToType<double>(data['cantidadAEntregar']),
         actividadObjetoAEntregar:
             data['actividadObjetoAEntregar'] as DocumentReference?,
+        objetoEntregadoReference:
+            data['objetoEntregadoReference'] as DocumentReference?,
       );
 
   static ObjetoAEntregarStruct? maybeFromMap(dynamic data) => data is Map
@@ -78,6 +89,7 @@ class ObjetoAEntregarStruct extends FFFirebaseStruct {
         'objetoAEntregarLabel': _objetoAEntregarLabel,
         'cantidadAEntregar': _cantidadAEntregar,
         'actividadObjetoAEntregar': _actividadObjetoAEntregar,
+        'objetoEntregadoReference': _objetoEntregadoReference,
       }.withoutNulls;
 
   @override
@@ -100,6 +112,10 @@ class ObjetoAEntregarStruct extends FFFirebaseStruct {
         ),
         'actividadObjetoAEntregar': serializeParam(
           _actividadObjetoAEntregar,
+          ParamType.DocumentReference,
+        ),
+        'objetoEntregadoReference': serializeParam(
+          _objetoEntregadoReference,
           ParamType.DocumentReference,
         ),
       }.withoutNulls;
@@ -136,6 +152,12 @@ class ObjetoAEntregarStruct extends FFFirebaseStruct {
             'actividad_objeto_a_entregar'
           ],
         ),
+        objetoEntregadoReference: deserializeParam(
+          data['objetoEntregadoReference'],
+          ParamType.DocumentReference,
+          false,
+          collectionNamePath: ['grupo_actividad_detalle', 'objeto_entregado'],
+        ),
       );
 
   @override
@@ -148,7 +170,8 @@ class ObjetoAEntregarStruct extends FFFirebaseStruct {
         objetoAEntregar == other.objetoAEntregar &&
         objetoAEntregarLabel == other.objetoAEntregarLabel &&
         cantidadAEntregar == other.cantidadAEntregar &&
-        actividadObjetoAEntregar == other.actividadObjetoAEntregar;
+        actividadObjetoAEntregar == other.actividadObjetoAEntregar &&
+        objetoEntregadoReference == other.objetoEntregadoReference;
   }
 
   @override
@@ -157,7 +180,8 @@ class ObjetoAEntregarStruct extends FFFirebaseStruct {
         objetoAEntregar,
         objetoAEntregarLabel,
         cantidadAEntregar,
-        actividadObjetoAEntregar
+        actividadObjetoAEntregar,
+        objetoEntregadoReference
       ]);
 }
 
@@ -167,6 +191,7 @@ ObjetoAEntregarStruct createObjetoAEntregarStruct({
   String? objetoAEntregarLabel,
   double? cantidadAEntregar,
   DocumentReference? actividadObjetoAEntregar,
+  DocumentReference? objetoEntregadoReference,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -178,6 +203,7 @@ ObjetoAEntregarStruct createObjetoAEntregarStruct({
       objetoAEntregarLabel: objetoAEntregarLabel,
       cantidadAEntregar: cantidadAEntregar,
       actividadObjetoAEntregar: actividadObjetoAEntregar,
+      objetoEntregadoReference: objetoEntregadoReference,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

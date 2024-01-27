@@ -58,6 +58,11 @@ ObjetoAEntregarStruct parseObjetoAEntregarDataType(dynamic json) {
   obj.cantidadAEntregar = double.parse("${json['cantidadAEntregar']}");
   obj.actividadObjetoAEntregar = json['actividadObjetoAEntregar'];
 
+  if (json['objetoEntregadoReference'] != null &&
+      json['objetoEntregadoReference'] != "") {
+    obj.objetoEntregadoReference = json['objetoEntregadoReference'];
+  }
+
   return obj;
 }
 
@@ -86,4 +91,24 @@ FirestoreDefaultResponseStruct evaluateObjetosAEntregar(
   }
 
   return response;
+}
+
+double addReduceNumber(
+  double target,
+  MathAction type,
+  double baseAdd,
+) {
+  if (type == MathAction.substract) {
+    return target -= baseAdd;
+  }
+
+  if (type == MathAction.add) {
+    return target += baseAdd;
+  }
+
+  return target;
+}
+
+double parseDouble(String number) {
+  return double.parse(number);
 }
