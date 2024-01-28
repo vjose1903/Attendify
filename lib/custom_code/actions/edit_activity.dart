@@ -63,6 +63,16 @@ Future<FirestoreDefaultResponseStruct> editActivity(
 
       await actividadCollection.doc(activityReference.id).update(activityData);
 
+      // GRUPO ACTIVIDAD --------------------------------------------------------------------------------------
+      CollectionReference grupoActividadCollection =
+          FirebaseFirestore.instance.collection('grupo_actividad');
+
+      final grupoActivityData = {'actividad_name': nombre};
+
+      await grupoActividadCollection
+          .doc(grupoActividadReference.id)
+          .update(grupoActivityData);
+
       // ACTIVIDAD IMG ----------------------------------------------------------------------------------------
       CollectionReference imagenActividadCollection =
           FirebaseFirestore.instance.collection('actividad_imagenes');

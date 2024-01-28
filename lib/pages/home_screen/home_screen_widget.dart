@@ -404,9 +404,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                 width: double.infinity,
                 height: double.infinity,
                 decoration: const BoxDecoration(),
-                child: const Column(
+                child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  children: [],
+                  children: [
+                    Text(
+                      'ahora2',
+                      style: FlutterFlowTheme.of(context).bodyMedium,
+                    ),
+                  ],
                 ),
               ),
               Padding(

@@ -70,15 +70,16 @@ Future<FirestoreDefaultResponseStruct> createActivity(
           await actividadCollection.add(activityData);
 
       // GRUPO ACTIVIDAD ----------------------------------------------------------------------------------------
+      CollectionReference grupoActividadCollection =
+          FirebaseFirestore.instance.collection('grupo_actividad');
+
       final grupoActivityData = {
         'actividad': newActivity,
+        'actividad_name': nombre,
         'grupos': grupos,
         'fecha_inicio': fecha,
         'fecha_fin': hasta,
       };
-
-      CollectionReference grupoActividadCollection =
-          FirebaseFirestore.instance.collection('grupo_actividad');
 
       DocumentReference newGroupActivity =
           await grupoActividadCollection.add(grupoActivityData);

@@ -34,11 +34,17 @@ class GrupoActividadRecord extends FirestoreRecord {
   DateTime? get fechaFin => _fechaFin;
   bool hasFechaFin() => _fechaFin != null;
 
+  // "actividad_name" field.
+  String? _actividadName;
+  String get actividadName => _actividadName ?? '';
+  bool hasActividadName() => _actividadName != null;
+
   void _initializeFields() {
     _actividad = snapshotData['actividad'] as DocumentReference?;
     _grupos = getDataList(snapshotData['grupos']);
     _fechaInicio = snapshotData['fecha_inicio'] as DateTime?;
     _fechaFin = snapshotData['fecha_fin'] as DateTime?;
+    _actividadName = snapshotData['actividad_name'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -79,12 +85,14 @@ Map<String, dynamic> createGrupoActividadRecordData({
   DocumentReference? actividad,
   DateTime? fechaInicio,
   DateTime? fechaFin,
+  String? actividadName,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'actividad': actividad,
       'fecha_inicio': fechaInicio,
       'fecha_fin': fechaFin,
+      'actividad_name': actividadName,
     }.withoutNulls,
   );
 
@@ -101,12 +109,13 @@ class GrupoActividadRecordDocumentEquality
     return e1?.actividad == e2?.actividad &&
         listEquality.equals(e1?.grupos, e2?.grupos) &&
         e1?.fechaInicio == e2?.fechaInicio &&
-        e1?.fechaFin == e2?.fechaFin;
+        e1?.fechaFin == e2?.fechaFin &&
+        e1?.actividadName == e2?.actividadName;
   }
 
   @override
-  int hash(GrupoActividadRecord? e) => const ListEquality()
-      .hash([e?.actividad, e?.grupos, e?.fechaInicio, e?.fechaFin]);
+  int hash(GrupoActividadRecord? e) => const ListEquality().hash(
+      [e?.actividad, e?.grupos, e?.fechaInicio, e?.fechaFin, e?.actividadName]);
 
   @override
   bool isValidKey(Object? o) => o is GrupoActividadRecord;

@@ -1,4 +1,5 @@
 import '/backend/backend.dart';
+import '/components/actividad_item_widget.dart';
 import '/components/activity_filters/activity_filters_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'activities_list_widget.dart' show ActivitiesListWidget;
@@ -20,25 +21,20 @@ class ActivitiesListModel extends FlutterFlowModel<ActivitiesListWidget> {
   void updateAccessListAtIndex(int index, Function(dynamic) updateFn) =>
       accessList[index] = updateFn(accessList[index]);
 
+  bool showFullList = true;
+
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // State field(s) for TextField widget.
-  FocusNode? textFieldFocusNode;
-  TextEditingController? textController;
-  String? Function(BuildContext, String?)? textControllerValidator;
-  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
-  List<GrupoActividadDetalleRecord>? doubleGrupoActividadDetalleResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
-  int? doubleImagenesActividadResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
-  List<GrupoActividadDetalleRecord>? longGrupoActividadDetalleResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
-  List<ActividadImagenesRecord>? longImgResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
-  List<ActividadObjetoAEntregarRecord>? longObjetosAEntregarResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
-  List<AccesoRecord>? longAccessResponse;
+  // State field(s) for searchActividades widget.
+  FocusNode? searchActividadesFocusNode;
+  TextEditingController? searchActividadesController;
+  String? Function(BuildContext, String?)? searchActividadesControllerValidator;
+  List<GrupoActividadRecord> simpleSearchResults = [];
+  // Models for actividadItem dynamic component.
+  late FlutterFlowDynamicModels<ActividadItemModel> actividadItemModels1;
+  // Models for actividadItem dynamic component.
+  late FlutterFlowDynamicModels<ActividadItemModel> actividadItemModels2;
   // Model for ActivityFilters component.
   late ActivityFiltersModel activityFiltersModel;
 
@@ -46,15 +42,19 @@ class ActivitiesListModel extends FlutterFlowModel<ActivitiesListWidget> {
 
   @override
   void initState(BuildContext context) {
+    actividadItemModels1 = FlutterFlowDynamicModels(() => ActividadItemModel());
+    actividadItemModels2 = FlutterFlowDynamicModels(() => ActividadItemModel());
     activityFiltersModel = createModel(context, () => ActivityFiltersModel());
   }
 
   @override
   void dispose() {
     unfocusNode.dispose();
-    textFieldFocusNode?.dispose();
-    textController?.dispose();
+    searchActividadesFocusNode?.dispose();
+    searchActividadesController?.dispose();
 
+    actividadItemModels1.dispose();
+    actividadItemModels2.dispose();
     activityFiltersModel.dispose();
   }
 
