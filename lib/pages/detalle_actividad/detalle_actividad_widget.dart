@@ -1456,7 +1456,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                           _model.editFindTipoUsuarioResponse = await TipoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord.tipoUsuario!);
                                                                                                           // find objetos a entregar
                                                                                                           _model.editFindObjetosAEntregarResponsee = await queryActividadObjetoAEntregarRecordOnce(
-                                                                                                            parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                            parent: actividadAsistenciaItem.parentReference,
                                                                                                             queryBuilder: (actividadObjetoAEntregarRecord) => actividadObjetoAEntregarRecord
                                                                                                                 .where(
                                                                                                                   'grupo',
@@ -1473,7 +1473,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                           );
                                                                                                           // Find Objetos Entregados
                                                                                                           _model.editFindObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                            parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                            parent: actividadAsistenciaItem.parentReference,
                                                                                                             queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
                                                                                                                 .where(
                                                                                                                   'asistencia',
@@ -1551,20 +1551,15 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                           // find objetos entregados
                                                                                                           _model.deleteObjetosEntregados = await queryObjetoEntregadoRecordOnce(
                                                                                                             parent: actividadAsistenciaItem.parentReference,
-                                                                                                            queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
-                                                                                                                .where(
-                                                                                                                  'grupo',
-                                                                                                                  isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                                                )
-                                                                                                                .where(
-                                                                                                                  'grupo_usuario',
-                                                                                                                  isEqualTo: actividadAsistenciaItem.grupoUsuario,
-                                                                                                                ),
+                                                                                                            queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
+                                                                                                              'asistencia',
+                                                                                                              isEqualTo: actividadAsistenciaItem.reference,
+                                                                                                            ),
                                                                                                           );
-                                                                                                          if (_model.deleteFilterObjetosEntregados != null && (_model.deleteFilterObjetosEntregados)!.isNotEmpty) {
-                                                                                                            while (FFAppState().contador < _model.deleteFilterObjetosEntregados!.length) {
+                                                                                                          if (_model.deleteObjetosEntregados != null && (_model.deleteObjetosEntregados)!.isNotEmpty) {
+                                                                                                            while (FFAppState().contador < _model.deleteObjetosEntregados!.length) {
                                                                                                               // delete objeto entregado
-                                                                                                              await _model.deleteFilterObjetosEntregados![FFAppState().contador].reference.delete();
+                                                                                                              await _model.deleteObjetosEntregados![FFAppState().contador].reference.delete();
                                                                                                               // increment Contador
                                                                                                               FFAppState().contador = FFAppState().contador + 1;
                                                                                                             }
@@ -1726,7 +1721,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                             _model.editFilterfindTipoUsuarioResponse = await TipoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord.tipoUsuario!);
                                                                                                             // find objetos a entregar
                                                                                                             _model.editFilterFindObjetosAEntregarResponsee = await queryActividadObjetoAEntregarRecordOnce(
-                                                                                                              parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                              parent: asistenciaFilterItem.parentReference,
                                                                                                               queryBuilder: (actividadObjetoAEntregarRecord) => actividadObjetoAEntregarRecord
                                                                                                                   .where(
                                                                                                                     'grupo',
@@ -1743,7 +1738,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                             );
                                                                                                             // Find Objetos Entregados
                                                                                                             _model.editFilterFindObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                              parent: widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.reference,
+                                                                                                              parent: asistenciaFilterItem.parentReference,
                                                                                                               queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
                                                                                                                   .where(
                                                                                                                     'asistencia',
@@ -1821,17 +1816,17 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                             // find objetos entregados
                                                                                                             _model.deleteFilterObjetosEntregados = await queryObjetoEntregadoRecordOnce(
                                                                                                               parent: asistenciaFilterItem.parentReference,
-                                                                                                              queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
-                                                                                                                  .where(
-                                                                                                                    'grupo',
-                                                                                                                    isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                                                  )
-                                                                                                                  .where(
-                                                                                                                    'grupo_usuario',
-                                                                                                                    isEqualTo: asistenciaFilterItem.grupoUsuario,
-                                                                                                                  ),
+                                                                                                              queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
+                                                                                                                'asistencia',
+                                                                                                                isEqualTo: asistenciaFilterItem.reference,
+                                                                                                              ),
                                                                                                             );
                                                                                                             if (_model.deleteFilterObjetosEntregados != null && (_model.deleteFilterObjetosEntregados)!.isNotEmpty) {
+                                                                                                              await actions.consoleLog(
+                                                                                                                null,
+                                                                                                                'TIENE OBJETOS PARA BORRAR',
+                                                                                                                null,
+                                                                                                              );
                                                                                                               while (FFAppState().contador < _model.deleteFilterObjetosEntregados!.length) {
                                                                                                                 // delete objeto entregado
                                                                                                                 await _model.deleteFilterObjetosEntregados![FFAppState().contador].reference.delete();
@@ -1839,7 +1834,14 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                                 FFAppState().contador = FFAppState().contador + 1;
                                                                                                               }
                                                                                                               FFAppState().contador = 0;
+                                                                                                            } else {
+                                                                                                              await actions.consoleLog(
+                                                                                                                null,
+                                                                                                                'NADA PARA BORRAR',
+                                                                                                                null,
+                                                                                                              );
                                                                                                             }
+
                                                                                                             // delete asistencia
                                                                                                             await asistenciaFilterItem.reference.delete();
                                                                                                             // Reload List Asistencia
