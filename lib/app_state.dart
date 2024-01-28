@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/backend/backend.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 
@@ -57,6 +58,10 @@ class FFAppState extends ChangeNotifier {
     });
     _safeInit(() {
       _secondContador = prefs.getInt('ff_secondContador') ?? _secondContador;
+    });
+    _safeInit(() {
+      _loadingActividades =
+          prefs.getBool('ff_loadingActividades') ?? _loadingActividades;
     });
   }
 
@@ -210,6 +215,74 @@ class FFAppState extends ChangeNotifier {
   set secondContador(int value) {
     _secondContador = value;
     prefs.setInt('ff_secondContador', value);
+  }
+
+  bool _loadingActividades = true;
+  bool get loadingActividades => _loadingActividades;
+  set loadingActividades(bool value) {
+    _loadingActividades = value;
+    prefs.setBool('ff_loadingActividades', value);
+  }
+
+  List<GrupoActividadHomeStruct> _proximasActividades = [];
+  List<GrupoActividadHomeStruct> get proximasActividades =>
+      _proximasActividades;
+  set proximasActividades(List<GrupoActividadHomeStruct> value) {
+    _proximasActividades = value;
+  }
+
+  void addToProximasActividades(GrupoActividadHomeStruct value) {
+    _proximasActividades.add(value);
+  }
+
+  void removeFromProximasActividades(GrupoActividadHomeStruct value) {
+    _proximasActividades.remove(value);
+  }
+
+  void removeAtIndexFromProximasActividades(int index) {
+    _proximasActividades.removeAt(index);
+  }
+
+  void updateProximasActividadesAtIndex(
+    int index,
+    GrupoActividadHomeStruct Function(GrupoActividadHomeStruct) updateFn,
+  ) {
+    _proximasActividades[index] = updateFn(_proximasActividades[index]);
+  }
+
+  void insertAtIndexInProximasActividades(
+      int index, GrupoActividadHomeStruct value) {
+    _proximasActividades.insert(index, value);
+  }
+
+  List<GrupoActividadHomeStruct> _restoActividades = [];
+  List<GrupoActividadHomeStruct> get restoActividades => _restoActividades;
+  set restoActividades(List<GrupoActividadHomeStruct> value) {
+    _restoActividades = value;
+  }
+
+  void addToRestoActividades(GrupoActividadHomeStruct value) {
+    _restoActividades.add(value);
+  }
+
+  void removeFromRestoActividades(GrupoActividadHomeStruct value) {
+    _restoActividades.remove(value);
+  }
+
+  void removeAtIndexFromRestoActividades(int index) {
+    _restoActividades.removeAt(index);
+  }
+
+  void updateRestoActividadesAtIndex(
+    int index,
+    GrupoActividadHomeStruct Function(GrupoActividadHomeStruct) updateFn,
+  ) {
+    _restoActividades[index] = updateFn(_restoActividades[index]);
+  }
+
+  void insertAtIndexInRestoActividades(
+      int index, GrupoActividadHomeStruct value) {
+    _restoActividades.insert(index, value);
   }
 }
 

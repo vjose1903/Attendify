@@ -112,3 +112,7 @@ double addReduceNumber(
 double parseDouble(String number) {
   return double.parse(number);
 }
+
+DateTime addDays(int cantidadDias) {
+  return DateTime.now().add(Duration(days: cantidadDias));
+}

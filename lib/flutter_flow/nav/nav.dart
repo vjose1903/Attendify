@@ -148,6 +148,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                 params.getParam('portadaBlurHash', ParamType.String),
             hasImagenes: params.getParam('hasImagenes', ParamType.bool),
           ),
+        ),
+        FFRoute(
+          name: 'ActivitiesListCopy',
+          path: '/activitiesListCopy',
+          builder: (context, params) => const ActivitiesListCopyWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

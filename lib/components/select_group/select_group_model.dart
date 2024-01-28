@@ -15,6 +15,8 @@ class SelectGroupModel extends FlutterFlowModel<SelectGroupWidget> {
   late FlutterFlowDynamicModels<GrupoOptionModel> grupoOptionModels;
   // Stores action output result for [Firestore Query - Query a collection] action in GrupoOption widget.
   GrupoUsuarioRecord? grupoUsuaruiResponse;
+  // Stores action output result for [Custom Action - getProximasActividades] action in GrupoOption widget.
+  dynamic getProximasActividadesResponse;
 
   /// Initialization and disposal methods.
 

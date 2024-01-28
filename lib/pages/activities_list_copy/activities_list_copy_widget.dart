@@ -1,6 +1,7 @@
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/components/actividad_item/actividad_item_widget.dart';
+import '/components/activity_filters/activity_filters_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/form_activity/form_activity_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -12,25 +13,26 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:text_search/text_search.dart';
-import 'activities_list_model.dart';
-export 'activities_list_model.dart';
+import 'activities_list_copy_model.dart';
+export 'activities_list_copy_model.dart';
 
-class ActivitiesListWidget extends StatefulWidget {
-  const ActivitiesListWidget({super.key});
+class ActivitiesListCopyWidget extends StatefulWidget {
+  const ActivitiesListCopyWidget({super.key});
 
   @override
-  State<ActivitiesListWidget> createState() => _ActivitiesListWidgetState();
+  State<ActivitiesListCopyWidget> createState() =>
+      _ActivitiesListCopyWidgetState();
 }
 
-class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
-  late ActivitiesListModel _model;
+class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
+  late ActivitiesListCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ActivitiesListModel());
+    _model = createModel(context, () => ActivitiesListCopyModel());
 
     _model.searchActividadesController ??= TextEditingController();
     _model.searchActividadesFocusNode ??= FocusNode();
@@ -112,6 +114,17 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
             Icons.add,
             color: FlutterFlowTheme.of(context).info,
             size: 24.0,
+          ),
+        ),
+        endDrawer: SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.85,
+          child: Drawer(
+            elevation: 16.0,
+            child: wrapWithModel(
+              model: _model.activityFiltersModel,
+              updateCallback: () => setState(() {}),
+              child: const ActivityFiltersWidget(),
+            ),
           ),
         ),
         appBar: AppBar(
@@ -256,29 +269,22 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                             ),
                           ),
                         ),
-                        if (responsiveVisibility(
-                          context: context,
-                          phone: false,
-                          tablet: false,
-                          tabletLandscape: false,
-                          desktop: false,
-                        ))
-                          FlutterFlowIconButton(
-                            borderColor: FlutterFlowTheme.of(context).alternate,
-                            borderRadius: 20.0,
-                            borderWidth: 1.0,
-                            buttonSize: 35.0,
-                            fillColor: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            icon: Icon(
-                              Icons.tune_sharp,
-                              color: FlutterFlowTheme.of(context).primaryText,
-                              size: 22.0,
-                            ),
-                            onPressed: () async {
-                              scaffoldKey.currentState!.openEndDrawer();
-                            },
+                        FlutterFlowIconButton(
+                          borderColor: FlutterFlowTheme.of(context).alternate,
+                          borderRadius: 20.0,
+                          borderWidth: 1.0,
+                          buttonSize: 35.0,
+                          fillColor:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                          icon: Icon(
+                            Icons.tune_sharp,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            size: 22.0,
                           ),
+                          onPressed: () async {
+                            scaffoldKey.currentState!.openEndDrawer();
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -359,7 +365,7 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                                 updateCallback: () => setState(() {}),
                                 child: ActividadItemWidget(
                                   key: Key(
-                                    'Keyao9_${fullListActividadesGrupoActividadRecord.reference.id}',
+                                    'Keywuj_${fullListActividadesGrupoActividadRecord.reference.id}',
                                   ),
                                   grupoActividad:
                                       fullListActividadesGrupoActividadRecord,
@@ -414,7 +420,7 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                                 updateCallback: () => setState(() {}),
                                 child: ActividadItemWidget(
                                   key: Key(
-                                    'Keyp0w_${filterGrupoActividadListItem.reference.id}',
+                                    'Key8db_${filterGrupoActividadListItem.reference.id}',
                                   ),
                                   grupoActividad: filterGrupoActividadListItem,
                                 ),

@@ -69,13 +69,13 @@ class _EmptyListWidgetState extends State<EmptyListWidget> {
               ),
             if (widget.msg != null && widget.msg != '')
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
                 child: Text(
                   valueOrDefault<String>(
                     widget.msg,
                     '- ',
                   ),
-                  textAlign: TextAlign.justify,
+                  textAlign: TextAlign.center,
                   style: FlutterFlowTheme.of(context).labelMedium,
                 ),
               ),

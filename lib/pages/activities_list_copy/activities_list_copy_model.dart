@@ -1,10 +1,12 @@
 import '/backend/backend.dart';
 import '/components/actividad_item/actividad_item_widget.dart';
+import '/components/activity_filters/activity_filters_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'activities_list_widget.dart' show ActivitiesListWidget;
+import 'activities_list_copy_widget.dart' show ActivitiesListCopyWidget;
 import 'package:flutter/material.dart';
 
-class ActivitiesListModel extends FlutterFlowModel<ActivitiesListWidget> {
+class ActivitiesListCopyModel
+    extends FlutterFlowModel<ActivitiesListCopyWidget> {
   ///  Local state fields for this page.
 
   DocumentReference? actividadSelected;
@@ -34,6 +36,8 @@ class ActivitiesListModel extends FlutterFlowModel<ActivitiesListWidget> {
   late FlutterFlowDynamicModels<ActividadItemModel> actividadItemModels1;
   // Models for actividadItem dynamic component.
   late FlutterFlowDynamicModels<ActividadItemModel> actividadItemModels2;
+  // Model for ActivityFilters component.
+  late ActivityFiltersModel activityFiltersModel;
 
   /// Initialization and disposal methods.
 
@@ -41,6 +45,7 @@ class ActivitiesListModel extends FlutterFlowModel<ActivitiesListWidget> {
   void initState(BuildContext context) {
     actividadItemModels1 = FlutterFlowDynamicModels(() => ActividadItemModel());
     actividadItemModels2 = FlutterFlowDynamicModels(() => ActividadItemModel());
+    activityFiltersModel = createModel(context, () => ActivityFiltersModel());
   }
 
   @override
@@ -51,6 +56,7 @@ class ActivitiesListModel extends FlutterFlowModel<ActivitiesListWidget> {
 
     actividadItemModels1.dispose();
     actividadItemModels2.dispose();
+    activityFiltersModel.dispose();
   }
 
   /// Action blocks are added here.

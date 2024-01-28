@@ -134,6 +134,7 @@ Future<FirestoreDefaultResponseStruct> createActivity(
               if (tipoUsuario != null) {
                 accesoActividadCollection.add({
                   'tipo_usuario': tipoUsuario.reference,
+                  'fecha': fechaActual,
                   'grupo': FFAppState().grupoSeleccionado,
                   'tipo_usuario_label': tipoUsuario.descripcion
                 });

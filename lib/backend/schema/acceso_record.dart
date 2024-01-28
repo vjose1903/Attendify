@@ -29,12 +29,18 @@ class AccesoRecord extends FirestoreRecord {
   DocumentReference? get grupo => _grupo;
   bool hasGrupo() => _grupo != null;
 
+  // "fecha" field.
+  DateTime? _fecha;
+  DateTime? get fecha => _fecha;
+  bool hasFecha() => _fecha != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
     _tipoUsuario = snapshotData['tipo_usuario'] as DocumentReference?;
     _tipoUsuarioLabel = snapshotData['tipo_usuario_label'] as String?;
     _grupo = snapshotData['grupo'] as DocumentReference?;
+    _fecha = snapshotData['fecha'] as DateTime?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -79,12 +85,14 @@ Map<String, dynamic> createAccesoRecordData({
   DocumentReference? tipoUsuario,
   String? tipoUsuarioLabel,
   DocumentReference? grupo,
+  DateTime? fecha,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'tipo_usuario': tipoUsuario,
       'tipo_usuario_label': tipoUsuarioLabel,
       'grupo': grupo,
+      'fecha': fecha,
     }.withoutNulls,
   );
 
@@ -98,12 +106,13 @@ class AccesoRecordDocumentEquality implements Equality<AccesoRecord> {
   bool equals(AccesoRecord? e1, AccesoRecord? e2) {
     return e1?.tipoUsuario == e2?.tipoUsuario &&
         e1?.tipoUsuarioLabel == e2?.tipoUsuarioLabel &&
-        e1?.grupo == e2?.grupo;
+        e1?.grupo == e2?.grupo &&
+        e1?.fecha == e2?.fecha;
   }
 
   @override
   int hash(AccesoRecord? e) => const ListEquality()
-      .hash([e?.tipoUsuario, e?.tipoUsuarioLabel, e?.grupo]);
+      .hash([e?.tipoUsuario, e?.tipoUsuarioLabel, e?.grupo, e?.fecha]);
 
   @override
   bool isValidKey(Object? o) => o is AccesoRecord;

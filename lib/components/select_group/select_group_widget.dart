@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -290,6 +291,51 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                       gridViewGrupoRecord.reference;
                                   FFAppState().grupoSeleccionadoName =
                                       gridViewGrupoRecord.nombre;
+                                });
+                                // start Loading
+                                setState(() {
+                                  FFAppState().loadingActividades = true;
+                                });
+                                // get proximas actividades
+                                _model.getProximasActividadesResponse =
+                                    await actions.getProximasActividades(
+                                  FFAppState().tipoUsuarioLoged!,
+                                  FFAppState().grupoSeleccionado!,
+                                );
+                                // End Loading
+                                setState(() {
+                                  FFAppState().loadingActividades = false;
+                                  FFAppState()
+                                      .proximasActividades = (getJsonField(
+                                    _model.getProximasActividadesResponse,
+                                    r'''$.primeras5Actividades''',
+                                    true,
+                                  )!
+                                              .toList()
+                                              .map<GrupoActividadHomeStruct?>(
+                                                  GrupoActividadHomeStruct
+                                                      .maybeFromMap)
+                                              .toList()
+                                          as Iterable<
+                                              GrupoActividadHomeStruct?>)
+                                      .withoutNulls
+                                      .toList()
+                                      .cast<GrupoActividadHomeStruct>();
+                                  FFAppState().restoActividades = (getJsonField(
+                                    _model.getProximasActividadesResponse,
+                                    r'''$.todasLasActividades''',
+                                    true,
+                                  )!
+                                              .toList()
+                                              .map<GrupoActividadHomeStruct?>(
+                                                  GrupoActividadHomeStruct
+                                                      .maybeFromMap)
+                                              .toList()
+                                          as Iterable<
+                                              GrupoActividadHomeStruct?>)
+                                      .withoutNulls
+                                      .toList()
+                                      .cast<GrupoActividadHomeStruct>();
                                 });
                                 // Clase Bottom Sheet
                                 Navigator.pop(context);
