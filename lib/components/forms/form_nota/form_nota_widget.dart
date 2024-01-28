@@ -138,6 +138,9 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                                 child: TextFormField(
                                   controller: _model.notaTxtController,
                                   focusNode: _model.notaTxtFocusNode,
+                                  autofocus: true,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     labelText: 'Nota',

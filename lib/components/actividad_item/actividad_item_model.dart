@@ -7,10 +7,6 @@ class ActividadItemModel extends FlutterFlowModel<ActividadItemWidget> {
   ///  State fields for stateful widgets in this component.
 
   // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
-  List<GrupoActividadDetalleRecord>? doubleGrupoActividadDetalleResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
-  int? doubleImagenesActividadResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
   List<GrupoActividadDetalleRecord>? longGrupoActividadDetalleResponse;
   // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
   List<ActividadImagenesRecord>? longImgResponse;
@@ -18,6 +14,12 @@ class ActividadItemModel extends FlutterFlowModel<ActividadItemWidget> {
   List<ActividadObjetoAEntregarRecord>? longObjetosAEntregarResponse;
   // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
   List<AccesoRecord>? longAccessResponse;
+  // Stores action output result for [Custom Action - deleteActividad] action in Container widget.
+  FirestoreDefaultResponseStruct? deleteActividadResponse;
+  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
+  List<GrupoActividadDetalleRecord>? doubleGrupoActividadDetalleResponse;
+  // Stores action output result for [Firestore Query - Query a collection] action in Container widget.
+  int? doubleImagenesActividadResponse;
 
   /// Initialization and disposal methods.
 

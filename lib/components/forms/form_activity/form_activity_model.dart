@@ -93,6 +93,10 @@ class FormActivityModel extends FlutterFlowModel<FormActivityWidget> {
   final formKey2 = GlobalKey<FormState>();
   // Stores action output result for [Firestore Query - Query a collection] action in FormActivity widget.
   List<TipoUsuarioRecord>? allTipoUsuarioResponse;
+  // State field(s) for scrollColumn widget.
+  ScrollController? scrollColumn;
+  // State field(s) for RowChips widget.
+  ScrollController? rowChips;
   // State field(s) for ChipsAcceso widget.
   List<String>? chipsAccesoValues;
   FormFieldController<List<String>>? chipsAccesoValueController;
@@ -177,6 +181,8 @@ class FormActivityModel extends FlutterFlowModel<FormActivityWidget> {
   List<FFUploadedFile> uploadedLocalFiles = [];
   List<String> uploadedFileUrls = [];
 
+  // State field(s) for ListView widget.
+  ScrollController? listViewController1;
   // State field(s) for CheckboxPortada widget.
 
   Map<dynamic, bool> checkboxPortadaValueMap = {};
@@ -221,6 +227,8 @@ class FormActivityModel extends FlutterFlowModel<FormActivityWidget> {
   FormFieldController<String>? deliverItemDDValueController;
   // Stores action output result for [Custom Action - getObjetoAEntregarByDescripcion] action in DeliverItemDD widget.
   ObjetoAEntregarRecord? findObjetoAEntregarResult;
+  // State field(s) for ListView widget.
+  ScrollController? listViewController2;
   // Stores action output result for [Custom Action - filterByKey] action in Button widget.
   List<dynamic>? imgWithoutRefence;
   // Stores action output result for [Custom Action - createActivity] action in Button widget.
@@ -232,16 +240,22 @@ class FormActivityModel extends FlutterFlowModel<FormActivityWidget> {
 
   @override
   void initState(BuildContext context) {
+    scrollColumn = ScrollController();
+    rowChips = ScrollController();
     nombreTxtControllerValidator = _nombreTxtControllerValidator;
     descripcionTxtControllerValidator = _descripcionTxtControllerValidator;
     fechaTxtControllerValidator = _fechaTxtControllerValidator;
     hastaTxtControllerValidator = _hastaTxtControllerValidator;
     costoTxtControllerValidator = _costoTxtControllerValidator;
+    listViewController1 = ScrollController();
     deliverCantTxtControllerValidator = _deliverCantTxtControllerValidator;
+    listViewController2 = ScrollController();
   }
 
   @override
   void dispose() {
+    scrollColumn?.dispose();
+    rowChips?.dispose();
     nombreTxtFocusNode?.dispose();
     nombreTxtController?.dispose();
 
@@ -257,8 +271,11 @@ class FormActivityModel extends FlutterFlowModel<FormActivityWidget> {
     costoTxtFocusNode?.dispose();
     costoTxtController?.dispose();
 
+    listViewController1?.dispose();
     deliverCantTxtFocusNode?.dispose();
     deliverCantTxtController?.dispose();
+
+    listViewController2?.dispose();
   }
 
   /// Action blocks are added here.

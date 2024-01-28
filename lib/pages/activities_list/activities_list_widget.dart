@@ -1,6 +1,6 @@
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
-import '/components/actividad_item_widget.dart';
+import '/components/actividad_item/actividad_item_widget.dart';
 import '/components/activity_filters/activity_filters_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/form_activity/form_activity_widget.dart';

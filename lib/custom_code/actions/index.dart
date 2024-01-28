@@ -16,3 +16,4 @@ export 'filter_by_key.dart' show filterByKey;
 export 'blur_current_input.dart' show blurCurrentInput;
 export 'update_objeto_a_entregar_json.dart' show updateObjetoAEntregarJson;
 export 'try_dissmiss_modal.dart' show tryDissmissModal;
+export 'delete_actividad.dart' show deleteActividad;

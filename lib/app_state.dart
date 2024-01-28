@@ -55,6 +55,9 @@ class FFAppState extends ChangeNotifier {
       _grupoSeleccionadoName =
           prefs.getString('ff_grupoSeleccionadoName') ?? _grupoSeleccionadoName;
     });
+    _safeInit(() {
+      _secondContador = prefs.getInt('ff_secondContador') ?? _secondContador;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -200,6 +203,13 @@ class FFAppState extends ChangeNotifier {
   set grupoSeleccionadoName(String value) {
     _grupoSeleccionadoName = value;
     prefs.setString('ff_grupoSeleccionadoName', value);
+  }
+
+  int _secondContador = 0;
+  int get secondContador => _secondContador;
+  set secondContador(int value) {
+    _secondContador = value;
+    prefs.setInt('ff_secondContador', value);
   }
 }
 

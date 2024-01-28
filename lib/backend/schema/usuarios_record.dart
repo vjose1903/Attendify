@@ -64,6 +64,11 @@ class UsuariosRecord extends FirestoreRecord {
   String get estado => _estado ?? '';
   bool hasEstado() => _estado != null;
 
+  // "photo_blur_url" field.
+  String? _photoBlurUrl;
+  String get photoBlurUrl => _photoBlurUrl ?? '';
+  bool hasPhotoBlurUrl() => _photoBlurUrl != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
     _displayName = snapshotData['display_name'] as String?;
@@ -75,6 +80,7 @@ class UsuariosRecord extends FirestoreRecord {
     _userName = snapshotData['user_name'] as String?;
     _uid = snapshotData['uid'] as String?;
     _estado = snapshotData['estado'] as String?;
+    _photoBlurUrl = snapshotData['photo_blur_url'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -122,6 +128,7 @@ Map<String, dynamic> createUsuariosRecordData({
   String? userName,
   String? uid,
   String? estado,
+  String? photoBlurUrl,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -135,6 +142,7 @@ Map<String, dynamic> createUsuariosRecordData({
       'user_name': userName,
       'uid': uid,
       'estado': estado,
+      'photo_blur_url': photoBlurUrl,
     }.withoutNulls,
   );
 
@@ -155,7 +163,8 @@ class UsuariosRecordDocumentEquality implements Equality<UsuariosRecord> {
         e1?.bio == e2?.bio &&
         e1?.userName == e2?.userName &&
         e1?.uid == e2?.uid &&
-        e1?.estado == e2?.estado;
+        e1?.estado == e2?.estado &&
+        e1?.photoBlurUrl == e2?.photoBlurUrl;
   }
 
   @override
@@ -169,7 +178,8 @@ class UsuariosRecordDocumentEquality implements Equality<UsuariosRecord> {
         e?.bio,
         e?.userName,
         e?.uid,
-        e?.estado
+        e?.estado,
+        e?.photoBlurUrl
       ]);
 
   @override

@@ -572,6 +572,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
               child: Container(
                 decoration: const BoxDecoration(),
                 child: SingleChildScrollView(
+                  controller: _model.scrollColumn,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: [
@@ -611,6 +612,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                   decoration: const BoxDecoration(),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
+                                    controller: _model.rowChips,
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -1931,6 +1933,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                 ),
                                                               );
                                                             },
+                                                            controller: _model
+                                                                .listViewController1,
                                                           );
                                                         },
                                                       ),
@@ -2881,6 +2885,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                               ),
                                                             );
                                                           },
+                                                          controller: _model
+                                                              .listViewController2,
                                                         );
                                                       },
                                                     );
@@ -2994,6 +3000,12 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        // Scroll to top
+                        await _model.scrollColumn?.animateTo(
+                          0,
+                          duration: const Duration(milliseconds: 1000),
+                          curve: Curves.ease,
+                        );
                         // Validate Form
                         if (_model.formKey1.currentState == null ||
                             !_model.formKey1.currentState!.validate()) {

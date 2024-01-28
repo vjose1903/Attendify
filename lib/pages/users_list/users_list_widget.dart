@@ -11,12 +11,12 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/custom_code/actions/index.dart' as actions;
+import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'users_list_model.dart';
 export 'users_list_model.dart';
@@ -201,6 +201,12 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                               });
                             }
 
+                            // Refresh Data user
+                            setState(
+                                () => _model.firestoreRequestCompleter = null);
+                            await _model.waitForFirestoreRequestCompleted(
+                                minWait: 2000, maxWait: 10000);
+
                             setState(() {});
                           },
                           selectedChipStyle: ChipStyle(
@@ -310,500 +316,454 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                         child: Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               0.0, 10.0, 0.0, 0.0),
-                          child: PagedListView<DocumentSnapshot<Object?>?,
-                              GrupoUsuarioRecord>(
-                            pagingController: _model.setListViewController(
-                              GrupoUsuarioRecord.collection
-                                  .where(
-                                    'grupo',
-                                    isEqualTo: FFAppState().grupoSeleccionado,
-                                  )
-                                  .where(
-                                    'tipo_usuario',
-                                    isEqualTo:
-                                        _model.currentTipoUsuario?.reference,
-                                  ),
-                            ),
-                            padding: const EdgeInsets.fromLTRB(
-                              0,
-                              0,
-                              0,
-                              150.0,
-                            ),
-                            shrinkWrap: true,
-                            reverse: false,
-                            scrollDirection: Axis.vertical,
-                            builderDelegate:
-                                PagedChildBuilderDelegate<GrupoUsuarioRecord>(
-                              // Customize what your widget looks like when it's loading the first page.
-                              firstPageProgressIndicatorBuilder: (_) => Center(
-                                child: SizedBox(
-                                  width: 60.0,
-                                  height: 60.0,
-                                  child: SpinKitChasingDots(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    size: 60.0,
-                                  ),
-                                ),
-                              ),
-                              // Customize what your widget looks like when it's loading another page.
-                              newPageProgressIndicatorBuilder: (_) => Center(
-                                child: SizedBox(
-                                  width: 60.0,
-                                  height: 60.0,
-                                  child: SpinKitChasingDots(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    size: 60.0,
-                                  ),
-                                ),
-                              ),
-                              noItemsFoundIndicatorBuilder: (_) => Center(
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.7,
-                                  child: EmptyListWidget(
-                                    title: 'No hay Usuarios',
-                                    msg:
-                                        'Parece que no se han registrado usuarios de este tipo',
-                                    icon: FaIcon(
-                                      FontAwesomeIcons.userFriends,
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryImputBackground,
-                                      size: 70.0,
+                          child: FutureBuilder<List<GrupoUsuarioRecord>>(
+                            future: (_model.firestoreRequestCompleter ??=
+                                    Completer<List<GrupoUsuarioRecord>>()
+                                      ..complete(queryGrupoUsuarioRecordOnce(
+                                        queryBuilder: (grupoUsuarioRecord) =>
+                                            grupoUsuarioRecord
+                                                .where(
+                                                  'grupo',
+                                                  isEqualTo: FFAppState()
+                                                      .grupoSeleccionado,
+                                                )
+                                                .where(
+                                                  'tipo_usuario',
+                                                  isEqualTo: _model
+                                                      .currentTipoUsuario
+                                                      ?.reference,
+                                                ),
+                                      )))
+                                .future,
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: SizedBox(
+                                    width: 60.0,
+                                    height: 60.0,
+                                    child: SpinKitChasingDots(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      size: 60.0,
                                     ),
                                   ),
-                                ),
-                              ),
-                              itemBuilder: (context, _, listViewIndex) {
-                                final listViewGrupoUsuarioRecord = _model
-                                    .listViewPagingController!
-                                    .itemList![listViewIndex];
-                                return Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 8.0, 16.0, 0.0),
-                                  child: StreamBuilder<List<UsuariosRecord>>(
-                                    stream: queryUsuariosRecord(
-                                      queryBuilder: (usuariosRecord) =>
-                                          usuariosRecord.where(
-                                        'uid',
-                                        isEqualTo: listViewGrupoUsuarioRecord
-                                            .usuario?.id,
+                                );
+                              }
+                              List<GrupoUsuarioRecord>
+                                  listViewUserGrupoUsuarioRecordList =
+                                  snapshot.data!;
+                              if (listViewUserGrupoUsuarioRecordList.isEmpty) {
+                                return Center(
+                                  child: SizedBox(
+                                    height:
+                                        MediaQuery.sizeOf(context).height * 0.7,
+                                    child: EmptyListWidget(
+                                      title: 'No hay Usuarios',
+                                      msg:
+                                          'Parece que no se han registrado usuarios de este tipo',
+                                      icon: FaIcon(
+                                        FontAwesomeIcons.userFriends,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryImputBackground,
+                                        size: 70.0,
                                       ),
-                                      singleRecord: true,
                                     ),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: 60.0,
-                                            height: 60.0,
-                                            child: SpinKitChasingDots(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              size: 60.0,
-                                            ),
+                                  ),
+                                );
+                              }
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  setState(() =>
+                                      _model.firestoreRequestCompleter = null);
+                                  await _model
+                                      .waitForFirestoreRequestCompleted();
+                                },
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    0,
+                                    150.0,
+                                  ),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      listViewUserGrupoUsuarioRecordList.length,
+                                  itemBuilder: (context, listViewUserIndex) {
+                                    final listViewUserGrupoUsuarioRecord =
+                                        listViewUserGrupoUsuarioRecordList[
+                                            listViewUserIndex];
+                                    return Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 8.0, 16.0, 0.0),
+                                      child:
+                                          StreamBuilder<List<UsuariosRecord>>(
+                                        stream: queryUsuariosRecord(
+                                          queryBuilder: (usuariosRecord) =>
+                                              usuariosRecord.where(
+                                            'uid',
+                                            isEqualTo:
+                                                listViewUserGrupoUsuarioRecord
+                                                    .usuario?.id,
                                           ),
-                                        );
-                                      }
-                                      List<UsuariosRecord>
-                                          containerUsuariosRecordList =
-                                          snapshot.data!;
-                                      // Return an empty Container when the item does not exist.
-                                      if (snapshot.data!.isEmpty) {
-                                        return Container();
-                                      }
-                                      final containerUsuariosRecord =
-                                          containerUsuariosRecordList.isNotEmpty
-                                              ? containerUsuariosRecordList
-                                                  .first
-                                              : null;
-                                      return ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 100.0,
-                                          decoration: BoxDecoration(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryBackground,
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                blurRadius: 4.0,
-                                                color: Color(0x320E151B),
-                                                offset: Offset(0.0, 1.0),
-                                              )
-                                            ],
+                                          singleRecord: true,
+                                        ),
+                                        builder: (context, snapshot) {
+                                          // Customize what your widget looks like when it's loading.
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child: SizedBox(
+                                                width: 60.0,
+                                                height: 60.0,
+                                                child: SpinKitChasingDots(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  size: 60.0,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          List<UsuariosRecord>
+                                              containerUsuariosRecordList =
+                                              snapshot.data!;
+                                          // Return an empty Container when the item does not exist.
+                                          if (snapshot.data!.isEmpty) {
+                                            return Container();
+                                          }
+                                          final containerUsuariosRecord =
+                                              containerUsuariosRecordList
+                                                      .isNotEmpty
+                                                  ? containerUsuariosRecordList
+                                                      .first
+                                                  : null;
+                                          return ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
-                                          ),
-                                          child: Builder(
-                                            builder: (context) => Padding(
-                                              padding: const EdgeInsetsDirectional
-                                                  .fromSTEB(8.0, 8.0, 8.0, 8.0),
-                                              child: StreamBuilder<
-                                                  TipoUsuarioRecord>(
-                                                stream: TipoUsuarioRecord
-                                                    .getDocument(
-                                                        listViewGrupoUsuarioRecord
-                                                            .tipoUsuario!),
-                                                builder: (context, snapshot) {
-                                                  // Customize what your widget looks like when it's loading.
-                                                  if (!snapshot.hasData) {
-                                                    return Center(
-                                                      child: SizedBox(
-                                                        width: 60.0,
-                                                        height: 60.0,
-                                                        child:
-                                                            SpinKitChasingDots(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                          size: 60.0,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                  final rowTipoUsuarioRecord =
-                                                      snapshot.data!;
-                                                  return InkWell(
-                                                    splashColor:
-                                                        Colors.transparent,
-                                                    focusColor:
-                                                        Colors.transparent,
-                                                    hoverColor:
-                                                        Colors.transparent,
-                                                    highlightColor:
-                                                        Colors.transparent,
-                                                    onTap: () async {
-                                                      await showModalBottomSheet(
-                                                        isScrollControlled:
-                                                            true,
-                                                        backgroundColor:
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 100.0,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    blurRadius: 4.0,
+                                                    color: Color(0x320E151B),
+                                                    offset: Offset(0.0, 1.0),
+                                                  )
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                              ),
+                                              child: Builder(
+                                                builder: (context) => Padding(
+                                                  padding: const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          8.0, 8.0, 8.0, 8.0),
+                                                  child: StreamBuilder<
+                                                      TipoUsuarioRecord>(
+                                                    stream: TipoUsuarioRecord
+                                                        .getDocument(
+                                                            listViewUserGrupoUsuarioRecord
+                                                                .tipoUsuario!),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 60.0,
+                                                            height: 60.0,
+                                                            child:
+                                                                SpinKitChasingDots(
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              size: 60.0,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      final rowTipoUsuarioRecord =
+                                                          snapshot.data!;
+                                                      return InkWell(
+                                                        splashColor:
                                                             Colors.transparent,
-                                                        isDismissible: false,
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return GestureDetector(
-                                                            onTap: () => _model
-                                                                    .unfocusNode
-                                                                    .canRequestFocus
-                                                                ? FocusScope.of(
-                                                                        context)
-                                                                    .requestFocus(
-                                                                        _model
-                                                                            .unfocusNode)
-                                                                : FocusScope.of(
-                                                                        context)
-                                                                    .unfocus(),
-                                                            child: Padding(
-                                                              padding: MediaQuery
-                                                                  .viewInsetsOf(
-                                                                      context),
-                                                              child: SizedBox(
-                                                                height: MediaQuery.sizeOf(
+                                                        focusColor:
+                                                            Colors.transparent,
+                                                        hoverColor:
+                                                            Colors.transparent,
+                                                        highlightColor:
+                                                            Colors.transparent,
+                                                        onTap: () async {
+                                                          await showModalBottomSheet(
+                                                            isScrollControlled:
+                                                                true,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            useSafeArea: true,
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return GestureDetector(
+                                                                onTap: () => _model
+                                                                        .unfocusNode
+                                                                        .canRequestFocus
+                                                                    ? FocusScope.of(
                                                                             context)
-                                                                        .height *
-                                                                    0.4,
-                                                                child:
-                                                                    ActionsDocumentWidget(
-                                                                  showQrBtn:
-                                                                      true,
-                                                                  editAction:
-                                                                      () async {
-                                                                    await showModalBottomSheet(
-                                                                      isScrollControlled:
+                                                                        .requestFocus(_model
+                                                                            .unfocusNode)
+                                                                    : FocusScope.of(
+                                                                            context)
+                                                                        .unfocus(),
+                                                                child: Padding(
+                                                                  padding: MediaQuery
+                                                                      .viewInsetsOf(
+                                                                          context),
+                                                                  child:
+                                                                      SizedBox(
+                                                                    height:
+                                                                        MediaQuery.sizeOf(context).height *
+                                                                            0.4,
+                                                                    child:
+                                                                        ActionsDocumentWidget(
+                                                                      showQrBtn:
                                                                           true,
-                                                                      backgroundColor:
-                                                                          Colors
-                                                                              .transparent,
-                                                                      isDismissible:
-                                                                          false,
-                                                                      enableDrag:
-                                                                          false,
-                                                                      useSafeArea:
-                                                                          true,
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) {
-                                                                        return GestureDetector(
-                                                                          onTap: () => _model.unfocusNode.canRequestFocus
-                                                                              ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                                                                              : FocusScope.of(context).unfocus(),
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                MediaQuery.viewInsetsOf(context),
-                                                                            child:
-                                                                                SizedBox(
-                                                                              height: MediaQuery.sizeOf(context).height * 0.7,
-                                                                              child: FormUserWidget(
-                                                                                user: containerUsuariosRecord,
-                                                                                action: FormAction.edit,
-                                                                                grupoUsuario: listViewGrupoUsuarioRecord.reference,
-                                                                                tipoUsuarioDescript: rowTipoUsuarioRecord.descripcion,
-                                                                                reloadChip: () async {
-                                                                                  setState(() {
-                                                                                    _model.selectedChip = _model.chipsTipoUsuarioValue!;
-                                                                                  });
-                                                                                  setState(() {
-                                                                                    _model.chipsTipoUsuarioValueController?.reset();
-                                                                                  });
-                                                                                  setState(() {
-                                                                                    _model.chipsTipoUsuarioValueController?.value = [
-                                                                                      _model.selectedChip
-                                                                                    ];
-                                                                                  });
-                                                                                },
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                    ).then((value) =>
-                                                                        safeSetState(
-                                                                            () {}));
-                                                                  },
-                                                                  deleteAction:
-                                                                      () async {
-                                                                    // Show delete modal
-                                                                    await showDialog(
-                                                                      barrierDismissible:
-                                                                          false,
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (dialogContext) {
-                                                                        return Dialog(
-                                                                          elevation:
-                                                                              0,
-                                                                          insetPadding:
-                                                                              EdgeInsets.zero,
+                                                                      editAction:
+                                                                          () async {
+                                                                        await showModalBottomSheet(
+                                                                          isScrollControlled:
+                                                                              true,
                                                                           backgroundColor:
                                                                               Colors.transparent,
-                                                                          alignment:
-                                                                              const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                          child:
-                                                                              GestureDetector(
-                                                                            onTap: () => _model.unfocusNode.canRequestFocus
-                                                                                ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                                                                                : FocusScope.of(context).unfocus(),
-                                                                            child:
-                                                                                DeleteModalWidget(
-                                                                              deleteMsg: 'Esta acción borrará definitivamente al usuario:  ${valueOrDefault<String>(
-                                                                                containerUsuariosRecord?.displayName,
-                                                                                'Nombre no definido',
-                                                                              )}, del grupo, ¿Desea Continuar?',
-                                                                              title: 'Eliminar Usuario',
-                                                                              deleteAction: () async {
-                                                                                await listViewGrupoUsuarioRecord.reference.delete();
-                                                                                // Show success Msg
-                                                                                ScaffoldMessenger.of(context).clearSnackBars();
-                                                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                                                  SnackBar(
-                                                                                    content: Text(
-                                                                                      'Usuario eliminado correctamente.',
-                                                                                      style: TextStyle(
-                                                                                        color: FlutterFlowTheme.of(context).primaryText,
-                                                                                      ),
-                                                                                    ),
-                                                                                    duration: const Duration(milliseconds: 4500),
-                                                                                    backgroundColor: FlutterFlowTheme.of(context).success,
+                                                                          isDismissible:
+                                                                              false,
+                                                                          enableDrag:
+                                                                              false,
+                                                                          useSafeArea:
+                                                                              true,
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (context) {
+                                                                            return GestureDetector(
+                                                                              onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                              child: Padding(
+                                                                                padding: MediaQuery.viewInsetsOf(context),
+                                                                                child: SizedBox(
+                                                                                  height: MediaQuery.sizeOf(context).height * 0.7,
+                                                                                  child: FormUserWidget(
+                                                                                    user: containerUsuariosRecord,
+                                                                                    action: FormAction.edit,
+                                                                                    grupoUsuario: listViewUserGrupoUsuarioRecord.reference,
+                                                                                    tipoUsuario: rowTipoUsuarioRecord,
+                                                                                    reloadChip: () async {
+                                                                                      // Refresh Data user
+                                                                                      setState(() => _model.firestoreRequestCompleter = null);
+                                                                                      await _model.waitForFirestoreRequestCompleted(minWait: 2000, maxWait: 10000);
+                                                                                    },
                                                                                   ),
-                                                                                );
-                                                                                setState(() {
-                                                                                  _model.selectedChip = _model.chipsTipoUsuarioValue!;
-                                                                                });
-                                                                                setState(() {
-                                                                                  _model.chipsTipoUsuarioValueController?.reset();
-                                                                                });
-                                                                                setState(() {
-                                                                                  _model.chipsTipoUsuarioValueController?.value = [
-                                                                                    _model.selectedChip
-                                                                                  ];
-                                                                                });
-                                                                              },
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                    ).then((value) =>
-                                                                        setState(
-                                                                            () {}));
-                                                                  },
-                                                                  showQRAction:
-                                                                      () async {
-                                                                    await showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (dialogContext) {
-                                                                        return Dialog(
-                                                                          elevation:
-                                                                              0,
-                                                                          insetPadding:
-                                                                              EdgeInsets.zero,
-                                                                          backgroundColor:
-                                                                              Colors.transparent,
-                                                                          alignment:
-                                                                              const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                          child:
-                                                                              GestureDetector(
-                                                                            onTap: () => _model.unfocusNode.canRequestFocus
-                                                                                ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                                                                                : FocusScope.of(context).unfocus(),
-                                                                            child:
-                                                                                SizedBox(
-                                                                              height: double.infinity,
-                                                                              width: double.infinity,
-                                                                              child: QrModalWidget(
-                                                                                user: containerUsuariosRecord!,
-                                                                                grupoUsuario: listViewGrupoUsuarioRecord,
+                                                                                ),
                                                                               ),
-                                                                            ),
-                                                                          ),
-                                                                        );
+                                                                            );
+                                                                          },
+                                                                        ).then((value) =>
+                                                                            safeSetState(() {}));
                                                                       },
-                                                                    ).then((value) =>
-                                                                        setState(
-                                                                            () {}));
-                                                                  },
-                                                                  pasarAsistencia:
-                                                                      () async {},
+                                                                      deleteAction:
+                                                                          () async {
+                                                                        // Show delete modal
+                                                                        await showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (dialogContext) {
+                                                                            return Dialog(
+                                                                              elevation: 0,
+                                                                              insetPadding: EdgeInsets.zero,
+                                                                              backgroundColor: Colors.transparent,
+                                                                              alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                              child: GestureDetector(
+                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                child: DeleteModalWidget(
+                                                                                  deleteMsg: 'Esta acción borrará definitivamente al usuario:  ${valueOrDefault<String>(
+                                                                                    containerUsuariosRecord?.displayName,
+                                                                                    'Nombre no definido',
+                                                                                  )}, del grupo, ¿Desea Continuar?',
+                                                                                  title: 'Eliminar Usuario',
+                                                                                  deleteAction: () async {
+                                                                                    await listViewUserGrupoUsuarioRecord.reference.delete();
+                                                                                    // Refresh Data user
+                                                                                    setState(() => _model.firestoreRequestCompleter = null);
+                                                                                    await _model.waitForFirestoreRequestCompleted(minWait: 2000, maxWait: 10000);
+                                                                                  },
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        ).then((value) =>
+                                                                            setState(() {}));
+                                                                      },
+                                                                      showQRAction:
+                                                                          () async {
+                                                                        await showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (dialogContext) {
+                                                                            return Dialog(
+                                                                              elevation: 0,
+                                                                              insetPadding: EdgeInsets.zero,
+                                                                              backgroundColor: Colors.transparent,
+                                                                              alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                              child: GestureDetector(
+                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                child: SizedBox(
+                                                                                  height: double.infinity,
+                                                                                  width: double.infinity,
+                                                                                  child: QrModalWidget(
+                                                                                    user: containerUsuariosRecord!,
+                                                                                    grupoUsuario: listViewUserGrupoUsuarioRecord,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        ).then((value) =>
+                                                                            setState(() {}));
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ).then((value) =>
+                                                              safeSetState(
+                                                                  () {}));
+                                                        },
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              width: 80.0,
+                                                              height: 80.0,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .alternate,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12.0),
+                                                              ),
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12.0),
+                                                                child: Image
+                                                                    .network(
+                                                                  valueOrDefault<
+                                                                      String>(
+                                                                    containerUsuariosRecord
+                                                                        ?.photoUrl,
+                                                                    'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fuser.png?alt=media&token=765cad05-627d-4fdd-8621-d333ecf3271a',
+                                                                  ),
+                                                                  width: 80.0,
+                                                                  height: 80.0,
+                                                                  fit: BoxFit
+                                                                      .fitWidth,
                                                                 ),
                                                               ),
                                                             ),
-                                                          );
-                                                        },
-                                                      ).then((value) =>
-                                                          safeSetState(() {}));
-                                                    },
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Container(
-                                                          width: 80.0,
-                                                          height: 80.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .alternate,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12.0),
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12.0),
-                                                            child:
-                                                                Image.network(
-                                                              valueOrDefault<
-                                                                  String>(
-                                                                containerUsuariosRecord
-                                                                    ?.photoUrl,
-                                                                'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fuser.png?alt=media&token=765cad05-627d-4fdd-8621-d333ecf3271a',
-                                                              ),
-                                                              width: 80.0,
-                                                              height: 80.0,
-                                                              fit: BoxFit
-                                                                  .fitWidth,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        8.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                            child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional
-                                                                      .fromSTEB(
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsetsDirectional.fromSTEB(
                                                                           0.0,
                                                                           0.0,
                                                                           0.0,
                                                                           8.0),
-                                                                  child:
-                                                                      Container(
-                                                                    width: double
-                                                                        .infinity,
-                                                                    decoration:
-                                                                        const BoxDecoration(),
-                                                                    child:
-                                                                        AutoSizeText(
-                                                                      valueOrDefault<
-                                                                          String>(
-                                                                        containerUsuariosRecord
-                                                                            ?.displayName,
-                                                                        'No definido',
+                                                                      child:
+                                                                          Container(
+                                                                        width: double
+                                                                            .infinity,
+                                                                        decoration:
+                                                                            const BoxDecoration(),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          valueOrDefault<
+                                                                              String>(
+                                                                            containerUsuariosRecord?.displayName,
+                                                                            'No definido',
+                                                                          ),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleSmall
+                                                                              .override(
+                                                                                fontFamily: 'Inter',
+                                                                                color: FlutterFlowTheme.of(context).primaryText,
+                                                                                lineHeight: 1.5,
+                                                                              ),
+                                                                          minFontSize:
+                                                                              14.0,
+                                                                        ),
                                                                       ),
-                                                                      maxLines:
-                                                                          2,
+                                                                    ),
+                                                                    Text(
+                                                                      rowTipoUsuarioRecord
+                                                                          .descripcion,
                                                                       style: FlutterFlowTheme.of(
                                                                               context)
-                                                                          .titleSmall
-                                                                          .override(
-                                                                            fontFamily:
-                                                                                'Inter',
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).primaryText,
-                                                                            lineHeight:
-                                                                                1.5,
-                                                                          ),
-                                                                      minFontSize:
-                                                                          14.0,
+                                                                          .labelSmall,
                                                                     ),
-                                                                  ),
+                                                                  ],
                                                                 ),
-                                                                Text(
-                                                                  rowTipoUsuarioRecord
-                                                                      .descripcion,
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .labelSmall,
-                                                                ),
-                                                              ],
+                                                              ),
                                                             ),
-                                                          ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),

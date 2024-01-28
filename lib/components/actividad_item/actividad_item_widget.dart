@@ -1,12 +1,13 @@
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/components/actions_document/actions_document_widget.dart';
+import '/components/custom_snack_bar/custom_snack_bar_widget.dart';
 import '/components/delete_modal/delete_modal_widget.dart';
 import '/components/forms/form_activity/form_activity_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:octo_image/octo_image.dart';
@@ -134,7 +135,7 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                         focusColor: Colors.transparent,
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
-                        onDoubleTap: () async {
+                        onTap: () async {
                           // Find Grupo Actividad Detalle
                           _model.doubleGrupoActividadDetalleResponse =
                               await queryGrupoActividadDetalleRecordOnce(
@@ -386,86 +387,53 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                                       'Esta acción borrará definitivamente la actividad:  ${containerActividadRecord.nombre}, ¿Desea Continuar?',
                                                   title: 'Confirmar',
                                                   deleteAction: () async {
-                                                    // delete grupo actividad
-                                                    await widget.grupoActividad!
-                                                        .reference
-                                                        .delete();
-                                                    // delete actividad
-                                                    await widget.grupoActividad!
-                                                        .actividad!
-                                                        .delete();
-                                                    while (FFAppState()
-                                                            .contador <
-                                                        _model.longImgResponse!
-                                                            .length) {
-                                                      // remove img from firestore
-                                                      await FirebaseStorage
-                                                          .instance
-                                                          .refFromURL(_model
-                                                              .longImgResponse![
-                                                                  FFAppState()
-                                                                      .contador]
-                                                              .imgPath)
-                                                          .delete();
-                                                      // delete img record
-                                                      await _model
-                                                          .longImgResponse![
-                                                              FFAppState()
-                                                                  .contador]
-                                                          .reference
-                                                          .delete();
-                                                      // increment Contador
-                                                      FFAppState().contador =
-                                                          FFAppState()
-                                                                  .contador +
-                                                              1;
-                                                    }
-                                                    // reset contador
-                                                    FFAppState().contador = 0;
-                                                    while (FFAppState()
-                                                            .contador <
-                                                        _model
-                                                            .longGrupoActividadDetalleResponse!
-                                                            .length) {
-                                                      // delete grupo actividad detalle
-                                                      await _model
-                                                          .longGrupoActividadDetalleResponse![
-                                                              FFAppState()
-                                                                  .contador]
-                                                          .reference
-                                                          .delete();
-                                                      // Increment Contador
-                                                      FFAppState().contador =
-                                                          FFAppState()
-                                                                  .contador +
-                                                              1;
-                                                    }
-                                                    FFAppState().contador = 0;
-                                                    // Show success Msg
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .clearSnackBars();
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          'Actividad eliminada correctamente.',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryText,
-                                                          ),
-                                                        ),
-                                                        duration: const Duration(
-                                                            milliseconds: 4500),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .success,
-                                                      ),
+                                                    _model.deleteActividadResponse =
+                                                        await actions
+                                                            .deleteActividad(
+                                                      _model
+                                                          .longGrupoActividadDetalleResponse!
+                                                          .toList(),
+                                                      containerActividadRecord,
+                                                      widget.grupoActividad!,
+                                                      _model.longImgResponse!
+                                                          .toList(),
                                                     );
-                                                    Navigator.pop(context);
+                                                    if (_model
+                                                        .deleteActividadResponse!
+                                                        .error) {
+                                                      // show error msg
+                                                      await showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (dialogContext) {
+                                                          return Dialog(
+                                                            elevation: 0,
+                                                            insetPadding:
+                                                                EdgeInsets.zero,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            alignment: const AlignmentDirectional(
+                                                                    0.0, 1.0)
+                                                                .resolve(
+                                                                    Directionality.of(
+                                                                        context)),
+                                                            child: SizedBox(
+                                                              height: 80.0,
+                                                              child:
+                                                                  CustomSnackBarWidget(
+                                                                msg: _model
+                                                                    .deleteActividadResponse!
+                                                                    .message,
+                                                                type: ToastType
+                                                                    .error,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ).then((value) =>
+                                                          setState(() {}));
+                                                    }
                                                   },
                                                 ),
                                               ),
@@ -497,7 +465,6 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                       }
                                     },
                                     showQRAction: () async {},
-                                    pasarAsistencia: () async {},
                                   ),
                                 ),
                               );

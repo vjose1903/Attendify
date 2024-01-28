@@ -1,5 +1,5 @@
 import '/backend/backend.dart';
-import '/components/actividad_item_widget.dart';
+import '/components/actividad_item/actividad_item_widget.dart';
 import '/components/activity_filters/activity_filters_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'activities_list_widget.dart' show ActivitiesListWidget;

@@ -1,9 +1,9 @@
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
+import 'dart:async';
 import 'users_list_widget.dart' show UsersListWidget;
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class UsersListModel extends FlutterFlowModel<UsersListWidget> {
   ///  Local state fields for this page.
@@ -20,12 +20,7 @@ class UsersListModel extends FlutterFlowModel<UsersListWidget> {
   FormFieldController<List<String>>? chipsTipoUsuarioValueController;
   // Stores action output result for [Custom Action - getTipoUsuarioByDescripcion] action in ChipsTipoUsuario widget.
   TipoUsuarioRecord? findTipoUsuario;
-  // State field(s) for ListView widget.
-
-  PagingController<DocumentSnapshot?, GrupoUsuarioRecord>?
-      listViewPagingController;
-  Query? listViewPagingQuery;
-  List<StreamSubscription?> listViewStreamSubscriptions = [];
+  Completer<List<GrupoUsuarioRecord>>? firestoreRequestCompleter;
 
   /// Initialization and disposal methods.
 
@@ -35,10 +30,6 @@ class UsersListModel extends FlutterFlowModel<UsersListWidget> {
   @override
   void dispose() {
     unfocusNode.dispose();
-    for (var s in listViewStreamSubscriptions) {
-      s?.cancel();
-    }
-    listViewPagingController?.dispose();
   }
 
   /// Action blocks are added here.
@@ -47,35 +38,18 @@ class UsersListModel extends FlutterFlowModel<UsersListWidget> {
 
   /// Additional helper methods are added here.
 
-  PagingController<DocumentSnapshot?, GrupoUsuarioRecord> setListViewController(
-    Query query, {
-    DocumentReference<Object?>? parent,
-  }) {
-    listViewPagingController ??= _createListViewController(query, parent);
-    if (listViewPagingQuery != query) {
-      listViewPagingQuery = query;
-      listViewPagingController?.refresh();
+  Future waitForFirestoreRequestCompleted({
+    double minWait = 0,
+    double maxWait = double.infinity,
+  }) async {
+    final stopwatch = Stopwatch()..start();
+    while (true) {
+      await Future.delayed(const Duration(milliseconds: 50));
+      final timeElapsed = stopwatch.elapsedMilliseconds;
+      final requestComplete = firestoreRequestCompleter?.isCompleted ?? false;
+      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
+        break;
+      }
     }
-    return listViewPagingController!;
-  }
-
-  PagingController<DocumentSnapshot?, GrupoUsuarioRecord>
-      _createListViewController(
-    Query query,
-    DocumentReference<Object?>? parent,
-  ) {
-    final controller = PagingController<DocumentSnapshot?, GrupoUsuarioRecord>(
-        firstPageKey: null);
-    return controller
-      ..addPageRequestListener(
-        (nextPageMarker) => queryGrupoUsuarioRecordPage(
-          queryBuilder: (_) => listViewPagingQuery ??= query,
-          nextPageMarker: nextPageMarker,
-          streamSubscriptions: listViewStreamSubscriptions,
-          controller: controller,
-          pageSize: 15,
-          isStream: true,
-        ),
-      );
   }
 }

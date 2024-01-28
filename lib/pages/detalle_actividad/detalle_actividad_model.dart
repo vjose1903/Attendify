@@ -86,6 +86,8 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
   GrupoUsuarioRecord? findGrupoUsuarioQrResponse;
   // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
+  AsistenciaRecord? qrFindUserIsPresent;
+  // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
   List<AccesoRecord>? detalleAccessResponse;
   // Stores action output result for [Backend Call - Read Document] action in Button widget.
   UsuariosRecord? qrfindUserInfoResponse;

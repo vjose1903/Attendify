@@ -9,6 +9,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'form_user_model.dart';
@@ -21,14 +22,14 @@ class FormUserWidget extends StatefulWidget {
     required this.reloadChip,
     required this.action,
     this.grupoUsuario,
-    this.tipoUsuarioDescript,
+    this.tipoUsuario,
   });
 
   final UsuariosRecord? user;
   final Future Function()? reloadChip;
   final FormAction? action;
   final DocumentReference? grupoUsuario;
-  final String? tipoUsuarioDescript;
+  final TipoUsuarioRecord? tipoUsuario;
 
   @override
   State<FormUserWidget> createState() => _FormUserWidgetState();
@@ -47,6 +48,14 @@ class _FormUserWidgetState extends State<FormUserWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => FormUserModel());
+
+    // On component load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      // set state
+      setState(() {
+        _model.tipoUsuarioSelected = widget.tipoUsuario?.reference;
+      });
+    });
 
     _model.displayNameTxtController ??=
         TextEditingController(text: widget.user?.displayName);
@@ -204,7 +213,7 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                                       _model.tipoUsuarioDDValueController ??=
                                           FormFieldController<String>(
                                     _model.tipoUsuarioDDValue ??=
-                                        widget.tipoUsuarioDescript,
+                                        widget.tipoUsuario?.descripcion,
                                   ),
                                   options: tipoUsuarioDDTipoUsuarioRecordList
                                       .map((e) => e.descripcion)
@@ -216,6 +225,11 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                                         .getTipoUsuarioByDescripcion(
                                       _model.tipoUsuarioDDValue!,
                                     );
+                                    // set state
+                                    setState(() {
+                                      _model.tipoUsuarioSelected = _model
+                                          .findTipoUsuarioResult?.reference;
+                                    });
 
                                     setState(() {});
                                   },
@@ -519,10 +533,11 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                             !_model.formKey.currentState!.validate()) {
                           return;
                         }
-                        if (_model.formDocumentoIdentidadModel.tipoDocDDValue ==
-                            null) {
-                          return;
-                        }
+                        await actions.consoleLog(
+                          null,
+                          'form valid',
+                          null,
+                        );
                         if ((_model.formDocumentoIdentidadModel
                                     .tipoDocDDValue !=
                                 null) &&
@@ -568,8 +583,7 @@ class _FormUserWidgetState extends State<FormUserWidget> {
 
                             await widget.grupoUsuario!
                                 .update(createGrupoUsuarioRecordData(
-                              tipoUsuario:
-                                  _model.findTipoUsuarioResult?.reference,
+                              tipoUsuario: _model.tipoUsuarioSelected,
                             ));
                           }
                           if (_model.formDocumentoIdentidadModel
@@ -662,26 +676,16 @@ class _FormUserWidgetState extends State<FormUserWidget> {
 
                           // Hide Bottom Sheet
                           Navigator.pop(context);
-                          // Show success msg
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                widget.action == FormAction.edit
-                                    ? 'Usuario modificado correctamente'
-                                    : 'Usuario creado correctamente',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: const Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).success,
-                            ),
-                          );
                           // Reload chips
                           await widget.reloadChip?.call();
+                          if (shouldSetState) setState(() {});
+                          return;
                         } else {
+                          await actions.consoleLog(
+                            null,
+                            'no doc',
+                            null,
+                          );
                           // Show required Tipo Document
                           await showDialog(
                             context: context,

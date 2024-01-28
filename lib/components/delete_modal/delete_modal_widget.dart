@@ -165,11 +165,7 @@ class _DeleteModalWidgetState extends State<DeleteModalWidget> {
                                   onPressed: () async {
                                     // execute delete action
                                     await widget.deleteAction?.call();
-                                    // wait 250ms
-                                    await Future.delayed(
-                                        const Duration(milliseconds: 250));
                                     Navigator.pop(context);
-                                    _model.updatePage(() {});
                                   },
                                   text: 'Aceptar',
                                   options: FFButtonOptions(

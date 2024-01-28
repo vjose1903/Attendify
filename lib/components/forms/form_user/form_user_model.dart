@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class FormUserModel extends FlutterFlowModel<FormUserWidget> {
+  ///  Local state fields for this component.
+
+  DocumentReference? tipoUsuarioSelected;
+
   ///  State fields for stateful widgets in this component.
 
   final formKey = GlobalKey<FormState>();

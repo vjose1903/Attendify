@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -14,17 +15,12 @@ class ActionsDocumentWidget extends StatefulWidget {
     required this.deleteAction,
     this.showQRAction,
     bool? showQrBtn,
-    this.pasarAsistencia,
-    bool? showAsistencia,
-  })  : showQrBtn = showQrBtn ?? false,
-        showAsistencia = showAsistencia ?? false;
+  }) : showQrBtn = showQrBtn ?? false;
 
   final Future Function()? editAction;
   final Future Function()? deleteAction;
   final Future Function()? showQRAction;
   final bool showQrBtn;
-  final Future Function()? pasarAsistencia;
-  final bool showAsistencia;
 
   @override
   State<ActionsDocumentWidget> createState() => _ActionsDocumentWidgetState();
@@ -85,7 +81,11 @@ class _ActionsDocumentWidgetState extends State<ActionsDocumentWidget> {
                 // Close bottom sheet
                 Navigator.pop(context);
                 // Execute Edit action
-                await widget.editAction?.call();
+                unawaited(
+                  () async {
+                    await widget.editAction?.call();
+                  }(),
+                );
               },
               text: 'Editar',
               icon: const Icon(
@@ -110,10 +110,14 @@ class _ActionsDocumentWidgetState extends State<ActionsDocumentWidget> {
               padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
               child: FFButtonWidget(
                 onPressed: () async {
-                  // Execute Edit action
-                  await widget.deleteAction?.call();
                   // Close bottom sheet
                   Navigator.pop(context);
+                  // Execute Edit action
+                  unawaited(
+                    () async {
+                      await widget.deleteAction?.call();
+                    }(),
+                  );
                 },
                 text: 'Eliminar',
                 icon: const FaIcon(
@@ -143,42 +147,15 @@ class _ActionsDocumentWidgetState extends State<ActionsDocumentWidget> {
                     // Close bottom sheet
                     Navigator.pop(context);
                     // Execute Qr action
-                    await widget.showQRAction?.call();
+                    unawaited(
+                      () async {
+                        await widget.showQRAction?.call();
+                      }(),
+                    );
                   },
                   text: 'QR',
                   icon: const Icon(
                     Icons.qr_code_2_outlined,
-                    size: 15.0,
-                  ),
-                  options: FFButtonOptions(
-                    width: double.infinity,
-                    height: 60.0,
-                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    iconPadding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primaryImputBackground,
-                    textStyle: FlutterFlowTheme.of(context).bodyLarge,
-                    elevation: 2.0,
-                    borderSide: const BorderSide(
-                      color: Colors.transparent,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
-            if (widget.showAsistencia)
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    // Close bottom sheet
-                    Navigator.pop(context);
-                    // Execute Qr action
-                    await widget.pasarAsistencia?.call();
-                  },
-                  text: 'Pasar asistencia',
-                  icon: const Icon(
-                    Icons.hail,
                     size: 15.0,
                   ),
                   options: FFButtonOptions(
