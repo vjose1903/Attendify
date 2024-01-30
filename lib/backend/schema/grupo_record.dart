@@ -29,10 +29,16 @@ class GrupoRecord extends FirestoreRecord {
   String get logo => _logo ?? '';
   bool hasLogo() => _logo != null;
 
+  // "logoBlurHash" field.
+  String? _logoBlurHash;
+  String get logoBlurHash => _logoBlurHash ?? '';
+  bool hasLogoBlurHash() => _logoBlurHash != null;
+
   void _initializeFields() {
     _nombre = snapshotData['nombre'] as String?;
     _estado = snapshotData['estado'] as bool?;
     _logo = snapshotData['logo'] as String?;
+    _logoBlurHash = snapshotData['logoBlurHash'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -72,12 +78,14 @@ Map<String, dynamic> createGrupoRecordData({
   String? nombre,
   bool? estado,
   String? logo,
+  String? logoBlurHash,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'nombre': nombre,
       'estado': estado,
       'logo': logo,
+      'logoBlurHash': logoBlurHash,
     }.withoutNulls,
   );
 
@@ -91,12 +99,13 @@ class GrupoRecordDocumentEquality implements Equality<GrupoRecord> {
   bool equals(GrupoRecord? e1, GrupoRecord? e2) {
     return e1?.nombre == e2?.nombre &&
         e1?.estado == e2?.estado &&
-        e1?.logo == e2?.logo;
+        e1?.logo == e2?.logo &&
+        e1?.logoBlurHash == e2?.logoBlurHash;
   }
 
   @override
-  int hash(GrupoRecord? e) =>
-      const ListEquality().hash([e?.nombre, e?.estado, e?.logo]);
+  int hash(GrupoRecord? e) => const ListEquality()
+      .hash([e?.nombre, e?.estado, e?.logo, e?.logoBlurHash]);
 
   @override
   bool isValidKey(Object? o) => o is GrupoRecord;

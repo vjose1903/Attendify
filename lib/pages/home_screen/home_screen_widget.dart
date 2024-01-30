@@ -208,6 +208,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                   _model.grupoUsuarioResponse?.tipoUsuario;
               FFAppState().grupoSeleccionadoName =
                   _model.findGrupoSelectedResult!.nombre;
+              FFAppState().selectedGroupImg =
+                  _model.findGrupoSelectedResult!.logo;
             });
             // start Loading
             setState(() {
@@ -367,21 +369,50 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                     },
                   ).then((value) => safeSetState(() {}));
                 },
-                child: AutoSizeText(
-                  valueOrDefault<String>(
-                    FFAppState().grupoSeleccionadoName,
-                    'Seleccione Grupo',
-                  ).maybeHandleOverflow(
-                    maxChars: 22,
-                    replacement: '…',
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).lightT10,
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
-                  style: FlutterFlowTheme.of(context).headlineMedium.override(
-                        fontFamily: 'Readex Pro',
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w500,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        width: 40.0,
+                        height: 40.0,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.network(
+                          FFAppState().selectedGroupImg,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                  minFontSize: 15.0,
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
+                        child: AutoSizeText(
+                          valueOrDefault<String>(
+                            FFAppState().grupoSeleccionadoName,
+                            'Seleccione Grupo',
+                          ).maybeHandleOverflow(
+                            maxChars: 22,
+                            replacement: '…',
+                          ),
+                          style: FlutterFlowTheme.of(context)
+                              .headlineMedium
+                              .override(
+                                fontFamily: 'Readex Pro',
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                          minFontSize: 15.0,
+                        ),
+                      ),
+                    ].divide(const SizedBox(width: 5.0)),
+                  ),
                 ),
               ),
               InkWell(
@@ -390,6 +421,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () async {
+                  // go to profile
+
                   context.pushNamed(
                     'profile',
                     extra: <String, dynamic>{
@@ -417,17 +450,23 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                     alignment: const AlignmentDirectional(0.0, 0.0),
                     child: AuthUserStreamWidget(
                       builder: (context) => Hero(
-                        tag: valueOrDefault<String>(
-                          currentUserPhoto,
-                          'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fuser.png?alt=media&token=765cad05-627d-4fdd-8621-d333ecf3271a',
-                        ),
+                        tag: currentUserPhoto != ''
+                            ? currentUserPhoto
+                            : FFAppConstants.noUserImgUrl,
                         transitionOnUserGestures: true,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            valueOrDefault<String>(
-                              currentUserPhoto,
-                              'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fuser.png?alt=media&token=765cad05-627d-4fdd-8621-d333ecf3271a',
+                          child: OctoImage(
+                            placeholderBuilder: OctoPlaceholder.blurHash(
+                              currentUserPhoto != ''
+                                  ? valueOrDefault(
+                                      currentUserDocument?.photoBlurUrl, '')
+                                  : FFAppConstants.noUserUrlBlurHash,
+                            ),
+                            image: NetworkImage(
+                              currentUserPhoto != ''
+                                  ? currentUserPhoto
+                                  : FFAppConstants.noUserImgUrl,
                             ),
                             width: double.infinity,
                             height: double.infinity,
@@ -439,7 +478,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                   ),
                 ),
               ),
-            ].divide(const SizedBox(width: 10.0)),
+            ].divide(const SizedBox(width: 5.0)),
           ),
           actions: const [],
           centerTitle: false,
@@ -865,7 +904,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                                                 enlargeFactor:
                                                                     0.25,
                                                                 enableInfiniteScroll:
-                                                                    true,
+                                                                    false,
                                                                 scrollDirection:
                                                                     Axis.horizontal,
                                                                 autoPlay: false,

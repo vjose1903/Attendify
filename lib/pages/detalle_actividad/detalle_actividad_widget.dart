@@ -1166,6 +1166,12 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                     MainAxisSize
                                                                         .max,
                                                                 children: [
+                                                                  Text(
+                                                                    'show full list: ${_model.showFullAsistenciaList.toString()}  total de registros:  ${containerAsistenciaAsistenciaRecordList.length.toString()}',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium,
+                                                                  ),
                                                                   Padding(
                                                                     padding: const EdgeInsetsDirectional
                                                                         .fromSTEB(

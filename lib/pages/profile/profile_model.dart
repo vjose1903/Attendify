@@ -1,3 +1,5 @@
+import '/backend/backend.dart';
+import '/backend/schema/enums/enums.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'profile_widget.dart' show ProfileWidget;
 import 'package:flutter/material.dart';
@@ -8,9 +10,17 @@ class ProfileModel extends FlutterFlowModel<ProfileWidget> {
 
   bool isEditing = false;
 
+  TipoDocumentoIdentidad? initialTipoDoc;
+
+  String? initialValueDoc;
+
+  DocumentReference? initialRefDoc;
+
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
+  // Stores action output result for [Firestore Query - Query a collection] action in profile widget.
+  DocumentoIdentidadRecord? findDocIdentidad;
   bool isDataUploading = false;
   FFUploadedFile uploadedLocalFile =
       FFUploadedFile(bytes: Uint8List.fromList([]));
@@ -25,6 +35,10 @@ class ProfileModel extends FlutterFlowModel<ProfileWidget> {
   TextEditingController? textController2;
   final textFieldMask2 = MaskTextInputFormatter(mask: '(###) ###-####');
   String? Function(BuildContext, String?)? textController2Validator;
+  // Stores action output result for [Firestore Query - Query a collection] action in CancelBtn widget.
+  DocumentoIdentidadRecord? findDocIdentidadCancel;
+  // Stores action output result for [Firestore Query - Query a collection] action in SaveBtn widget.
+  DocumentoIdentidadRecord? findDocIdentidadAceptar;
 
   /// Initialization and disposal methods.
 

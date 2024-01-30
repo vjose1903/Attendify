@@ -1,18 +1,25 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
+import '/backend/schema/enums/enums.dart';
+import '/components/forms/form_doc_identidad/form_doc_identidad_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
+import '/flutter_flow/flutter_flow_expanded_image_view.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
 import '/flutter_flow/permissions_util.dart';
+import 'package:collection/collection.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
 import 'profile_model.dart';
 export 'profile_model.dart';
@@ -57,6 +64,25 @@ class _ProfileWidgetState extends State<ProfileWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => ProfileModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      // Find doc identidad
+      _model.findDocIdentidad = await queryDocumentoIdentidadRecordOnce(
+        queryBuilder: (documentoIdentidadRecord) =>
+            documentoIdentidadRecord.where(
+          'usuarioReference',
+          isEqualTo: currentUserReference,
+        ),
+        singleRecord: true,
+      ).then((s) => s.firstOrNull);
+      if (_model.findDocIdentidad?.reference != null) {
+        // Set document initial values
+        _model.initialValueDoc = _model.findDocIdentidad?.valor;
+        _model.initialRefDoc = _model.findDocIdentidad?.reference;
+        _model.initialTipoDoc = _model.findDocIdentidad?.tipo;
+      }
+    });
 
     _model.textController1 ??=
         TextEditingController(text: currentUserDisplayName);
@@ -142,22 +168,69 @@ class _ProfileWidgetState extends State<ProfileWidget>
                         Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: AuthUserStreamWidget(
-                            builder: (context) => Hero(
-                              tag: valueOrDefault<String>(
-                                currentUserPhoto,
-                                'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fuser.png?alt=media&token=765cad05-627d-4fdd-8621-d333ecf3271a',
-                              ),
-                              transitionOnUserGestures: true,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50.0),
-                                child: Image.network(
-                                  valueOrDefault<String>(
-                                    currentUserPhoto,
-                                    'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fuser.png?alt=media&token=765cad05-627d-4fdd-8621-d333ecf3271a',
+                            builder: (context) => InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                await Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.fade,
+                                    child: FlutterFlowExpandedImageView(
+                                      image: OctoImage(
+                                        placeholderBuilder:
+                                            OctoPlaceholder.blurHash(
+                                          currentUserPhoto != ''
+                                              ? valueOrDefault(
+                                                  currentUserDocument
+                                                      ?.photoBlurUrl,
+                                                  '')
+                                              : FFAppConstants
+                                                  .noUserUrlBlurHash,
+                                        ),
+                                        image: NetworkImage(
+                                          currentUserPhoto != ''
+                                              ? currentUserPhoto
+                                              : FFAppConstants.noUserImgUrl,
+                                        ),
+                                        fit: BoxFit.contain,
+                                      ),
+                                      allowRotation: false,
+                                      tag: currentUserPhoto != ''
+                                          ? currentUserPhoto
+                                          : FFAppConstants.noUserImgUrl,
+                                      useHeroAnimation: true,
+                                    ),
                                   ),
-                                  width: 100.0,
-                                  height: 100.0,
-                                  fit: BoxFit.cover,
+                                );
+                              },
+                              child: Hero(
+                                tag: currentUserPhoto != ''
+                                    ? currentUserPhoto
+                                    : FFAppConstants.noUserImgUrl,
+                                transitionOnUserGestures: true,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  child: OctoImage(
+                                    placeholderBuilder:
+                                        OctoPlaceholder.blurHash(
+                                      currentUserPhoto != ''
+                                          ? valueOrDefault(
+                                              currentUserDocument?.photoBlurUrl,
+                                              '')
+                                          : FFAppConstants.noUserUrlBlurHash,
+                                    ),
+                                    image: NetworkImage(
+                                      currentUserPhoto != ''
+                                          ? currentUserPhoto
+                                          : FFAppConstants.noUserImgUrl,
+                                    ),
+                                    width: 100.0,
+                                    height: 100.0,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
@@ -177,7 +250,9 @@ class _ProfileWidgetState extends State<ProfileWidget>
                               final selectedMedia =
                                   await selectMediaWithSourceBottomSheet(
                                 context: context,
+                                imageQuality: 60,
                                 allowPhoto: true,
+                                includeBlurHash: true,
                                 pickerFontFamily: 'Open Sans',
                               );
                               if (selectedMedia != null &&
@@ -517,8 +592,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                 buttonSize: 40.0,
                                 fillColor: FlutterFlowTheme.of(context)
                                     .primaryBackground,
-                                icon: FaIcon(
-                                  FontAwesomeIcons.userCog,
+                                icon: Icon(
+                                  Icons.settings_sharp,
                                   color: FlutterFlowTheme.of(context)
                                       .primaryImputBorder,
                                   size: 22.0,
@@ -573,7 +648,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                         Padding(
                                           padding:
                                               const EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 12.0, 0.0),
+                                                  3.0, 0.0, 12.0, 0.0),
                                           child: Text(
                                             'Número telefono',
                                             textAlign: TextAlign.start,
@@ -722,6 +797,262 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                       ],
                                     ),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 8.0),
+                                    child: StreamBuilder<
+                                        List<DocumentoIdentidadRecord>>(
+                                      stream: queryDocumentoIdentidadRecord(
+                                        queryBuilder:
+                                            (documentoIdentidadRecord) =>
+                                                documentoIdentidadRecord.where(
+                                          'usuarioReference',
+                                          isEqualTo: currentUserReference,
+                                        ),
+                                        singleRecord: true,
+                                      ),
+                                      builder: (context, snapshot) {
+                                        // Customize what your widget looks like when it's loading.
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: SizedBox(
+                                              width: 60.0,
+                                              height: 60.0,
+                                              child: SpinKitChasingDots(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                size: 60.0,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        List<DocumentoIdentidadRecord>
+                                            documentoIdentidadDocumentoIdentidadRecordList =
+                                            snapshot.data!;
+                                        final documentoIdentidadDocumentoIdentidadRecord =
+                                            documentoIdentidadDocumentoIdentidadRecordList
+                                                    .isNotEmpty
+                                                ? documentoIdentidadDocumentoIdentidadRecordList
+                                                    .first
+                                                : null;
+                                        return Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      0.0, 8.0, 16.0, 8.0),
+                                              child: FaIcon(
+                                                FontAwesomeIcons.idCardAlt,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                size: 24.0,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                12.0, 0.0),
+                                                    child: Text(
+                                                      'Doc. identidad',
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium,
+                                                    ),
+                                                  ),
+                                                  if (documentoIdentidadDocumentoIdentidadRecord !=
+                                                      null)
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  3.0,
+                                                                  12.0,
+                                                                  0.0),
+                                                      child: Text(
+                                                        valueOrDefault<String>(
+                                                          () {
+                                                            if (documentoIdentidadDocumentoIdentidadRecord
+                                                                    .tipo ==
+                                                                TipoDocumentoIdentidad
+                                                                    .cedula) {
+                                                              return 'Cédula';
+                                                            } else if (documentoIdentidadDocumentoIdentidadRecord
+                                                                    .tipo ==
+                                                                TipoDocumentoIdentidad
+                                                                    .pasaporte) {
+                                                              return 'Pasaporte';
+                                                            } else if (documentoIdentidadDocumentoIdentidadRecord
+                                                                    .tipo ==
+                                                                TipoDocumentoIdentidad
+                                                                    .rnc) {
+                                                              return 'RNC';
+                                                            } else {
+                                                              return '-';
+                                                            }
+                                                          }(),
+                                                          '-',
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryText,
+                                                                  fontSize:
+                                                                      10.0,
+                                                                ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  if (_model.isEditing == false)
+                                                    Text(
+                                                      valueOrDefault<String>(
+                                                        documentoIdentidadDocumentoIdentidadRecord !=
+                                                                null
+                                                            ? documentoIdentidadDocumentoIdentidadRecord
+                                                                .valor
+                                                            : 'No definido',
+                                                        'No definido',
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .secondaryText,
+                                                              ),
+                                                    ),
+                                                  if (_model.isEditing == true)
+                                                    FFButtonWidget(
+                                                      onPressed: () async {
+                                                        await showModalBottomSheet(
+                                                          isScrollControlled:
+                                                              true,
+                                                          backgroundColor:
+                                                              Colors
+                                                                  .transparent,
+                                                          isDismissible: false,
+                                                          enableDrag: false,
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return GestureDetector(
+                                                              onTap: () => _model
+                                                                      .unfocusNode
+                                                                      .canRequestFocus
+                                                                  ? FocusScope.of(
+                                                                          context)
+                                                                      .requestFocus(
+                                                                          _model
+                                                                              .unfocusNode)
+                                                                  : FocusScope.of(
+                                                                          context)
+                                                                      .unfocus(),
+                                                              child: Padding(
+                                                                padding: MediaQuery
+                                                                    .viewInsetsOf(
+                                                                        context),
+                                                                child:
+                                                                    SizedBox(
+                                                                  height: 300.0,
+                                                                  child:
+                                                                      FormDocIdentidadWidget(
+                                                                    documentoIdentidad:
+                                                                        documentoIdentidadDocumentoIdentidadRecord,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ).then((value) =>
+                                                            safeSetState(
+                                                                () {}));
+                                                      },
+                                                      text: 'Cambiar',
+                                                      options: FFButtonOptions(
+                                                        height: 30.0,
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    24.0,
+                                                                    0.0,
+                                                                    24.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                        elevation: 3.0,
+                                                        borderSide: const BorderSide(
+                                                          color: Colors
+                                                              .transparent,
+                                                          width: 1.0,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
                                   if (false)
                                     Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(
@@ -790,6 +1121,39 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                     _model.uploadedFileUrl = '';
                                   });
                                 }
+                                // Find doc identidad
+                                _model.findDocIdentidadCancel =
+                                    await queryDocumentoIdentidadRecordOnce(
+                                  queryBuilder: (documentoIdentidadRecord) =>
+                                      documentoIdentidadRecord.where(
+                                    'usuarioReference',
+                                    isEqualTo: currentUserReference,
+                                  ),
+                                  singleRecord: true,
+                                ).then((s) => s.firstOrNull);
+                                if (_model.findDocIdentidadCancel != null) {
+                                  if (_model.initialRefDoc?.id != null &&
+                                      _model.initialRefDoc?.id != '') {
+                                    if ((_model.initialValueDoc !=
+                                            _model.findDocIdentidadCancel
+                                                ?.valor) ||
+                                        (_model.findDocIdentidadCancel?.tipo !=
+                                            _model.initialTipoDoc)) {
+                                      // Return initial doc values
+
+                                      await _model.initialRefDoc!.update(
+                                          createDocumentoIdentidadRecordData(
+                                        tipo: _model.initialTipoDoc,
+                                        valor: _model.initialValueDoc,
+                                      ));
+                                    }
+                                  } else {
+                                    // delete new documento
+                                    await _model
+                                        .findDocIdentidadCancel!.reference
+                                        .delete();
+                                  }
+                                }
                                 // Hide btns
                                 if (animationsMap[
                                         'rowOnActionTriggerAnimation'] !=
@@ -802,6 +1166,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                 setState(() {
                                   _model.isEditing = false;
                                 });
+
+                                setState(() {});
                               },
                               text: 'Cancelar',
                               options: FFButtonOptions(
@@ -847,6 +1213,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                   await currentUserReference!
                                       .update(createUsuariosRecordData(
                                     photoUrl: _model.uploadedFileUrl,
+                                    photoBlurUrl:
+                                        _model.uploadedLocalFile.blurHash,
                                   ));
                                   // Clear photo data
                                   setState(() {
@@ -854,6 +1222,36 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                     _model.uploadedLocalFile = FFUploadedFile(
                                         bytes: Uint8List.fromList([]));
                                     _model.uploadedFileUrl = '';
+                                  });
+                                }
+                                // Find doc identidad
+                                _model.findDocIdentidadAceptar =
+                                    await queryDocumentoIdentidadRecordOnce(
+                                  queryBuilder: (documentoIdentidadRecord) =>
+                                      documentoIdentidadRecord.where(
+                                    'usuarioReference',
+                                    isEqualTo: currentUserReference,
+                                  ),
+                                  singleRecord: true,
+                                ).then((s) => s.firstOrNull);
+                                if (_model.findDocIdentidadAceptar?.reference
+                                            .id !=
+                                        null &&
+                                    _model.findDocIdentidadAceptar?.reference
+                                            .id !=
+                                        '') {
+                                  // update doc state
+                                  setState(() {
+                                    _model.initialTipoDoc =
+                                        _model.findDocIdentidadAceptar?.tipo;
+                                    _model.initialValueDoc =
+                                        _model.findDocIdentidadAceptar?.valor;
+                                    _model.initialRefDoc =
+                                        _model.initialRefDoc?.id != null &&
+                                                _model.initialRefDoc?.id != ''
+                                            ? _model.initialRefDoc
+                                            : _model.findDocIdentidadAceptar
+                                                ?.reference;
                                   });
                                 }
                                 // Show success msg
@@ -883,6 +1281,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                 setState(() {
                                   _model.isEditing = false;
                                 });
+
+                                setState(() {});
                               },
                               text: 'Guardar',
                               options: FFButtonOptions(

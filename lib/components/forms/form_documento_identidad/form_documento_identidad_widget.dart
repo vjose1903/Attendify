@@ -45,17 +45,30 @@ class _FormDocumentoIdentidadWidgetState
         setState(() {
           _model.tipoDocDDValueController?.value = 0;
         });
+        // Set cedula value
+        setState(() {
+          _model.cedulaTxtController?.text = widget.documentoIdentidad!.valor;
+        });
       } else if (widget.documentoIdentidad?.tipo ==
           TipoDocumentoIdentidad.rnc) {
         // set rnc values
         setState(() {
           _model.tipoDocDDValueController?.value = 1;
         });
+        // Set rnc value
+        setState(() {
+          _model.rncTxtController?.text = widget.documentoIdentidad!.valor;
+        });
       } else if (widget.documentoIdentidad?.tipo ==
           TipoDocumentoIdentidad.pasaporte) {
         // set pasaporte values
         setState(() {
           _model.tipoDocDDValueController?.value = 2;
+        });
+        // Set pasaporte value
+        setState(() {
+          _model.pasaporteTxtController?.text =
+              widget.documentoIdentidad!.valor;
         });
       }
 
@@ -67,8 +80,7 @@ class _FormDocumentoIdentidadWidgetState
       });
     });
 
-    _model.cedulaTxtController ??=
-        TextEditingController(text: widget.documentoIdentidad?.valor);
+    _model.cedulaTxtController ??= TextEditingController();
     _model.cedulaTxtFocusNode ??= FocusNode();
 
     _model.rncTxtController ??=
@@ -142,6 +154,19 @@ class _FormDocumentoIdentidadWidgetState
                       ),
                     );
                   }
+
+                  // Reset cedula field
+                  setState(() {
+                    _model.cedulaTxtController?.text = '';
+                  });
+                  // Reset rnc field
+                  setState(() {
+                    _model.rncTxtController?.text = '';
+                  });
+                  // Reset pasaporte field
+                  setState(() {
+                    _model.pasaporteTxtController?.text = '';
+                  });
                 },
                 width: 120.0,
                 height: 50.0,

@@ -14,6 +14,7 @@ import '/flutter_flow/form_field_controller.dart';
 import '/flutter_flow/upload_data.dart';
 import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
+import '/flutter_flow/permissions_util.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -1479,6 +1480,9 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                         _model.uploadingIMG
                                                             ? null
                                                             : () async {
+                                                                // Req. permission galery
+                                                                await requestPermission(
+                                                                    photoLibraryPermission);
                                                                 // Is Uploading IMG
                                                                 setState(() {
                                                                   _model.uploadingIMG =

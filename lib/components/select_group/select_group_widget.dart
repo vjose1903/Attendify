@@ -119,7 +119,7 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 0.0, 0.0),
                     child: Text(
-                      'Seleccione un grupo',
+                      'Seleccione un grupo.',
                       style: FlutterFlowTheme.of(context).headlineMedium,
                     ),
                   ),
@@ -291,6 +291,8 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                       gridViewGrupoRecord.reference;
                                   FFAppState().grupoSeleccionadoName =
                                       gridViewGrupoRecord.nombre;
+                                  FFAppState().selectedGroupImg =
+                                      gridViewGrupoRecord.logo;
                                 });
                                 // start Loading
                                 setState(() {

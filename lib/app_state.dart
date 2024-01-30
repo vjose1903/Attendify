@@ -63,6 +63,14 @@ class FFAppState extends ChangeNotifier {
       _loadingActividades =
           prefs.getBool('ff_loadingActividades') ?? _loadingActividades;
     });
+    _safeInit(() {
+      _selectedGroupImg =
+          prefs.getString('ff_selectedGroupImg') ?? _selectedGroupImg;
+    });
+    _safeInit(() {
+      _selectedGroupImgBlur =
+          prefs.getString('ff_selectedGroupImgBlur') ?? _selectedGroupImgBlur;
+    });
   }
 
   void update(VoidCallback callback) {
@@ -283,6 +291,20 @@ class FFAppState extends ChangeNotifier {
   void insertAtIndexInRestoActividades(
       int index, GrupoActividadHomeStruct value) {
     _restoActividades.insert(index, value);
+  }
+
+  String _selectedGroupImg = '';
+  String get selectedGroupImg => _selectedGroupImg;
+  set selectedGroupImg(String value) {
+    _selectedGroupImg = value;
+    prefs.setString('ff_selectedGroupImg', value);
+  }
+
+  String _selectedGroupImgBlur = '';
+  String get selectedGroupImgBlur => _selectedGroupImgBlur;
+  set selectedGroupImgBlur(String value) {
+    _selectedGroupImgBlur = value;
+    prefs.setString('ff_selectedGroupImgBlur', value);
   }
 }
 
