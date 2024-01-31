@@ -1,9 +1,11 @@
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/components/alert_modal/alert_modal_widget.dart';
+import '/components/delete_modal/delete_modal_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/asistencia/form_asistencia/form_asistencia_widget.dart';
 import '/components/forms/form_nota/form_nota_widget.dart';
+import '/components/info_modal/info_modal_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_choice_chips.dart';
 import '/flutter_flow/flutter_flow_expanded_image_view.dart';
@@ -30,11 +32,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
 import 'package:text_search/text_search.dart';
-import 'detalle_actividad_model.dart';
-export 'detalle_actividad_model.dart';
+import 'detalle_actividad_copy_model.dart';
+export 'detalle_actividad_copy_model.dart';
 
-class DetalleActividadWidget extends StatefulWidget {
-  const DetalleActividadWidget({
+class DetalleActividadCopyWidget extends StatefulWidget {
+  const DetalleActividadCopyWidget({
     super.key,
     required this.actividad,
     required this.grupoActividad,
@@ -52,12 +54,13 @@ class DetalleActividadWidget extends StatefulWidget {
   final bool hasImagenes;
 
   @override
-  State<DetalleActividadWidget> createState() => _DetalleActividadWidgetState();
+  State<DetalleActividadCopyWidget> createState() =>
+      _DetalleActividadCopyWidgetState();
 }
 
-class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
+class _DetalleActividadCopyWidgetState extends State<DetalleActividadCopyWidget>
     with TickerProviderStateMixin {
-  late DetalleActividadModel _model;
+  late DetalleActividadCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -220,18 +223,29 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => DetalleActividadModel());
+    _model = createModel(context, () => DetalleActividadCopyModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      setState(() {
+        _model.customTabs = [''];
+      });
       if (FFAppState().tipoUsuarioLoged == FFAppState().TAdministrador) {
+        // Add detalles
+        _model.addToCustomTabs('Detalles');
         // Add Asistecia
         _model.addToCustomTabs('Asistencia');
         // Add Notas
         setState(() {
           _model.addToCustomTabs('Notas');
         });
+      } else {
+        // Add detalles
+        setState(() {
+          _model.addToCustomTabs('Detalles');
+        });
       }
+
       if (functions.toInitDayHour(getCurrentTimestamp) <
           widget.actividad!.fechaInicio!) {
         // Actividad aun no iniciada
@@ -610,6 +624,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                     0.0, 0.0, 0.0, 10.0),
                                 child: FlutterFlowChoiceChips(
                                   options: _model.customTabs
+                                      .where((e) => e != '')
+                                      .toList()
                                       .map((label) => ChipData(label))
                                       .toList(),
                                   onChanged: (val) => setState(() =>
@@ -1350,7 +1366,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                               Builder(
                                                                             builder:
                                                                                 (context) {
-                                                                              if (_model.showFullAsistenciaList == true) {
+                                                                              if (_model.showFullAsistenciaList) {
                                                                                 return Builder(
                                                                                   builder: (context) {
                                                                                     final actividadAsistencia = containerAsistenciaAsistenciaRecordList.toList();
@@ -1370,7 +1386,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                       );
                                                                                     }
                                                                                     return RefreshIndicator(
-                                                                                      key: const Key('RefreshIndicator_sz32zoq3'),
+                                                                                      key: const Key('RefreshIndicator_ixzuh963'),
                                                                                       onRefresh: () async {
                                                                                         // Reload List Asistencia
                                                                                         setState(() => _model.firestoreRequestCompleter1 = null);
@@ -1625,7 +1641,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                         );
                                                                                       }
                                                                                       return RefreshIndicator(
-                                                                                        key: const Key('RefreshIndicator_su6g498c'),
+                                                                                        key: const Key('RefreshIndicator_8blr8wcx'),
                                                                                         onRefresh: () async {
                                                                                           // Reload List Asistencia
                                                                                           setState(() => _model.firestoreRequestCompleter1 = null);
@@ -1996,10 +2012,18 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                       .map((label) =>
                                                           ChipData(label))
                                                       .toList(),
-                                                  onChanged: (val) => setState(
-                                                      () => _model
-                                                              .dateNotasChipsValue =
-                                                          val?.first),
+                                                  onChanged: (val) async {
+                                                    setState(() => _model
+                                                            .dateNotasChipsValue =
+                                                        val?.first);
+                                                    setState(() => _model
+                                                            .firestoreRequestCompleter2 =
+                                                        null);
+                                                    await _model
+                                                        .waitForFirestoreRequestCompleted2(
+                                                            minWait: 1000,
+                                                            maxWait: 10000);
+                                                  },
                                                   selectedChipStyle: ChipStyle(
                                                     backgroundColor:
                                                         FlutterFlowTheme.of(
@@ -2107,6 +2131,12 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                 ).animateOnPageLoad(animationsMap[
                                                     'choiceChipsOnPageLoadAnimation3']!),
                                               ),
+                                              Text(
+                                                '${(_model.dateNotasChipsValue != null && _model.dateNotasChipsValue != '').toString()}   -   ${(functions.parseDateStringToDateTime(_model.dateNotasChipsValue)! <= functions.toInitDayHour(getCurrentTimestamp)).toString()}',
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium,
+                                              ),
                                               Expanded(
                                                 child: ClipRRect(
                                                   child: Container(
@@ -2125,111 +2155,112 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                 functions
                                                                     .toInitDayHour(
                                                                         getCurrentTimestamp))) {
-                                                          return Container(
-                                                            decoration:
-                                                                const BoxDecoration(),
-                                                            child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          10.0,
-                                                                          10.0,
-                                                                          10.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Container(
-                                                                    width: double
-                                                                        .infinity,
-                                                                    height:
-                                                                        50.0,
-                                                                    decoration:
-                                                                        const BoxDecoration(),
-                                                                    child: Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .end,
-                                                                      children: [
-                                                                        FlutterFlowIconButton(
-                                                                          borderColor:
-                                                                              FlutterFlowTheme.of(context).primary,
-                                                                          borderRadius:
+                                                          return Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0.0,
+                                                                            15.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                child:
+                                                                    Container(
+                                                                  height: 37.0,
+                                                                  decoration:
+                                                                      const BoxDecoration(),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .end,
+                                                                    children: [
+                                                                      FlutterFlowIconButton(
+                                                                        borderColor:
+                                                                            FlutterFlowTheme.of(context).primary,
+                                                                        borderRadius:
+                                                                            20.0,
+                                                                        borderWidth:
+                                                                            1.0,
+                                                                        buttonSize:
+                                                                            35.0,
+                                                                        fillColor:
+                                                                            FlutterFlowTheme.of(context).primary,
+                                                                        disabledColor:
+                                                                            FlutterFlowTheme.of(context).disablePrimaryColor,
+                                                                        icon:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .add,
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primaryText,
+                                                                          size:
                                                                               20.0,
-                                                                          borderWidth:
-                                                                              1.0,
-                                                                          buttonSize:
-                                                                              35.0,
-                                                                          fillColor:
-                                                                              FlutterFlowTheme.of(context).primary,
-                                                                          disabledColor:
-                                                                              FlutterFlowTheme.of(context).disablePrimaryColor,
-                                                                          icon:
-                                                                              Icon(
-                                                                            Icons.add,
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).primaryText,
-                                                                            size:
-                                                                                20.0,
-                                                                          ),
-                                                                          onPressed: (_model.dateNotasChipsValue !=
-                                                                                  dateTimeFormat(
-                                                                                    'dd/MM/yyyy',
-                                                                                    widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.fecha,
-                                                                                    locale: FFLocalizations.of(context).languageCode,
-                                                                                  ))
-                                                                              ? null
-                                                                              : () async {
-                                                                                  // show form
-                                                                                  await showModalBottomSheet(
-                                                                                    isScrollControlled: true,
-                                                                                    backgroundColor: Colors.transparent,
-                                                                                    isDismissible: false,
-                                                                                    enableDrag: false,
-                                                                                    useSafeArea: true,
-                                                                                    context: context,
-                                                                                    builder: (context) {
-                                                                                      return GestureDetector(
-                                                                                        onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                        child: Padding(
-                                                                                          padding: MediaQuery.viewInsetsOf(context),
-                                                                                          child: SizedBox(
-                                                                                            height: 400.0,
-                                                                                            child: FormNotaWidget(
-                                                                                              grupoActividadDetalle: widget.grupoActividadDetalles
-                                                                                                  ?.where((e) =>
-                                                                                                      dateTimeFormat(
-                                                                                                        'dd/MM/yyyy',
-                                                                                                        e.fecha,
-                                                                                                        locale: FFLocalizations.of(context).languageCode,
-                                                                                                      ) ==
-                                                                                                      _model.dateNotasChipsValue)
-                                                                                                  .toList()
-                                                                                                  .first,
-                                                                                              action: FormAction.create,
-                                                                                              reloadAction: () async {
-                                                                                                // Refresh request
-                                                                                                setState(() => _model.firestoreRequestCompleter2 = null);
-                                                                                                await _model.waitForFirestoreRequestCompleted2(maxWait: 7000);
-                                                                                              },
-                                                                                            ),
+                                                                        ),
+                                                                        onPressed: (_model.dateNotasChipsValue !=
+                                                                                dateTimeFormat(
+                                                                                  'dd/MM/yyyy',
+                                                                                  widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.fecha,
+                                                                                  locale: FFLocalizations.of(context).languageCode,
+                                                                                ))
+                                                                            ? null
+                                                                            : () async {
+                                                                                // show form
+                                                                                await showModalBottomSheet(
+                                                                                  isScrollControlled: true,
+                                                                                  backgroundColor: Colors.transparent,
+                                                                                  isDismissible: false,
+                                                                                  enableDrag: false,
+                                                                                  useSafeArea: true,
+                                                                                  context: context,
+                                                                                  builder: (context) {
+                                                                                    return GestureDetector(
+                                                                                      onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                      child: Padding(
+                                                                                        padding: MediaQuery.viewInsetsOf(context),
+                                                                                        child: SizedBox(
+                                                                                          height: 400.0,
+                                                                                          child: FormNotaWidget(
+                                                                                            grupoActividadDetalle: widget.grupoActividadDetalles
+                                                                                                ?.where((e) =>
+                                                                                                    dateTimeFormat(
+                                                                                                      'dd/MM/yyyy',
+                                                                                                      e.fecha,
+                                                                                                      locale: FFLocalizations.of(context).languageCode,
+                                                                                                    ) ==
+                                                                                                    _model.dateNotasChipsValue)
+                                                                                                .toList()
+                                                                                                .first,
+                                                                                            action: FormAction.create,
+                                                                                            reloadAction: () async {
+                                                                                              // Refresh request
+                                                                                              setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                              await _model.waitForFirestoreRequestCompleted2(maxWait: 7000);
+                                                                                            },
                                                                                           ),
                                                                                         ),
-                                                                                      );
-                                                                                    },
-                                                                                  ).then((value) => safeSetState(() {}));
-                                                                                },
-                                                                        ),
-                                                                      ],
-                                                                    ),
+                                                                                      ),
+                                                                                    );
+                                                                                  },
+                                                                                ).then((value) => safeSetState(() {}));
+                                                                              },
+                                                                      ),
+                                                                    ],
                                                                   ),
                                                                 ),
-                                                                Expanded(
+                                                              ),
+                                                              Expanded(
+                                                                child: Align(
+                                                                  alignment:
+                                                                      const AlignmentDirectional(
+                                                                          0.0,
+                                                                          -1.0),
                                                                   child:
                                                                       Padding(
                                                                     padding: const EdgeInsetsDirectional
@@ -2252,77 +2283,303 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                             BorderRadius.circular(10.0),
                                                                       ),
                                                                       child:
-                                                                          RefreshIndicator(
-                                                                        key: const Key(
-                                                                            'RefreshIndicator_3xslvjaf'),
-                                                                        onRefresh:
-                                                                            () async {},
-                                                                        child:
-                                                                            ListView(
-                                                                          padding:
-                                                                              EdgeInsets.zero,
-                                                                          shrinkWrap:
-                                                                              true,
-                                                                          scrollDirection:
-                                                                              Axis.vertical,
-                                                                          children:
-                                                                              [
-                                                                            Slidable(
-                                                                              endActionPane: ActionPane(
-                                                                                motion: const ScrollMotion(),
-                                                                                extentRatio: 0.5,
-                                                                                children: [
-                                                                                  SlidableAction(
-                                                                                    label: 'Editar',
-                                                                                    backgroundColor: FlutterFlowTheme.of(context).primaryText,
-                                                                                    icon: FontAwesomeIcons.pencilAlt,
-                                                                                    onPressed: (_) {
-                                                                                      print('SlidableActionWidget pressed ...');
-                                                                                    },
+                                                                          Align(
+                                                                        alignment: const AlignmentDirectional(
+                                                                            0.0,
+                                                                            -1.0),
+                                                                        child: FutureBuilder<
+                                                                            List<ActividadComentarioRecord>>(
+                                                                          future: (_model.firestoreRequestCompleter2 ??= Completer<List<ActividadComentarioRecord>>()
+                                                                                ..complete(queryActividadComentarioRecordOnce(
+                                                                                  parent: widget.grupoActividadDetalles
+                                                                                      ?.where((e) =>
+                                                                                          dateTimeFormat(
+                                                                                            'dd/MM/yyyy',
+                                                                                            e.fecha,
+                                                                                            locale: FFLocalizations.of(context).languageCode,
+                                                                                          ) ==
+                                                                                          _model.dateNotasChipsValue)
+                                                                                      .toList()
+                                                                                      .first
+                                                                                      .reference,
+                                                                                  queryBuilder: (actividadComentarioRecord) => actividadComentarioRecord
+                                                                                      .where(
+                                                                                        'grupo',
+                                                                                        isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                      )
+                                                                                      .orderBy('createdAt', descending: true),
+                                                                                )))
+                                                                              .future,
+                                                                          builder:
+                                                                              (context, snapshot) {
+                                                                            // Customize what your widget looks like when it's loading.
+                                                                            if (!snapshot.hasData) {
+                                                                              return Center(
+                                                                                child: SizedBox(
+                                                                                  width: 60.0,
+                                                                                  height: 60.0,
+                                                                                  child: SpinKitChasingDots(
+                                                                                    color: FlutterFlowTheme.of(context).primary,
+                                                                                    size: 60.0,
                                                                                   ),
-                                                                                  SlidableAction(
-                                                                                    label: 'Eliminar',
-                                                                                    backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                    icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                    onPressed: (_) {
-                                                                                      print('SlidableActionWidget pressed ...');
-                                                                                    },
+                                                                                ),
+                                                                              );
+                                                                            }
+                                                                            List<ActividadComentarioRecord>
+                                                                                listViewNotasActividadComentarioRecordList =
+                                                                                snapshot.data!;
+                                                                            if (listViewNotasActividadComentarioRecordList.isEmpty) {
+                                                                              return SizedBox(
+                                                                                width: double.infinity,
+                                                                                height: 290.0,
+                                                                                child: EmptyListWidget(
+                                                                                  icon: Icon(
+                                                                                    Icons.note_alt_outlined,
+                                                                                    color: FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                                    size: 70.0,
                                                                                   ),
-                                                                                ],
-                                                                              ),
-                                                                              child: ListTile(
-                                                                                title: Text(
-                                                                                  'Title',
-                                                                                  style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                                                        fontFamily: 'Readex Pro',
-                                                                                        fontSize: 16.0,
+                                                                                  title: 'Sin notas para mostrar',
+                                                                                ),
+                                                                              );
+                                                                            }
+                                                                            return RefreshIndicator(
+                                                                              key: const Key('RefreshIndicator_kixcqfs3'),
+                                                                              onRefresh: () async {
+                                                                                // Refresh request
+                                                                                setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                await _model.waitForFirestoreRequestCompleted2(maxWait: 7000);
+                                                                              },
+                                                                              child: ListView.separated(
+                                                                                padding: EdgeInsets.zero,
+                                                                                shrinkWrap: true,
+                                                                                scrollDirection: Axis.vertical,
+                                                                                itemCount: listViewNotasActividadComentarioRecordList.length,
+                                                                                separatorBuilder: (_, __) => const SizedBox(height: 8.0),
+                                                                                itemBuilder: (context, listViewNotasIndex) {
+                                                                                  final listViewNotasActividadComentarioRecord = listViewNotasActividadComentarioRecordList[listViewNotasIndex];
+                                                                                  return Builder(
+                                                                                    builder: (context) => InkWell(
+                                                                                      splashColor: Colors.transparent,
+                                                                                      focusColor: Colors.transparent,
+                                                                                      hoverColor: Colors.transparent,
+                                                                                      highlightColor: Colors.transparent,
+                                                                                      onTap: () async {
+                                                                                        // Get grupo usuario
+                                                                                        _model.grupoUsuarioNotaResponse = await GrupoUsuarioRecord.getDocumentOnce(listViewNotasActividadComentarioRecord.createdBy!);
+                                                                                        // Get usuario
+                                                                                        _model.usuarioNotaResponse = await UsuariosRecord.getDocumentOnce(_model.grupoUsuarioNotaResponse!.usuario!);
+                                                                                        await showDialog(
+                                                                                          context: context,
+                                                                                          builder: (dialogContext) {
+                                                                                            return Dialog(
+                                                                                              elevation: 0,
+                                                                                              insetPadding: EdgeInsets.zero,
+                                                                                              backgroundColor: Colors.transparent,
+                                                                                              alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                              child: GestureDetector(
+                                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                child: SizedBox(
+                                                                                                  height: double.infinity,
+                                                                                                  width: double.infinity,
+                                                                                                  child: InfoModalWidget(
+                                                                                                    title: 'Nota',
+                                                                                                    message: listViewNotasActividadComentarioRecord.comentario,
+                                                                                                    subTitle: '${valueOrDefault<String>(
+                                                                                                      _model.usuarioNotaResponse?.displayName,
+                                                                                                      'No Definido',
+                                                                                                    )}  ${dateTimeFormat(
+                                                                                                      'relative',
+                                                                                                      listViewNotasActividadComentarioRecord.createdAt,
+                                                                                                      locale: FFLocalizations.of(context).languageShortCode ?? FFLocalizations.of(context).languageCode,
+                                                                                                    )}',
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            );
+                                                                                          },
+                                                                                        ).then((value) => setState(() {}));
+
+                                                                                        setState(() {});
+                                                                                      },
+                                                                                      child: Slidable(
+                                                                                        endActionPane: ActionPane(
+                                                                                          motion: const ScrollMotion(),
+                                                                                          extentRatio: 0.5,
+                                                                                          children: [
+                                                                                            SlidableAction(
+                                                                                              label: 'Editar',
+                                                                                              backgroundColor: FlutterFlowTheme.of(context).info,
+                                                                                              icon: FontAwesomeIcons.pencilAlt,
+                                                                                              onPressed: (_) async {
+                                                                                                if (dateTimeFormat(
+                                                                                                      'dd/MM/yyyy',
+                                                                                                      functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                      locale: FFLocalizations.of(context).languageCode,
+                                                                                                    ) ==
+                                                                                                    _model.dateNotasChipsValue) {
+                                                                                                  // open form
+                                                                                                  await showModalBottomSheet(
+                                                                                                    isScrollControlled: true,
+                                                                                                    backgroundColor: Colors.transparent,
+                                                                                                    isDismissible: false,
+                                                                                                    enableDrag: false,
+                                                                                                    useSafeArea: true,
+                                                                                                    context: context,
+                                                                                                    builder: (context) {
+                                                                                                      return GestureDetector(
+                                                                                                        onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                        child: Padding(
+                                                                                                          padding: MediaQuery.viewInsetsOf(context),
+                                                                                                          child: SizedBox(
+                                                                                                            height: 400.0,
+                                                                                                            child: FormNotaWidget(
+                                                                                                              grupoActividadDetalle: widget.grupoActividadDetalles
+                                                                                                                  ?.where((e) =>
+                                                                                                                      dateTimeFormat(
+                                                                                                                        'dd/MM/yyyy',
+                                                                                                                        e.fecha,
+                                                                                                                        locale: FFLocalizations.of(context).languageCode,
+                                                                                                                      ) ==
+                                                                                                                      _model.dateNotasChipsValue)
+                                                                                                                  .toList()
+                                                                                                                  .first,
+                                                                                                              comentario: listViewNotasActividadComentarioRecord,
+                                                                                                              action: FormAction.edit,
+                                                                                                              reloadAction: () async {
+                                                                                                                // Refresh request
+                                                                                                                setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                                                await _model.waitForFirestoreRequestCompleted2(maxWait: 7000);
+                                                                                                              },
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      );
+                                                                                                    },
+                                                                                                  ).then((value) => safeSetState(() {}));
+                                                                                                } else {
+                                                                                                  // show msg error
+                                                                                                  ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                    SnackBar(
+                                                                                                      content: Text(
+                                                                                                        'Solo puede editar notas del dia actual',
+                                                                                                        style: TextStyle(
+                                                                                                          color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      duration: const Duration(milliseconds: 4000),
+                                                                                                      backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                    ),
+                                                                                                  );
+                                                                                                }
+                                                                                              },
+                                                                                            ),
+                                                                                            Builder(
+                                                                                              builder: (context) => SlidableAction(
+                                                                                                label: 'Eliminar',
+                                                                                                backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                icon: FontAwesomeIcons.solidTrashAlt,
+                                                                                                onPressed: (_) async {
+                                                                                                  if (dateTimeFormat(
+                                                                                                        'dd/MM/yyyy',
+                                                                                                        functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                        locale: FFLocalizations.of(context).languageCode,
+                                                                                                      ) ==
+                                                                                                      _model.dateNotasChipsValue) {
+                                                                                                    // show delete modal
+                                                                                                    await showDialog(
+                                                                                                      context: context,
+                                                                                                      builder: (dialogContext) {
+                                                                                                        return Dialog(
+                                                                                                          elevation: 0,
+                                                                                                          insetPadding: EdgeInsets.zero,
+                                                                                                          backgroundColor: Colors.transparent,
+                                                                                                          alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                          child: GestureDetector(
+                                                                                                            onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                            child: SizedBox(
+                                                                                                              height: double.infinity,
+                                                                                                              width: double.infinity,
+                                                                                                              child: DeleteModalWidget(
+                                                                                                                deleteMsg: '',
+                                                                                                                title: 'Confirmación',
+                                                                                                                deleteAction: () async {
+                                                                                                                  // Delete Note
+                                                                                                                  await listViewNotasActividadComentarioRecord.reference.delete();
+                                                                                                                  // Refresh request
+                                                                                                                  setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                                                  await _model.waitForFirestoreRequestCompleted2(maxWait: 7000);
+                                                                                                                },
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    ).then((value) => setState(() {}));
+                                                                                                  } else {
+                                                                                                    // show msg error
+                                                                                                    ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                      SnackBar(
+                                                                                                        content: Text(
+                                                                                                          'Solo puede eliminar notas del dia actual',
+                                                                                                          style: TextStyle(
+                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        duration: const Duration(milliseconds: 4000),
+                                                                                                        backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                      ),
+                                                                                                    );
+                                                                                                  }
+                                                                                                },
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                        child: ListTile(
+                                                                                          title: Text(
+                                                                                            listViewNotasActividadComentarioRecord.comentario,
+                                                                                            style: FlutterFlowTheme.of(context).titleLarge.override(
+                                                                                                  fontFamily: 'Readex Pro',
+                                                                                                  fontSize: 16.0,
+                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                ),
+                                                                                          ),
+                                                                                          subtitle: Text(
+                                                                                            dateTimeFormat(
+                                                                                              'relative',
+                                                                                              listViewNotasActividadComentarioRecord.createdAt!,
+                                                                                              locale: FFLocalizations.of(context).languageCode,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                                  fontFamily: 'Inter',
+                                                                                                  fontSize: 12.0,
+                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                  lineHeight: 1.2,
+                                                                                                ),
+                                                                                          ),
+                                                                                          trailing: Icon(
+                                                                                            Icons.arrow_forward_ios,
+                                                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                            size: 20.0,
+                                                                                          ),
+                                                                                          dense: false,
+                                                                                        ),
                                                                                       ),
-                                                                                ),
-                                                                                subtitle: Text(
-                                                                                  'Subtitle goes here...',
-                                                                                  style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                        fontFamily: 'Inter',
-                                                                                        fontSize: 12.0,
-                                                                                        fontWeight: FontWeight.normal,
-                                                                                        lineHeight: 1.5,
-                                                                                      ),
-                                                                                ),
-                                                                                trailing: Icon(
-                                                                                  Icons.arrow_forward_ios,
-                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                  size: 20.0,
-                                                                                ),
-                                                                                dense: false,
+                                                                                    ),
+                                                                                  );
+                                                                                },
                                                                               ),
-                                                                            ),
-                                                                          ].divide(const SizedBox(height: 8.0)),
+                                                                            );
+                                                                          },
                                                                         ),
                                                                       ),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ],
-                                                            ),
+                                                              ),
+                                                            ],
                                                           );
                                                         } else {
                                                           return Align(
@@ -2334,7 +2591,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                   const EdgeInsetsDirectional
                                                                       .fromSTEB(
                                                                           0.0,
-                                                                          65.0,
+                                                                          60.0,
                                                                           0.0,
                                                                           0.0),
                                                               child: Container(
@@ -2342,7 +2599,11 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                     .infinity,
                                                                 height: 290.0,
                                                                 decoration:
-                                                                    const BoxDecoration(),
+                                                                    BoxDecoration(
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryBackground,
+                                                                ),
                                                                 alignment:
                                                                     const AlignmentDirectional(
                                                                         0.0,
@@ -2367,31 +2628,25 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                               10.0),
                                                                     ),
                                                                     child:
-                                                                        Align(
-                                                                      alignment:
-                                                                          const AlignmentDirectional(
-                                                                              0.0,
-                                                                              0.0),
+                                                                        wrapWithModel(
+                                                                      model: _model
+                                                                          .emptyListModel2,
+                                                                      updateCallback:
+                                                                          () =>
+                                                                              setState(() {}),
                                                                       child:
-                                                                          wrapWithModel(
-                                                                        model: _model
-                                                                            .emptyListModel2,
-                                                                        updateCallback:
-                                                                            () =>
-                                                                                setState(() {}),
-                                                                        child:
-                                                                            EmptyListWidget(
-                                                                          icon:
-                                                                              Icon(
-                                                                            Icons.calendar_month_rounded,
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).primaryImputBorder,
-                                                                            size:
-                                                                                75.0,
-                                                                          ),
-                                                                          title:
-                                                                              'Solo se puede agregar notas en una actividad vigente',
+                                                                          EmptyListWidget(
+                                                                        icon:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .calendar_month_rounded,
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                          size:
+                                                                              75.0,
                                                                         ),
+                                                                        title:
+                                                                            'Solo se puede agregar notas en una actividad vigente',
                                                                       ),
                                                                     ),
                                                                   ),

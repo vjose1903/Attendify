@@ -14,7 +14,9 @@ import '/backend/schema/structs/index.dart';
 import '/backend/schema/enums/enums.dart';
 import '/auth/firebase_auth/auth_util.dart';
 
-DateTime? parseDateStringToDateTime(String dateString) {
+DateTime? parseDateStringToDateTime(String? dateString) {
+  print("dateString --> ${dateString}");
+  if (dateString == null || dateString == '') return null;
   // Define el formato esperado de la cadena de fecha
   DateFormat formatoFecha = DateFormat('dd/MM/yyyy');
 

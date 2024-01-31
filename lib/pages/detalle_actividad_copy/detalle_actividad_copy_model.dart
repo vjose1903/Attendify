@@ -3,13 +3,14 @@ import '/components/empty_list/empty_list_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'dart:async';
-import 'detalle_actividad_widget.dart' show DetalleActividadWidget;
+import 'detalle_actividad_copy_widget.dart' show DetalleActividadCopyWidget;
 import 'package:flutter/material.dart';
 
-class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
+class DetalleActividadCopyModel
+    extends FlutterFlowModel<DetalleActividadCopyWidget> {
   ///  Local state fields for this page.
 
-  List<String> customTabs = ['Detalles'];
+  List<String> customTabs = [''];
   void addToCustomTabs(String item) => customTabs.add(item);
   void removeFromCustomTabs(String item) => customTabs.remove(item);
   void removeAtIndexFromCustomTabs(int index) => customTabs.removeAt(index);
@@ -76,6 +77,10 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   String? dateNotasChipsValue;
   FormFieldController<List<String>>? dateNotasChipsValueController;
   Completer<List<ActividadComentarioRecord>>? firestoreRequestCompleter2;
+  // Stores action output result for [Backend Call - Read Document] action in ListTile widget.
+  GrupoUsuarioRecord? grupoUsuarioNotaResponse;
+  // Stores action output result for [Backend Call - Read Document] action in ListTile widget.
+  UsuariosRecord? usuarioNotaResponse;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel2;
   var scanResponse = '';

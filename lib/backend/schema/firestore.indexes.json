@@ -60,5 +60,47 @@
         }
       ]
     }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "objeto_entregado",
+      "fieldPath": "asistencia",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "objeto_entregado",
+      "fieldPath": "asistencia",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "objeto_entregado",
+      "fieldPath": "asistencia",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "objeto_entregado",
+      "fieldPath": "asistencia",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    }
   ]
 }

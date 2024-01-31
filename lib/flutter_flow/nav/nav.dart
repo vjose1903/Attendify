@@ -153,6 +153,29 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'ActivitiesListCopy',
           path: '/activitiesListCopy',
           builder: (context, params) => const ActivitiesListCopyWidget(),
+        ),
+        FFRoute(
+          name: 'DetalleActividadCopy',
+          path: '/detalleActividadCopy',
+          asyncParams: {
+            'actividad': getDoc(['actividad'], ActividadRecord.fromSnapshot),
+            'grupoActividad':
+                getDoc(['grupo_actividad'], GrupoActividadRecord.fromSnapshot),
+            'grupoActividadDetalles': getDocList(['grupo_actividad_detalle'],
+                GrupoActividadDetalleRecord.fromSnapshot),
+          },
+          builder: (context, params) => DetalleActividadCopyWidget(
+            actividad: params.getParam('actividad', ParamType.Document),
+            grupoActividad:
+                params.getParam('grupoActividad', ParamType.Document),
+            portada: params.getParam('portada', ParamType.String),
+            grupoActividadDetalles:
+                params.getParam<GrupoActividadDetalleRecord>(
+                    'grupoActividadDetalles', ParamType.Document, true),
+            portadaBlurHash:
+                params.getParam('portadaBlurHash', ParamType.String),
+            hasImagenes: params.getParam('hasImagenes', ParamType.bool),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

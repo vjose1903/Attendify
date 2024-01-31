@@ -6,7 +6,6 @@ import '/components/forms/form_documento_identidad/form_documento_identidad_widg
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'form_doc_identidad_model.dart';
@@ -224,11 +223,6 @@ class _FormDocIdentidadWidgetState extends State<FormDocIdentidadWidget> {
                               false,
                             )) {
                           if (widget.documentoIdentidad != null) {
-                            await actions.consoleLog(
-                              null,
-                              'SI tiene documento de identidad',
-                              null,
-                            );
                             // Update  documento Edit user
 
                             await widget.documentoIdentidad!.reference
@@ -253,11 +247,6 @@ class _FormDocIdentidadWidgetState extends State<FormDocIdentidadWidget> {
                               }(),
                             ));
                           } else {
-                            await actions.consoleLog(
-                              null,
-                              'NO tiene documento de identidad',
-                              null,
-                            );
                             // Create  documento
 
                             var documentoIdentidadRecordReference =
@@ -323,11 +312,6 @@ class _FormDocIdentidadWidgetState extends State<FormDocIdentidadWidget> {
                           if (shouldSetState) setState(() {});
                           return;
                         } else {
-                          await actions.consoleLog(
-                            null,
-                            'no doc',
-                            null,
-                          );
                           // Show required Tipo Document
                           await showDialog(
                             context: context,

@@ -14,3 +14,5 @@ export '/pages/detalle_actividad/detalle_actividad_widget.dart'
     show DetalleActividadWidget;
 export '/pages/activities_list_copy/activities_list_copy_widget.dart'
     show ActivitiesListCopyWidget;
+export '/pages/detalle_actividad_copy/detalle_actividad_copy_widget.dart'
+    show DetalleActividadCopyWidget;
