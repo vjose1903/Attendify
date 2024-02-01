@@ -34,6 +34,14 @@ class HomeScreenModel extends FlutterFlowModel<HomeScreenWidget> {
   int? imagenesActividadResponse;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel;
+  // Stores action output result for [Backend Call - Read Document] action in QrOption widget.
+  UsuariosRecord? findAdminCurrenUserLogged;
+  // Stores action output result for [Backend Call - Read Document] action in QrOption widget.
+  GrupoUsuarioRecord? findAdminGrupoUsarioLogged;
+  // Stores action output result for [Backend Call - Read Document] action in QrButton widget.
+  UsuariosRecord? findCurrenUserLogged;
+  // Stores action output result for [Backend Call - Read Document] action in QrButton widget.
+  GrupoUsuarioRecord? findGrupoUsarioLogged;
 
   /// Initialization and disposal methods.
 

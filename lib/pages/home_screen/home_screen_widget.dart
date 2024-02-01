@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/empty_list/empty_list_widget.dart';
+import '/components/qr_modal/qr_modal_widget.dart';
 import '/components/select_group/select_group_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -56,14 +57,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
       effects: [
         MoveEffect(
           curve: Curves.easeInOut,
-          delay: 500.ms,
+          delay: 800.ms,
           duration: 600.ms,
           begin: const Offset(-20.0, 0.0),
           end: const Offset(0.0, 0.0),
         ),
         FadeEffect(
           curve: Curves.easeInOut,
-          delay: 500.ms,
+          delay: 800.ms,
           duration: 600.ms,
           begin: 0.0,
           end: 1.0,
@@ -76,14 +77,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
       effects: [
         MoveEffect(
           curve: Curves.easeInOut,
-          delay: 600.ms,
+          delay: 700.ms,
           duration: 600.ms,
           begin: const Offset(-20.0, 0.0),
           end: const Offset(0.0, 0.0),
         ),
         FadeEffect(
           curve: Curves.easeInOut,
-          delay: 600.ms,
+          delay: 700.ms,
           duration: 600.ms,
           begin: 0.0,
           end: 1.0,
@@ -110,7 +111,47 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
         ),
       ],
     ),
-    'iconOnActionTriggerAnimation': AnimationInfo(
+    'containerOnActionTriggerAnimation5': AnimationInfo(
+      trigger: AnimationTrigger.onActionTrigger,
+      applyInitialState: true,
+      effects: [
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 600.ms,
+          duration: 600.ms,
+          begin: const Offset(-20.0, 0.0),
+          end: const Offset(0.0, 0.0),
+        ),
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 600.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
+    'iconOnActionTriggerAnimation1': AnimationInfo(
+      trigger: AnimationTrigger.onActionTrigger,
+      applyInitialState: true,
+      effects: [
+        ScaleEffect(
+          curve: Curves.easeInOut,
+          delay: 150.ms,
+          duration: 600.ms,
+          begin: const Offset(1.0, 1.0),
+          end: const Offset(1.5, 1.5),
+        ),
+        RotateEffect(
+          curve: Curves.easeInOut,
+          delay: 300.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.375,
+        ),
+      ],
+    ),
+    'iconOnActionTriggerAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onActionTrigger,
       applyInitialState: true,
       effects: [
@@ -1387,105 +1428,149 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    context.pushNamed(
-                                      'UsersList',
-                                      extra: <String, dynamic>{
-                                        kTransitionInfoKey: const TransitionInfo(
-                                          hasTransition: true,
-                                          transitionType:
-                                              PageTransitionType.leftToRight,
-                                          duration: Duration(milliseconds: 500),
-                                        ),
-                                      },
-                                    );
-
-                                    // Hide Group option
-                                    unawaited(
-                                      () async {}(),
-                                    );
-                                    // Hide Members option
-                                    if (animationsMap[
-                                            'containerOnActionTriggerAnimation2'] !=
-                                        null) {
-                                      animationsMap[
-                                              'containerOnActionTriggerAnimation2']!
-                                          .controller
-                                          .reverse();
-                                    }
-                                    // Hide Activities option
-                                    if (animationsMap[
-                                            'containerOnActionTriggerAnimation3'] !=
-                                        null) {
-                                      animationsMap[
-                                              'containerOnActionTriggerAnimation3']!
-                                          .controller
-                                          .reverse();
-                                    }
-                                    // Hide menu
-                                    if (animationsMap[
-                                            'containerOnActionTriggerAnimation1'] !=
-                                        null) {
-                                      animationsMap[
-                                              'containerOnActionTriggerAnimation1']!
-                                          .controller
-                                          .reverse();
-                                    }
-                                    // Revert  button icon
-                                    if (animationsMap[
-                                            'iconOnActionTriggerAnimation'] !=
-                                        null) {
-                                      animationsMap[
-                                              'iconOnActionTriggerAnimation']!
-                                          .controller
-                                          .reverse();
-                                    }
-                                    // Turn off expanded variable
-                                    setState(() {
-                                      _model.isOptionsExpanded = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 50.0,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          20.0, 0.0, 20.0, 0.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          const Icon(
-                                            Icons.people_alt_rounded,
-                                            color: Colors.white,
-                                            size: 26.0,
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    8.0, 0.0, 0.0, 0.0),
-                                            child: Text(
-                                              'MIEMBROS',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium,
+                                Builder(
+                                  builder: (context) => InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      // Find current user
+                                      _model.findAdminCurrenUserLogged =
+                                          await UsuariosRecord.getDocumentOnce(
+                                              currentUserReference!);
+                                      // Find grupo usuario logged
+                                      _model.findAdminGrupoUsarioLogged =
+                                          await GrupoUsuarioRecord
+                                              .getDocumentOnce(FFAppState()
+                                                  .grupoUsuarioLoged!);
+                                      // Show QR
+                                      showDialog(
+                                        context: context,
+                                        builder: (dialogContext) {
+                                          return Dialog(
+                                            elevation: 0,
+                                            insetPadding: EdgeInsets.zero,
+                                            backgroundColor: Colors.transparent,
+                                            alignment: const AlignmentDirectional(
+                                                    0.0, 0.0)
+                                                .resolve(
+                                                    Directionality.of(context)),
+                                            child: GestureDetector(
+                                              onTap: () => _model.unfocusNode
+                                                      .canRequestFocus
+                                                  ? FocusScope.of(context)
+                                                      .requestFocus(
+                                                          _model.unfocusNode)
+                                                  : FocusScope.of(context)
+                                                      .unfocus(),
+                                              child: SizedBox(
+                                                height: double.infinity,
+                                                width: double.infinity,
+                                                child: QrModalWidget(
+                                                  user: _model
+                                                      .findAdminCurrenUserLogged!,
+                                                  grupoUsuario: _model
+                                                      .findAdminGrupoUsarioLogged!,
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          );
+                                        },
+                                      ).then((value) => setState(() {}));
+
+                                      // Hide Group option
+                                      unawaited(
+                                        () async {}(),
+                                      );
+                                      // Hide Members option
+                                      if (animationsMap[
+                                              'containerOnActionTriggerAnimation5'] !=
+                                          null) {
+                                        animationsMap[
+                                                'containerOnActionTriggerAnimation5']!
+                                            .controller
+                                            .reverse();
+                                      }
+                                      // Hide Activities option
+                                      if (animationsMap[
+                                              'containerOnActionTriggerAnimation3'] !=
+                                          null) {
+                                        animationsMap[
+                                                'containerOnActionTriggerAnimation3']!
+                                            .controller
+                                            .reverse();
+                                      }
+                                      // Hide Qr option
+                                      if (animationsMap[
+                                              'containerOnActionTriggerAnimation2'] !=
+                                          null) {
+                                        animationsMap[
+                                                'containerOnActionTriggerAnimation2']!
+                                            .controller
+                                            .reverse();
+                                      }
+                                      // Hide menu
+                                      if (animationsMap[
+                                              'containerOnActionTriggerAnimation1'] !=
+                                          null) {
+                                        animationsMap[
+                                                'containerOnActionTriggerAnimation1']!
+                                            .controller
+                                            .reverse();
+                                      }
+                                      // Revert  button icon
+                                      if (animationsMap[
+                                              'iconOnActionTriggerAnimation1'] !=
+                                          null) {
+                                        animationsMap[
+                                                'iconOnActionTriggerAnimation1']!
+                                            .controller
+                                            .reverse();
+                                      }
+                                      // Turn off expanded variable
+                                      setState(() {
+                                        _model.isOptionsExpanded = false;
+                                      });
+
+                                      setState(() {});
+                                    },
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: 50.0,
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
+                                            20.0, 0.0, 20.0, 0.0),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            const Icon(
+                                              Icons.qr_code_2_rounded,
+                                              color: Colors.white,
+                                              size: 26.0,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(8.0, 0.0, 0.0, 0.0),
+                                              child: Text(
+                                                'Mi QR',
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
+                                  ).animateOnActionTrigger(
+                                    animationsMap[
+                                        'containerOnActionTriggerAnimation2']!,
                                   ),
-                                ).animateOnActionTrigger(
-                                  animationsMap[
-                                      'containerOnActionTriggerAnimation2']!,
                                 ),
                                 InkWell(
                                   splashColor: Colors.transparent,
@@ -1511,10 +1596,10 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     );
                                     // Hide Members option
                                     if (animationsMap[
-                                            'containerOnActionTriggerAnimation2'] !=
+                                            'containerOnActionTriggerAnimation5'] !=
                                         null) {
                                       animationsMap[
-                                              'containerOnActionTriggerAnimation2']!
+                                              'containerOnActionTriggerAnimation5']!
                                           .controller
                                           .reverse();
                                     }
@@ -1524,6 +1609,15 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                         null) {
                                       animationsMap[
                                               'containerOnActionTriggerAnimation3']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide Qr option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation2'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation2']!
                                           .controller
                                           .reverse();
                                     }
@@ -1538,10 +1632,10 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     }
                                     // Revert  button icon
                                     if (animationsMap[
-                                            'iconOnActionTriggerAnimation'] !=
+                                            'iconOnActionTriggerAnimation1'] !=
                                         null) {
                                       animationsMap[
-                                              'iconOnActionTriggerAnimation']!
+                                              'iconOnActionTriggerAnimation1']!
                                           .controller
                                           .reverse();
                                     }
@@ -1630,6 +1724,115 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     animationsMap[
                                         'containerOnActionTriggerAnimation4']!,
                                   ),
+                                InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    context.pushNamed(
+                                      'UsersList',
+                                      extra: <String, dynamic>{
+                                        kTransitionInfoKey: const TransitionInfo(
+                                          hasTransition: true,
+                                          transitionType:
+                                              PageTransitionType.leftToRight,
+                                          duration: Duration(milliseconds: 500),
+                                        ),
+                                      },
+                                    );
+
+                                    // Hide Group option
+                                    unawaited(
+                                      () async {}(),
+                                    );
+                                    // Hide Members option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation5'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation5']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide Activities option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation3'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation3']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide Qr option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation2'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation2']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide menu
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation1'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation1']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Revert  button icon
+                                    if (animationsMap[
+                                            'iconOnActionTriggerAnimation1'] !=
+                                        null) {
+                                      animationsMap[
+                                              'iconOnActionTriggerAnimation1']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Turn off expanded variable
+                                    setState(() {
+                                      _model.isOptionsExpanded = false;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 50.0,
+                                    decoration: BoxDecoration(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          20.0, 0.0, 20.0, 0.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          const Icon(
+                                            Icons.people_alt_rounded,
+                                            color: Colors.white,
+                                            size: 26.0,
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsetsDirectional.fromSTEB(
+                                                    8.0, 0.0, 0.0, 0.0),
+                                            child: Text(
+                                              'MIEMBROS',
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ).animateOnActionTrigger(
+                                  animationsMap[
+                                      'containerOnActionTriggerAnimation5']!,
+                                ),
                               ],
                             ),
                           ),
@@ -1662,10 +1865,10 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                               );
                               // Hide Members option
                               if (animationsMap[
-                                      'containerOnActionTriggerAnimation2'] !=
+                                      'containerOnActionTriggerAnimation5'] !=
                                   null) {
                                 animationsMap[
-                                        'containerOnActionTriggerAnimation2']!
+                                        'containerOnActionTriggerAnimation5']!
                                     .controller
                                     .reverse();
                               }
@@ -1678,11 +1881,20 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .controller
                                     .reverse();
                               }
+                              // Hide Qr option
+                              if (animationsMap[
+                                      'containerOnActionTriggerAnimation2'] !=
+                                  null) {
+                                animationsMap[
+                                        'containerOnActionTriggerAnimation2']!
+                                    .controller
+                                    .reverse();
+                              }
                               // Revert  button icon
                               if (animationsMap[
-                                      'iconOnActionTriggerAnimation'] !=
+                                      'iconOnActionTriggerAnimation1'] !=
                                   null) {
-                                animationsMap['iconOnActionTriggerAnimation']!
+                                animationsMap['iconOnActionTriggerAnimation1']!
                                     .controller
                                     .reverse();
                               }
@@ -1691,6 +1903,15 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                 _model.isOptionsExpanded = false;
                               });
                             } else {
+                              // show Qr option
+                              if (animationsMap[
+                                      'containerOnActionTriggerAnimation2'] !=
+                                  null) {
+                                animationsMap[
+                                        'containerOnActionTriggerAnimation2']!
+                                    .controller
+                                    .forward(from: 0.0);
+                              }
                               // Show menu
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation1'] !=
@@ -1702,10 +1923,10 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                               }
                               // Show Members option
                               if (animationsMap[
-                                      'containerOnActionTriggerAnimation2'] !=
+                                      'containerOnActionTriggerAnimation5'] !=
                                   null) {
                                 animationsMap[
-                                        'containerOnActionTriggerAnimation2']!
+                                        'containerOnActionTriggerAnimation5']!
                                     .controller
                                     .forward(from: 0.0);
                               }
@@ -1724,9 +1945,9 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                               );
                               // animate button icon
                               if (animationsMap[
-                                      'iconOnActionTriggerAnimation'] !=
+                                      'iconOnActionTriggerAnimation1'] !=
                                   null) {
-                                animationsMap['iconOnActionTriggerAnimation']!
+                                animationsMap['iconOnActionTriggerAnimation1']!
                                     .controller
                                     .forward(from: 0.0);
                               }
@@ -1754,8 +1975,92 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     size: 24.0,
                                   ).animateOnActionTrigger(
                                     animationsMap[
-                                        'iconOnActionTriggerAnimation']!,
+                                        'iconOnActionTriggerAnimation1']!,
                                   ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if ((FFAppState().tipoUsuarioLoged?.id != null &&
+                      FFAppState().tipoUsuarioLoged?.id != '') &&
+                  (FFAppState().tipoUsuarioLoged?.id !=
+                      FFAppState().TAdministrador?.id))
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Builder(
+                        builder: (context) => Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 8.0, 0.0, 0.0),
+                          child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () async {
+                              // Find current user
+                              _model.findCurrenUserLogged =
+                                  await UsuariosRecord.getDocumentOnce(
+                                      currentUserReference!);
+                              // Find grupo usuario logged
+                              _model.findGrupoUsarioLogged =
+                                  await GrupoUsuarioRecord.getDocumentOnce(
+                                      FFAppState().grupoUsuarioLoged!);
+                              // Show QR
+                              await showDialog(
+                                context: context,
+                                builder: (dialogContext) {
+                                  return Dialog(
+                                    elevation: 0,
+                                    insetPadding: EdgeInsets.zero,
+                                    backgroundColor: Colors.transparent,
+                                    alignment: const AlignmentDirectional(0.0, 0.0)
+                                        .resolve(Directionality.of(context)),
+                                    child: GestureDetector(
+                                      onTap: () => _model
+                                              .unfocusNode.canRequestFocus
+                                          ? FocusScope.of(context)
+                                              .requestFocus(_model.unfocusNode)
+                                          : FocusScope.of(context).unfocus(),
+                                      child: SizedBox(
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        child: QrModalWidget(
+                                          user: _model.findCurrenUserLogged!,
+                                          grupoUsuario:
+                                              _model.findGrupoUsarioLogged!,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ).then((value) => setState(() {}));
+
+                              setState(() {});
+                            },
+                            child: ClipOval(
+                              child: Container(
+                                width: 50.0,
+                                height: 50.0,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.qr_code_2_rounded,
+                                  color: Colors.white,
+                                  size: 30.0,
+                                ).animateOnActionTrigger(
+                                  animationsMap[
+                                      'iconOnActionTriggerAnimation2']!,
                                 ),
                               ),
                             ),

@@ -3056,22 +3056,6 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                               },
                             ).then((value) => setState(() {}));
                           } else {
-                            // show success msg
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Actividad creada correctamente',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                duration: const Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).success,
-                              ),
-                            );
                             // close bottom sheet
                             Navigator.pop(context);
                           }
@@ -3118,22 +3102,6 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                               },
                             ).then((value) => setState(() {}));
                           } else {
-                            // show success msg
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Actividad editada correctamente',
-                                  style: TextStyle(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                duration: const Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).success,
-                              ),
-                            );
                             // close bottom sheet
                             Navigator.pop(context);
                           }

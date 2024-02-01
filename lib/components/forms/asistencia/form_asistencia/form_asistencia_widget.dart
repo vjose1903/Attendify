@@ -632,22 +632,6 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                         }
                         // Hide Bottom Sheet
                         Navigator.pop(context);
-                        // Show success msg
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              widget.action == FormAction.edit
-                                  ? 'Asistencia modificada correctamente'
-                                  : 'Asistencia creada correctamente',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: const Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).success,
-                          ),
-                        );
                         // Reload List
                         await widget.reloadChip?.call();
                         if (shouldSetState) setState(() {});
