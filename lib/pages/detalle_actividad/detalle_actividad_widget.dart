@@ -1,9 +1,11 @@
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/components/alert_modal/alert_modal_widget.dart';
+import '/components/delete_modal/delete_modal_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/asistencia/form_asistencia/form_asistencia_widget.dart';
 import '/components/forms/form_nota/form_nota_widget.dart';
+import '/components/info_modal/info_modal_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_choice_chips.dart';
 import '/flutter_flow/flutter_flow_expanded_image_view.dart';
@@ -1516,58 +1518,80 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                         setState(() {});
                                                                                                       },
                                                                                                     ),
-                                                                                                    SlidableAction(
-                                                                                                      label: 'Eliminar',
-                                                                                                      backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                      icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                                      onPressed: (_) async {
-                                                                                                        if (dateTimeFormat(
-                                                                                                              'dd/MM/yyyy',
-                                                                                                              functions.toInitDayHour(getCurrentTimestamp),
-                                                                                                              locale: FFLocalizations.of(context).languageCode,
-                                                                                                            ) ==
-                                                                                                            _model.dateAsistenciaChipsValue) {
-                                                                                                          // find objetos entregados
-                                                                                                          _model.deleteObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                            parent: actividadAsistenciaItem.parentReference,
-                                                                                                            queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
-                                                                                                              'asistencia',
-                                                                                                              isEqualTo: actividadAsistenciaItem.reference,
-                                                                                                            ),
-                                                                                                          );
-                                                                                                          if (_model.deleteObjetosEntregados != null && (_model.deleteObjetosEntregados)!.isNotEmpty) {
-                                                                                                            while (FFAppState().contador < _model.deleteObjetosEntregados!.length) {
-                                                                                                              // delete objeto entregado
-                                                                                                              await _model.deleteObjetosEntregados![FFAppState().contador].reference.delete();
-                                                                                                              // increment Contador
-                                                                                                              FFAppState().contador = FFAppState().contador + 1;
-                                                                                                            }
-                                                                                                            FFAppState().contador = 0;
-                                                                                                          }
-                                                                                                          // delete asistencia
-                                                                                                          await actividadAsistenciaItem.reference.delete();
-                                                                                                          // Reload List Asistencia
-                                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
-                                                                                                        } else {
-                                                                                                          // show msg error
-                                                                                                          ScaffoldMessenger.of(context).clearSnackBars();
-                                                                                                          ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                            SnackBar(
-                                                                                                              content: Text(
-                                                                                                                'Solo puede eliminar asistencia del dia actual',
-                                                                                                                style: TextStyle(
-                                                                                                                  color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                    Builder(
+                                                                                                      builder: (context) => SlidableAction(
+                                                                                                        label: 'Eliminar',
+                                                                                                        backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                        icon: FontAwesomeIcons.solidTrashAlt,
+                                                                                                        onPressed: (_) async {
+                                                                                                          if (dateTimeFormat(
+                                                                                                                'dd/MM/yyyy',
+                                                                                                                functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                                locale: FFLocalizations.of(context).languageCode,
+                                                                                                              ) ==
+                                                                                                              _model.dateAsistenciaChipsValue) {
+                                                                                                            await showDialog(
+                                                                                                              context: context,
+                                                                                                              builder: (dialogContext) {
+                                                                                                                return Dialog(
+                                                                                                                  elevation: 0,
+                                                                                                                  insetPadding: EdgeInsets.zero,
+                                                                                                                  backgroundColor: Colors.transparent,
+                                                                                                                  alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                  child: GestureDetector(
+                                                                                                                    onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                                    child: DeleteModalWidget(
+                                                                                                                      deleteMsg: 'Esta accioón borrará la asistencia de:  ${actividadAsistenciaItem.usuarioName}, de esta actividad. ¿Desea Continuar?',
+                                                                                                                      title: 'Confirmación',
+                                                                                                                      deleteAction: () async {
+                                                                                                                        // find objetos entregados
+                                                                                                                        _model.deleteObjetosEntregados = await queryObjetoEntregadoRecordOnce(
+                                                                                                                          parent: actividadAsistenciaItem.parentReference,
+                                                                                                                          queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
+                                                                                                                            'asistencia',
+                                                                                                                            isEqualTo: actividadAsistenciaItem.reference,
+                                                                                                                          ),
+                                                                                                                        );
+                                                                                                                        if (_model.deleteObjetosEntregados != null && (_model.deleteObjetosEntregados)!.isNotEmpty) {
+                                                                                                                          while (FFAppState().contador < _model.deleteObjetosEntregados!.length) {
+                                                                                                                            // delete objeto entregado
+                                                                                                                            await _model.deleteObjetosEntregados![FFAppState().contador].reference.delete();
+                                                                                                                            // increment Contador
+                                                                                                                            FFAppState().contador = FFAppState().contador + 1;
+                                                                                                                          }
+                                                                                                                          FFAppState().contador = 0;
+                                                                                                                        }
+                                                                                                                        // delete asistencia
+                                                                                                                        await actividadAsistenciaItem.reference.delete();
+                                                                                                                        // Reload List Asistencia
+                                                                                                                        setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                                                        await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
+                                                                                                                      },
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                );
+                                                                                                              },
+                                                                                                            ).then((value) => setState(() {}));
+                                                                                                          } else {
+                                                                                                            // show msg error
+                                                                                                            ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                              SnackBar(
+                                                                                                                content: Text(
+                                                                                                                  'Solo puede eliminar asistencia del dia actual',
+                                                                                                                  style: TextStyle(
+                                                                                                                    color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                                  ),
                                                                                                                 ),
+                                                                                                                duration: const Duration(milliseconds: 4000),
+                                                                                                                backgroundColor: FlutterFlowTheme.of(context).error,
                                                                                                               ),
-                                                                                                              duration: const Duration(milliseconds: 4000),
-                                                                                                              backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                            ),
-                                                                                                          );
-                                                                                                        }
+                                                                                                            );
+                                                                                                          }
 
-                                                                                                        setState(() {});
-                                                                                                      },
+                                                                                                          setState(() {});
+                                                                                                        },
+                                                                                                      ),
                                                                                                     ),
                                                                                                   ],
                                                                                                 ),
@@ -1771,70 +1795,80 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                           setState(() {});
                                                                                                         },
                                                                                                       ),
-                                                                                                      SlidableAction(
-                                                                                                        label: 'Eliminar',
-                                                                                                        backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                        icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                                        onPressed: (_) async {
-                                                                                                          if (dateTimeFormat(
-                                                                                                                'dd/MM/yyyy',
-                                                                                                                functions.toInitDayHour(getCurrentTimestamp),
-                                                                                                                locale: FFLocalizations.of(context).languageCode,
-                                                                                                              ) ==
-                                                                                                              _model.dateAsistenciaChipsValue) {
-                                                                                                            // find objetos entregados
-                                                                                                            _model.deleteFilterObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                              parent: asistenciaFilterItem.parentReference,
-                                                                                                              queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
-                                                                                                                'asistencia',
-                                                                                                                isEqualTo: asistenciaFilterItem.reference,
-                                                                                                              ),
-                                                                                                            );
-                                                                                                            if (_model.deleteFilterObjetosEntregados != null && (_model.deleteFilterObjetosEntregados)!.isNotEmpty) {
-                                                                                                              await actions.consoleLog(
-                                                                                                                null,
-                                                                                                                'TIENE OBJETOS PARA BORRAR',
-                                                                                                                null,
-                                                                                                              );
-                                                                                                              while (FFAppState().contador < _model.deleteFilterObjetosEntregados!.length) {
-                                                                                                                // delete objeto entregado
-                                                                                                                await _model.deleteFilterObjetosEntregados![FFAppState().contador].reference.delete();
-                                                                                                                // increment Contador
-                                                                                                                FFAppState().contador = FFAppState().contador + 1;
-                                                                                                              }
-                                                                                                              FFAppState().contador = 0;
+                                                                                                      Builder(
+                                                                                                        builder: (context) => SlidableAction(
+                                                                                                          label: 'Eliminar',
+                                                                                                          backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                          icon: FontAwesomeIcons.solidTrashAlt,
+                                                                                                          onPressed: (_) async {
+                                                                                                            if (dateTimeFormat(
+                                                                                                                  'dd/MM/yyyy',
+                                                                                                                  functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                                  locale: FFLocalizations.of(context).languageCode,
+                                                                                                                ) ==
+                                                                                                                _model.dateAsistenciaChipsValue) {
+                                                                                                              await showDialog(
+                                                                                                                context: context,
+                                                                                                                builder: (dialogContext) {
+                                                                                                                  return Dialog(
+                                                                                                                    elevation: 0,
+                                                                                                                    insetPadding: EdgeInsets.zero,
+                                                                                                                    backgroundColor: Colors.transparent,
+                                                                                                                    alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                                    child: GestureDetector(
+                                                                                                                      onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                                      child: DeleteModalWidget(
+                                                                                                                        deleteMsg: 'Esta accioón borrará la asistencia de:  ${asistenciaFilterItem.usuarioName}, de esta actividad. ¿Desea Continuar?',
+                                                                                                                        title: 'Confirmación',
+                                                                                                                        deleteAction: () async {
+                                                                                                                          // find objetos entregados
+                                                                                                                          _model.deleteFilterObjetosEntregados = await queryObjetoEntregadoRecordOnce(
+                                                                                                                            parent: asistenciaFilterItem.parentReference,
+                                                                                                                            queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
+                                                                                                                              'asistencia',
+                                                                                                                              isEqualTo: asistenciaFilterItem.reference,
+                                                                                                                            ),
+                                                                                                                          );
+                                                                                                                          if (_model.deleteFilterObjetosEntregados != null && (_model.deleteFilterObjetosEntregados)!.isNotEmpty) {
+                                                                                                                            while (FFAppState().contador < _model.deleteFilterObjetosEntregados!.length) {
+                                                                                                                              // delete objeto entregado
+                                                                                                                              await _model.deleteFilterObjetosEntregados![FFAppState().contador].reference.delete();
+                                                                                                                              // increment Contador
+                                                                                                                              FFAppState().contador = FFAppState().contador + 1;
+                                                                                                                            }
+                                                                                                                            FFAppState().contador = 0;
+                                                                                                                          }
+                                                                                                                          // delete asistencia
+                                                                                                                          await asistenciaFilterItem.reference.delete();
+                                                                                                                          // Reload List Asistencia
+                                                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
+                                                                                                                        },
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  );
+                                                                                                                },
+                                                                                                              ).then((value) => setState(() {}));
                                                                                                             } else {
-                                                                                                              await actions.consoleLog(
-                                                                                                                null,
-                                                                                                                'NADA PARA BORRAR',
-                                                                                                                null,
+                                                                                                              // show msg error
+                                                                                                              ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                                SnackBar(
+                                                                                                                  content: Text(
+                                                                                                                    'Solo puede eliminar asistencia del dia actual',
+                                                                                                                    style: TextStyle(
+                                                                                                                      color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  duration: const Duration(milliseconds: 4000),
+                                                                                                                  backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                                ),
                                                                                                               );
                                                                                                             }
 
-                                                                                                            // delete asistencia
-                                                                                                            await asistenciaFilterItem.reference.delete();
-                                                                                                            // Reload List Asistencia
-                                                                                                            setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                                            await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
-                                                                                                          } else {
-                                                                                                            // show msg error
-                                                                                                            ScaffoldMessenger.of(context).clearSnackBars();
-                                                                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                              SnackBar(
-                                                                                                                content: Text(
-                                                                                                                  'Solo puede eliminar asistencia del dia actual',
-                                                                                                                  style: TextStyle(
-                                                                                                                    color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                                duration: const Duration(milliseconds: 4000),
-                                                                                                                backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                              ),
-                                                                                                            );
-                                                                                                          }
-
-                                                                                                          setState(() {});
-                                                                                                        },
+                                                                                                            setState(() {});
+                                                                                                          },
+                                                                                                        ),
                                                                                                       ),
                                                                                                     ],
                                                                                                   ),
@@ -2177,12 +2211,13 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                             size:
                                                                                 20.0,
                                                                           ),
-                                                                          onPressed: (_model.dateNotasChipsValue !=
-                                                                                  dateTimeFormat(
-                                                                                    'dd/MM/yyyy',
-                                                                                    widget.grupoActividadDetalles?.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first.fecha,
-                                                                                    locale: FFLocalizations.of(context).languageCode,
-                                                                                  ))
+                                                                          onPressed: ((_model.dateNotasChipsValue == null || _model.dateNotasChipsValue == '') ||
+                                                                                  (_model.dateNotasChipsValue !=
+                                                                                      dateTimeFormat(
+                                                                                        'dd/MM/yyyy',
+                                                                                        getCurrentTimestamp,
+                                                                                        locale: FFLocalizations.of(context).languageCode,
+                                                                                      )))
                                                                               ? null
                                                                               : () async {
                                                                                   // show form
@@ -2214,8 +2249,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                               action: FormAction.create,
                                                                                               reloadAction: () async {
                                                                                                 // Refresh request
-                                                                                                setState(() => _model.firestoreRequestCompleter2 = null);
-                                                                                                await _model.waitForFirestoreRequestCompleted2(maxWait: 7000);
+                                                                                                setState(() => _model.firestoreRequestCompleter3 = null);
+                                                                                                await _model.waitForFirestoreRequestCompleted3(minWait: 2000, maxWait: 7000);
                                                                                               },
                                                                                             ),
                                                                                           ),
@@ -2252,70 +2287,296 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                             BorderRadius.circular(10.0),
                                                                       ),
                                                                       child:
-                                                                          RefreshIndicator(
-                                                                        key: const Key(
-                                                                            'RefreshIndicator_3xslvjaf'),
-                                                                        onRefresh:
-                                                                            () async {},
-                                                                        child:
-                                                                            ListView(
-                                                                          padding:
-                                                                              EdgeInsets.zero,
-                                                                          shrinkWrap:
-                                                                              true,
-                                                                          scrollDirection:
-                                                                              Axis.vertical,
-                                                                          children:
-                                                                              [
-                                                                            Slidable(
-                                                                              endActionPane: ActionPane(
-                                                                                motion: const ScrollMotion(),
-                                                                                extentRatio: 0.5,
-                                                                                children: [
-                                                                                  SlidableAction(
-                                                                                    label: 'Editar',
-                                                                                    backgroundColor: FlutterFlowTheme.of(context).primaryText,
-                                                                                    icon: FontAwesomeIcons.pencilAlt,
-                                                                                    onPressed: (_) {
-                                                                                      print('SlidableActionWidget pressed ...');
-                                                                                    },
+                                                                          Align(
+                                                                        alignment: const AlignmentDirectional(
+                                                                            0.0,
+                                                                            -1.0),
+                                                                        child: FutureBuilder<
+                                                                            List<ActividadComentarioRecord>>(
+                                                                          future: (_model.firestoreRequestCompleter3 ??= Completer<List<ActividadComentarioRecord>>()
+                                                                                ..complete(queryActividadComentarioRecordOnce(
+                                                                                  parent: widget.grupoActividadDetalles
+                                                                                      ?.where((e) =>
+                                                                                          dateTimeFormat(
+                                                                                            'dd/MM/yyyy',
+                                                                                            e.fecha,
+                                                                                            locale: FFLocalizations.of(context).languageCode,
+                                                                                          ) ==
+                                                                                          _model.dateNotasChipsValue)
+                                                                                      .toList()
+                                                                                      .first
+                                                                                      .reference,
+                                                                                  queryBuilder: (actividadComentarioRecord) => actividadComentarioRecord
+                                                                                      .where(
+                                                                                        'grupo',
+                                                                                        isEqualTo: FFAppState().grupoSeleccionado,
+                                                                                      )
+                                                                                      .orderBy('createdAt', descending: true),
+                                                                                )))
+                                                                              .future,
+                                                                          builder:
+                                                                              (context, snapshot) {
+                                                                            // Customize what your widget looks like when it's loading.
+                                                                            if (!snapshot.hasData) {
+                                                                              return Center(
+                                                                                child: SizedBox(
+                                                                                  width: 60.0,
+                                                                                  height: 60.0,
+                                                                                  child: SpinKitChasingDots(
+                                                                                    color: FlutterFlowTheme.of(context).primary,
+                                                                                    size: 60.0,
                                                                                   ),
-                                                                                  SlidableAction(
-                                                                                    label: 'Eliminar',
-                                                                                    backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                    icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                    onPressed: (_) {
-                                                                                      print('SlidableActionWidget pressed ...');
-                                                                                    },
+                                                                                ),
+                                                                              );
+                                                                            }
+                                                                            List<ActividadComentarioRecord>
+                                                                                listViewNotasActividadComentarioRecordList =
+                                                                                snapshot.data!;
+                                                                            if (listViewNotasActividadComentarioRecordList.isEmpty) {
+                                                                              return SizedBox(
+                                                                                width: double.infinity,
+                                                                                height: 290.0,
+                                                                                child: EmptyListWidget(
+                                                                                  icon: Icon(
+                                                                                    Icons.note_alt_outlined,
+                                                                                    color: FlutterFlowTheme.of(context).primaryImputBorder,
+                                                                                    size: 70.0,
                                                                                   ),
-                                                                                ],
-                                                                              ),
-                                                                              child: ListTile(
-                                                                                title: Text(
-                                                                                  'Title',
-                                                                                  style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                                                        fontFamily: 'Readex Pro',
-                                                                                        fontSize: 16.0,
+                                                                                  title: 'Sin notas para mostrar',
+                                                                                ),
+                                                                              );
+                                                                            }
+                                                                            return RefreshIndicator(
+                                                                              key: const Key('RefreshIndicator_zyfe49fz'),
+                                                                              onRefresh: () async {
+                                                                                // Refresh request
+                                                                                setState(() => _model.firestoreRequestCompleter3 = null);
+                                                                                await _model.waitForFirestoreRequestCompleted3(maxWait: 7000);
+                                                                              },
+                                                                              child: ListView.separated(
+                                                                                padding: EdgeInsets.zero,
+                                                                                shrinkWrap: true,
+                                                                                scrollDirection: Axis.vertical,
+                                                                                itemCount: listViewNotasActividadComentarioRecordList.length,
+                                                                                separatorBuilder: (_, __) => const SizedBox(height: 8.0),
+                                                                                itemBuilder: (context, listViewNotasIndex) {
+                                                                                  final listViewNotasActividadComentarioRecord = listViewNotasActividadComentarioRecordList[listViewNotasIndex];
+                                                                                  return Builder(
+                                                                                    builder: (context) => InkWell(
+                                                                                      splashColor: Colors.transparent,
+                                                                                      focusColor: Colors.transparent,
+                                                                                      hoverColor: Colors.transparent,
+                                                                                      highlightColor: Colors.transparent,
+                                                                                      onTap: () async {
+                                                                                        // Get grupo usuario
+                                                                                        _model.grupoUsuarioNotaResponse = await GrupoUsuarioRecord.getDocumentOnce(listViewNotasActividadComentarioRecord.createdBy!);
+                                                                                        // Get usuario
+                                                                                        _model.usuarioNotaResponse = await UsuariosRecord.getDocumentOnce(_model.grupoUsuarioNotaResponse!.usuario!);
+                                                                                        await showDialog(
+                                                                                          context: context,
+                                                                                          builder: (dialogContext) {
+                                                                                            return Dialog(
+                                                                                              elevation: 0,
+                                                                                              insetPadding: EdgeInsets.zero,
+                                                                                              backgroundColor: Colors.transparent,
+                                                                                              alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                              child: GestureDetector(
+                                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                child: SizedBox(
+                                                                                                  height: double.infinity,
+                                                                                                  width: double.infinity,
+                                                                                                  child: InfoModalWidget(
+                                                                                                    title: 'Nota',
+                                                                                                    message: listViewNotasActividadComentarioRecord.comentario,
+                                                                                                    subTitle: '${valueOrDefault<String>(
+                                                                                                      _model.usuarioNotaResponse?.displayName,
+                                                                                                      'No Definido',
+                                                                                                    )}  ${dateTimeFormat(
+                                                                                                      'relative',
+                                                                                                      listViewNotasActividadComentarioRecord.createdAt,
+                                                                                                      locale: FFLocalizations.of(context).languageShortCode ?? FFLocalizations.of(context).languageCode,
+                                                                                                    )}',
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            );
+                                                                                          },
+                                                                                        ).then((value) => setState(() {}));
+
+                                                                                        setState(() {});
+                                                                                      },
+                                                                                      child: Slidable(
+                                                                                        endActionPane: ActionPane(
+                                                                                          motion: const ScrollMotion(),
+                                                                                          extentRatio: 0.5,
+                                                                                          children: [
+                                                                                            SlidableAction(
+                                                                                              label: 'Editar',
+                                                                                              backgroundColor: FlutterFlowTheme.of(context).info,
+                                                                                              icon: FontAwesomeIcons.pencilAlt,
+                                                                                              onPressed: (_) async {
+                                                                                                if (dateTimeFormat(
+                                                                                                      'dd/MM/yyyy',
+                                                                                                      functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                      locale: FFLocalizations.of(context).languageCode,
+                                                                                                    ) ==
+                                                                                                    _model.dateNotasChipsValue) {
+                                                                                                  // open form
+                                                                                                  await showModalBottomSheet(
+                                                                                                    isScrollControlled: true,
+                                                                                                    backgroundColor: Colors.transparent,
+                                                                                                    isDismissible: false,
+                                                                                                    enableDrag: false,
+                                                                                                    useSafeArea: true,
+                                                                                                    context: context,
+                                                                                                    builder: (context) {
+                                                                                                      return GestureDetector(
+                                                                                                        onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                        child: Padding(
+                                                                                                          padding: MediaQuery.viewInsetsOf(context),
+                                                                                                          child: SizedBox(
+                                                                                                            height: 400.0,
+                                                                                                            child: FormNotaWidget(
+                                                                                                              grupoActividadDetalle: widget.grupoActividadDetalles
+                                                                                                                  ?.where((e) =>
+                                                                                                                      dateTimeFormat(
+                                                                                                                        'dd/MM/yyyy',
+                                                                                                                        e.fecha,
+                                                                                                                        locale: FFLocalizations.of(context).languageCode,
+                                                                                                                      ) ==
+                                                                                                                      _model.dateNotasChipsValue)
+                                                                                                                  .toList()
+                                                                                                                  .first,
+                                                                                                              comentario: listViewNotasActividadComentarioRecord,
+                                                                                                              action: FormAction.edit,
+                                                                                                              reloadAction: () async {
+                                                                                                                // Refresh request
+                                                                                                                setState(() => _model.firestoreRequestCompleter3 = null);
+                                                                                                                await _model.waitForFirestoreRequestCompleted3(minWait: 2000, maxWait: 7000);
+                                                                                                              },
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      );
+                                                                                                    },
+                                                                                                  ).then((value) => safeSetState(() {}));
+                                                                                                } else {
+                                                                                                  // show msg error
+                                                                                                  ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                    SnackBar(
+                                                                                                      content: Text(
+                                                                                                        'Solo puede editar notas del dia actual',
+                                                                                                        style: TextStyle(
+                                                                                                          color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      duration: const Duration(milliseconds: 4000),
+                                                                                                      backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                    ),
+                                                                                                  );
+                                                                                                }
+                                                                                              },
+                                                                                            ),
+                                                                                            Builder(
+                                                                                              builder: (context) => SlidableAction(
+                                                                                                label: 'Eliminar',
+                                                                                                backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                icon: FontAwesomeIcons.solidTrashAlt,
+                                                                                                onPressed: (_) async {
+                                                                                                  if (dateTimeFormat(
+                                                                                                        'dd/MM/yyyy',
+                                                                                                        functions.toInitDayHour(getCurrentTimestamp),
+                                                                                                        locale: FFLocalizations.of(context).languageCode,
+                                                                                                      ) ==
+                                                                                                      _model.dateNotasChipsValue) {
+                                                                                                    // show delete modal
+                                                                                                    await showDialog(
+                                                                                                      context: context,
+                                                                                                      builder: (dialogContext) {
+                                                                                                        return Dialog(
+                                                                                                          elevation: 0,
+                                                                                                          insetPadding: EdgeInsets.zero,
+                                                                                                          backgroundColor: Colors.transparent,
+                                                                                                          alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                                          child: GestureDetector(
+                                                                                                            onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                                            child: SizedBox(
+                                                                                                              height: double.infinity,
+                                                                                                              width: double.infinity,
+                                                                                                              child: DeleteModalWidget(
+                                                                                                                deleteMsg: '',
+                                                                                                                title: 'Confirmación',
+                                                                                                                deleteAction: () async {
+                                                                                                                  // Delete Note
+                                                                                                                  await listViewNotasActividadComentarioRecord.reference.delete();
+                                                                                                                  // Refresh request
+                                                                                                                  setState(() => _model.firestoreRequestCompleter3 = null);
+                                                                                                                  await _model.waitForFirestoreRequestCompleted3(minWait: 2000, maxWait: 7000);
+                                                                                                                },
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    ).then((value) => setState(() {}));
+                                                                                                  } else {
+                                                                                                    // show msg error
+                                                                                                    ScaffoldMessenger.of(context).clearSnackBars();
+                                                                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                      SnackBar(
+                                                                                                        content: Text(
+                                                                                                          'Solo puede eliminar notas del dia actual',
+                                                                                                          style: TextStyle(
+                                                                                                            color: FlutterFlowTheme.of(context).primaryText,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        duration: const Duration(milliseconds: 4000),
+                                                                                                        backgroundColor: FlutterFlowTheme.of(context).error,
+                                                                                                      ),
+                                                                                                    );
+                                                                                                  }
+                                                                                                },
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                        child: ListTile(
+                                                                                          title: Text(
+                                                                                            listViewNotasActividadComentarioRecord.comentario,
+                                                                                            style: FlutterFlowTheme.of(context).titleLarge.override(
+                                                                                                  fontFamily: 'Readex Pro',
+                                                                                                  fontSize: 16.0,
+                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                ),
+                                                                                          ),
+                                                                                          subtitle: Text(
+                                                                                            dateTimeFormat(
+                                                                                              'relative',
+                                                                                              listViewNotasActividadComentarioRecord.createdAt!,
+                                                                                              locale: FFLocalizations.of(context).languageCode,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).labelMedium.override(
+                                                                                                  fontFamily: 'Inter',
+                                                                                                  fontSize: 12.0,
+                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                  lineHeight: 1.2,
+                                                                                                ),
+                                                                                          ),
+                                                                                          trailing: Icon(
+                                                                                            Icons.arrow_forward_ios,
+                                                                                            color: FlutterFlowTheme.of(context).secondaryText,
+                                                                                            size: 20.0,
+                                                                                          ),
+                                                                                          dense: false,
+                                                                                        ),
                                                                                       ),
-                                                                                ),
-                                                                                subtitle: Text(
-                                                                                  'Subtitle goes here...',
-                                                                                  style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                        fontFamily: 'Inter',
-                                                                                        fontSize: 12.0,
-                                                                                        fontWeight: FontWeight.normal,
-                                                                                        lineHeight: 1.5,
-                                                                                      ),
-                                                                                ),
-                                                                                trailing: Icon(
-                                                                                  Icons.arrow_forward_ios,
-                                                                                  color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                  size: 20.0,
-                                                                                ),
-                                                                                dense: false,
+                                                                                    ),
+                                                                                  );
+                                                                                },
                                                                               ),
-                                                                            ),
-                                                                          ].divide(const SizedBox(height: 8.0)),
+                                                                            );
+                                                                          },
                                                                         ),
                                                                       ),
                                                                     ),

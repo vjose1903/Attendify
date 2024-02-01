@@ -15,6 +15,7 @@ Future<dynamic> getProximasActividades(
   DocumentReference grupo,
 ) async {
   // Add your function code here!
+
   DateTime fechaActual = DateTime.now();
   DateTime fechaLimite = fechaActual.add(Duration(days: 7));
 

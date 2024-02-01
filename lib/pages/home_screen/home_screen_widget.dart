@@ -720,7 +720,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                                                                           .where(
                                                                                             'grupo',
                                                                                             isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                          ),
+                                                                                          )
+                                                                                          .orderBy('fecha'),
                                                                                     );
                                                                                     // Count imgs
                                                                                     _model.imagenesActividadResponse = await queryActividadImagenesRecordCount(

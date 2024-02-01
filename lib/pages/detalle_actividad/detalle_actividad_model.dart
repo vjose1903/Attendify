@@ -58,6 +58,7 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   List<ObjetoEntregadoRecord>? editFindObjetosEntregados;
   // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
   List<ObjetoEntregadoRecord>? deleteObjetosEntregados;
+  Completer<List<AsistenciaRecord>>? firestoreRequestCompleter1;
   // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
   GrupoUsuarioRecord? editFilterFindGrupoUsuarioResponse;
   // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
@@ -75,7 +76,11 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   // State field(s) for DateNotasChips widget.
   String? dateNotasChipsValue;
   FormFieldController<List<String>>? dateNotasChipsValueController;
-  Completer<List<ActividadComentarioRecord>>? firestoreRequestCompleter2;
+  Completer<List<ActividadComentarioRecord>>? firestoreRequestCompleter3;
+  // Stores action output result for [Backend Call - Read Document] action in ListTile widget.
+  GrupoUsuarioRecord? grupoUsuarioNotaResponse;
+  // Stores action output result for [Backend Call - Read Document] action in ListTile widget.
+  UsuariosRecord? usuarioNotaResponse;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel2;
   var scanResponse = '';
@@ -129,7 +134,7 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
     }
   }
 
-  Future waitForFirestoreRequestCompleted2({
+  Future waitForFirestoreRequestCompleted1({
     double minWait = 0,
     double maxWait = double.infinity,
   }) async {
@@ -137,7 +142,22 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 50));
       final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = firestoreRequestCompleter2?.isCompleted ?? false;
+      final requestComplete = firestoreRequestCompleter1?.isCompleted ?? false;
+      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
+        break;
+      }
+    }
+  }
+
+  Future waitForFirestoreRequestCompleted3({
+    double minWait = 0,
+    double maxWait = double.infinity,
+  }) async {
+    final stopwatch = Stopwatch()..start();
+    while (true) {
+      await Future.delayed(const Duration(milliseconds: 50));
+      final timeElapsed = stopwatch.elapsedMilliseconds;
+      final requestComplete = firestoreRequestCompleter3?.isCompleted ?? false;
       if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
         break;
       }

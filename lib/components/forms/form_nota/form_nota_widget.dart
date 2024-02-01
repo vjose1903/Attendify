@@ -269,25 +269,8 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                                 ),
                                 actividadComentarioRecordReference);
                         shouldSetState = true;
-                        if (_model.createNotaResponse?.comentario != null &&
-                            _model.createNotaResponse?.comentario != '') {
-                          // success msg
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Nota creada correctamente',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                              ),
-                              duration: const Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).success,
-                            ),
-                          );
-                        } else {
+                        if (!(_model.createNotaResponse?.comentario != null &&
+                            _model.createNotaResponse?.comentario != '')) {
                           // error msg
                           ScaffoldMessenger.of(context).clearSnackBars();
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -314,21 +297,6 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                             .update(createActividadComentarioRecordData(
                           comentario: _model.notaTxtController.text,
                         ));
-                        // success msg
-                        ScaffoldMessenger.of(context).clearSnackBars();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Nota editada correctamente',
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: const Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).success,
-                          ),
-                        );
                       }
 
                       // close form
