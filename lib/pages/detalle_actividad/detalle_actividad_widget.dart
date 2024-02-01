@@ -1,6 +1,7 @@
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/components/alert_modal/alert_modal_widget.dart';
+import '/components/asistencia_list_view_widget.dart';
 import '/components/delete_modal/delete_modal_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/asistencia/form_asistencia/form_asistencia_widget.dart';
@@ -14,7 +15,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
-import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'dart:async';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
@@ -1236,21 +1236,11 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                           setState(() {
                                                                                             _model.showFullAsistenciaList = false;
                                                                                           });
-                                                                                          await actions.consoleLog(
-                                                                                            null,
-                                                                                            'filtrando',
-                                                                                            null,
-                                                                                          );
                                                                                         } else {
                                                                                           // change To Full list
                                                                                           setState(() {
                                                                                             _model.showFullAsistenciaList = true;
                                                                                           });
-                                                                                          await actions.consoleLog(
-                                                                                            null,
-                                                                                            'lista completa',
-                                                                                            null,
-                                                                                          );
                                                                                         }
                                                                                       },
                                                                                     ),
@@ -1283,21 +1273,11 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                   setState(() {
                                                                                                     _model.showFullAsistenciaList = false;
                                                                                                   });
-                                                                                                  await actions.consoleLog(
-                                                                                                    null,
-                                                                                                    'filtrando',
-                                                                                                    null,
-                                                                                                  );
                                                                                                 } else {
                                                                                                   // change To Full list
                                                                                                   setState(() {
                                                                                                     _model.showFullAsistenciaList = true;
                                                                                                   });
-                                                                                                  await actions.consoleLog(
-                                                                                                    null,
-                                                                                                    'lista completa',
-                                                                                                    null,
-                                                                                                  );
                                                                                                 }
 
                                                                                                 setState(() {});
@@ -1353,555 +1333,54 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                             builder:
                                                                                 (context) {
                                                                               if (_model.showFullAsistenciaList == true) {
-                                                                                return Builder(
-                                                                                  builder: (context) {
-                                                                                    final actividadAsistencia = containerAsistenciaAsistenciaRecordList.toList();
-                                                                                    if (actividadAsistencia.isEmpty) {
-                                                                                      return Center(
-                                                                                        child: SizedBox(
-                                                                                          height: 290.0,
-                                                                                          child: EmptyListWidget(
-                                                                                            icon: FaIcon(
-                                                                                              FontAwesomeIcons.userTimes,
-                                                                                              color: FlutterFlowTheme.of(context).primaryImputBorder,
-                                                                                              size: 75.0,
-                                                                                            ),
-                                                                                            title: 'Sin registros de asistencia',
-                                                                                          ),
-                                                                                        ),
-                                                                                      );
-                                                                                    }
-                                                                                    return RefreshIndicator(
-                                                                                      key: const Key('RefreshIndicator_sz32zoq3'),
-                                                                                      onRefresh: () async {
-                                                                                        // Reload List Asistencia
-                                                                                        setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                        await _model.waitForFirestoreRequestCompleted1(minWait: 5000, maxWait: 10000);
-                                                                                      },
-                                                                                      child: ListView.separated(
-                                                                                        padding: EdgeInsets.zero,
-                                                                                        shrinkWrap: true,
-                                                                                        scrollDirection: Axis.vertical,
-                                                                                        itemCount: actividadAsistencia.length,
-                                                                                        separatorBuilder: (_, __) => const SizedBox(height: 8.0),
-                                                                                        itemBuilder: (context, actividadAsistenciaIndex) {
-                                                                                          final actividadAsistenciaItem = actividadAsistencia[actividadAsistenciaIndex];
-                                                                                          return StreamBuilder<List<ObjetoEntregadoRecord>>(
-                                                                                            stream: queryObjetoEntregadoRecord(
-                                                                                              queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
-                                                                                                'asistencia',
-                                                                                                isEqualTo: actividadAsistenciaItem.reference,
-                                                                                              ),
-                                                                                              singleRecord: true,
-                                                                                            ),
-                                                                                            builder: (context, snapshot) {
-                                                                                              // Customize what your widget looks like when it's loading.
-                                                                                              if (!snapshot.hasData) {
-                                                                                                return Center(
-                                                                                                  child: Padding(
-                                                                                                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 2.0),
-                                                                                                    child: SizedBox(
-                                                                                                      width: 60.0,
-                                                                                                      height: 60.0,
-                                                                                                      child: SpinKitChasingDots(
-                                                                                                        color: FlutterFlowTheme.of(context).primary,
-                                                                                                        size: 60.0,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                );
-                                                                                              }
-                                                                                              List<ObjetoEntregadoRecord> listTileObjetoEntregadoRecordList = snapshot.data!;
-                                                                                              final listTileObjetoEntregadoRecord = listTileObjetoEntregadoRecordList.isNotEmpty ? listTileObjetoEntregadoRecordList.first : null;
-                                                                                              return Slidable(
-                                                                                                endActionPane: ActionPane(
-                                                                                                  motion: const ScrollMotion(),
-                                                                                                  extentRatio: 0.5,
-                                                                                                  children: [
-                                                                                                    SlidableAction(
-                                                                                                      label: 'Editar',
-                                                                                                      backgroundColor: FlutterFlowTheme.of(context).primaryText,
-                                                                                                      icon: FontAwesomeIcons.pencilAlt,
-                                                                                                      onPressed: (_) async {
-                                                                                                        if (dateTimeFormat(
-                                                                                                              'dd/MM/yyyy',
-                                                                                                              functions.toInitDayHour(getCurrentTimestamp),
-                                                                                                              locale: FFLocalizations.of(context).languageCode,
-                                                                                                            ) ==
-                                                                                                            _model.dateAsistenciaChipsValue) {
-                                                                                                          // Find Grupo Usuario
-                                                                                                          _model.editFindGrupoUsuarioResponse = await GrupoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord!.grupoUsuario!);
-                                                                                                          // find user info
-                                                                                                          _model.editFindUserInfoResponse = await UsuariosRecord.getDocumentOnce(_model.editFindGrupoUsuarioResponse!.usuario!);
-                                                                                                          // Find tipo usuario
-                                                                                                          _model.editFindTipoUsuarioResponse = await TipoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord.tipoUsuario!);
-                                                                                                          // find objetos a entregar
-                                                                                                          _model.editFindObjetosAEntregarResponsee = await queryActividadObjetoAEntregarRecordOnce(
-                                                                                                            parent: actividadAsistenciaItem.parentReference,
-                                                                                                            queryBuilder: (actividadObjetoAEntregarRecord) => actividadObjetoAEntregarRecord
-                                                                                                                .where(
-                                                                                                                  'grupo',
-                                                                                                                  isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                                                )
-                                                                                                                .where(
-                                                                                                                  'tipo_usuario',
-                                                                                                                  isEqualTo: listTileObjetoEntregadoRecord.tipoUsuario,
-                                                                                                                )
-                                                                                                                .where(
-                                                                                                                  'grupo_actividad',
-                                                                                                                  isEqualTo: widget.grupoActividad?.reference,
-                                                                                                                ),
-                                                                                                          );
-                                                                                                          // Find Objetos Entregados
-                                                                                                          _model.editFindObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                            parent: actividadAsistenciaItem.parentReference,
-                                                                                                            queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
-                                                                                                                .where(
-                                                                                                                  'asistencia',
-                                                                                                                  isEqualTo: listTileObjetoEntregadoRecord.asistencia,
-                                                                                                                )
-                                                                                                                .where(
-                                                                                                                  'grupo',
-                                                                                                                  isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                                                ),
-                                                                                                          );
-                                                                                                          // open form asistencia
-                                                                                                          await showModalBottomSheet(
-                                                                                                            isScrollControlled: true,
-                                                                                                            backgroundColor: Colors.transparent,
-                                                                                                            isDismissible: false,
-                                                                                                            enableDrag: false,
-                                                                                                            context: context,
-                                                                                                            builder: (context) {
-                                                                                                              return GestureDetector(
-                                                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                                                child: Padding(
-                                                                                                                  padding: MediaQuery.viewInsetsOf(context),
-                                                                                                                  child: SizedBox(
-                                                                                                                    height: MediaQuery.sizeOf(context).height * 0.55,
-                                                                                                                    child: FormAsistenciaWidget(
-                                                                                                                      user: _model.editFindUserInfoResponse,
-                                                                                                                      action: FormAction.edit,
-                                                                                                                      grupoUsuario: _model.editFindGrupoUsuarioResponse,
-                                                                                                                      tipoUsuario: _model.editFindTipoUsuarioResponse!,
-                                                                                                                      actividadObjetosAEntregar: _model.editFindObjetosAEntregarResponsee,
-                                                                                                                      grupoActividadDetalle: widget.grupoActividadDetalles!.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first,
-                                                                                                                      objetosEntregados: _model.editFindObjetosEntregados,
-                                                                                                                      reloadChip: () async {
-                                                                                                                        // Reload List Asistencia
-                                                                                                                        setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                                                        await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
-                                                                                                                      },
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                              );
-                                                                                                            },
-                                                                                                          ).then((value) => safeSetState(() {}));
-                                                                                                        } else {
-                                                                                                          // show msg error
-                                                                                                          ScaffoldMessenger.of(context).clearSnackBars();
-                                                                                                          ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                            SnackBar(
-                                                                                                              content: Text(
-                                                                                                                'Solo puede editar asistencia del dia actual',
-                                                                                                                style: TextStyle(
-                                                                                                                  color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                                ),
-                                                                                                              ),
-                                                                                                              duration: const Duration(milliseconds: 4000),
-                                                                                                              backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                            ),
-                                                                                                          );
-                                                                                                        }
-
-                                                                                                        setState(() {});
-                                                                                                      },
-                                                                                                    ),
-                                                                                                    Builder(
-                                                                                                      builder: (context) => SlidableAction(
-                                                                                                        label: 'Eliminar',
-                                                                                                        backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                        icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                                        onPressed: (_) async {
-                                                                                                          if (dateTimeFormat(
-                                                                                                                'dd/MM/yyyy',
-                                                                                                                functions.toInitDayHour(getCurrentTimestamp),
-                                                                                                                locale: FFLocalizations.of(context).languageCode,
-                                                                                                              ) ==
-                                                                                                              _model.dateAsistenciaChipsValue) {
-                                                                                                            await showDialog(
-                                                                                                              context: context,
-                                                                                                              builder: (dialogContext) {
-                                                                                                                return Dialog(
-                                                                                                                  elevation: 0,
-                                                                                                                  insetPadding: EdgeInsets.zero,
-                                                                                                                  backgroundColor: Colors.transparent,
-                                                                                                                  alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                                                                  child: GestureDetector(
-                                                                                                                    onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                                                    child: DeleteModalWidget(
-                                                                                                                      deleteMsg: 'Esta accioón borrará la asistencia de:  ${actividadAsistenciaItem.usuarioName}, de esta actividad. ¿Desea Continuar?',
-                                                                                                                      title: 'Confirmación',
-                                                                                                                      deleteAction: () async {
-                                                                                                                        // find objetos entregados
-                                                                                                                        _model.deleteObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                                          parent: actividadAsistenciaItem.parentReference,
-                                                                                                                          queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
-                                                                                                                            'asistencia',
-                                                                                                                            isEqualTo: actividadAsistenciaItem.reference,
-                                                                                                                          ),
-                                                                                                                        );
-                                                                                                                        if (_model.deleteObjetosEntregados != null && (_model.deleteObjetosEntregados)!.isNotEmpty) {
-                                                                                                                          while (FFAppState().contador < _model.deleteObjetosEntregados!.length) {
-                                                                                                                            // delete objeto entregado
-                                                                                                                            await _model.deleteObjetosEntregados![FFAppState().contador].reference.delete();
-                                                                                                                            // increment Contador
-                                                                                                                            FFAppState().contador = FFAppState().contador + 1;
-                                                                                                                          }
-                                                                                                                          FFAppState().contador = 0;
-                                                                                                                        }
-                                                                                                                        // delete asistencia
-                                                                                                                        await actividadAsistenciaItem.reference.delete();
-                                                                                                                        // Reload List Asistencia
-                                                                                                                        setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                                                        await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
-                                                                                                                      },
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                );
-                                                                                                              },
-                                                                                                            ).then((value) => setState(() {}));
-                                                                                                          } else {
-                                                                                                            // show msg error
-                                                                                                            ScaffoldMessenger.of(context).clearSnackBars();
-                                                                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                              SnackBar(
-                                                                                                                content: Text(
-                                                                                                                  'Solo puede eliminar asistencia del dia actual',
-                                                                                                                  style: TextStyle(
-                                                                                                                    color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                                duration: const Duration(milliseconds: 4000),
-                                                                                                                backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                              ),
-                                                                                                            );
-                                                                                                          }
-
-                                                                                                          setState(() {});
-                                                                                                        },
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ],
-                                                                                                ),
-                                                                                                child: ListTile(
-                                                                                                  title: Text(
-                                                                                                    actividadAsistenciaItem.usuarioName,
-                                                                                                    style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                                                                          fontFamily: 'Readex Pro',
-                                                                                                          fontSize: 16.0,
-                                                                                                        ),
-                                                                                                  ),
-                                                                                                  subtitle: Text(
-                                                                                                    listTileObjetoEntregadoRecord != null ? 'Entregado: ${listTileObjetoEntregadoRecord.cantidad.toString()}  ${listTileObjetoEntregadoRecord.objetoAEntregarLabel}' : '',
-                                                                                                    style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                          fontFamily: 'Inter',
-                                                                                                          fontSize: 12.0,
-                                                                                                          fontWeight: FontWeight.normal,
-                                                                                                          lineHeight: 1.5,
-                                                                                                        ),
-                                                                                                  ),
-                                                                                                  trailing: Icon(
-                                                                                                    Icons.arrow_forward_ios,
-                                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                    size: 20.0,
-                                                                                                  ),
-                                                                                                  dense: false,
-                                                                                                ),
-                                                                                              );
-                                                                                            },
-                                                                                          );
-                                                                                        },
-                                                                                      ),
-                                                                                    );
-                                                                                  },
+                                                                                return wrapWithModel(
+                                                                                  model: _model.fullAsistenciaListViewModel,
+                                                                                  updateCallback: () => setState(() {}),
+                                                                                  updateOnChange: true,
+                                                                                  child: AsistenciaListViewWidget(
+                                                                                    currentSelectedStringDate: _model.dateAsistenciaChipsValue!,
+                                                                                    asistenciaList: containerAsistenciaAsistenciaRecordList,
+                                                                                    grupoActividad: widget.grupoActividad!.reference,
+                                                                                    grupoActividadDetalle: widget.grupoActividadDetalles!
+                                                                                        .where((e) =>
+                                                                                            dateTimeFormat(
+                                                                                              'dd/MM/yyyy',
+                                                                                              e.fecha,
+                                                                                              locale: FFLocalizations.of(context).languageCode,
+                                                                                            ) ==
+                                                                                            _model.dateAsistenciaChipsValue)
+                                                                                        .toList()
+                                                                                        .first,
+                                                                                    reloadAction: () async {
+                                                                                      // Reload List Asistencia
+                                                                                      setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                      await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
+                                                                                    },
+                                                                                  ),
                                                                                 );
                                                                               } else {
-                                                                                return Align(
-                                                                                  alignment: const AlignmentDirectional(0.0, -1.0),
-                                                                                  child: Builder(
-                                                                                    builder: (context) {
-                                                                                      final asistenciaFilter = _model.simpleSearchResults.toList();
-                                                                                      if (asistenciaFilter.isEmpty) {
-                                                                                        return Center(
-                                                                                          child: SizedBox(
-                                                                                            height: 290.0,
-                                                                                            child: EmptyListWidget(
-                                                                                              icon: FaIcon(
-                                                                                                FontAwesomeIcons.userTimes,
-                                                                                                color: FlutterFlowTheme.of(context).primaryImputBorder,
-                                                                                                size: 75.0,
-                                                                                              ),
-                                                                                              title: 'Sin registros de asistencia',
-                                                                                            ),
-                                                                                          ),
-                                                                                        );
-                                                                                      }
-                                                                                      return RefreshIndicator(
-                                                                                        key: const Key('RefreshIndicator_su6g498c'),
-                                                                                        onRefresh: () async {
-                                                                                          // Reload List Asistencia
-                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 5000, maxWait: 10000);
-                                                                                        },
-                                                                                        child: ListView.separated(
-                                                                                          padding: EdgeInsets.zero,
-                                                                                          shrinkWrap: true,
-                                                                                          scrollDirection: Axis.vertical,
-                                                                                          itemCount: asistenciaFilter.length,
-                                                                                          separatorBuilder: (_, __) => const SizedBox(height: 8.0),
-                                                                                          itemBuilder: (context, asistenciaFilterIndex) {
-                                                                                            final asistenciaFilterItem = asistenciaFilter[asistenciaFilterIndex];
-                                                                                            return StreamBuilder<List<ObjetoEntregadoRecord>>(
-                                                                                              stream: queryObjetoEntregadoRecord(
-                                                                                                queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
-                                                                                                  'asistencia',
-                                                                                                  isEqualTo: asistenciaFilterItem.reference,
-                                                                                                ),
-                                                                                                singleRecord: true,
-                                                                                              ),
-                                                                                              builder: (context, snapshot) {
-                                                                                                // Customize what your widget looks like when it's loading.
-                                                                                                if (!snapshot.hasData) {
-                                                                                                  return Center(
-                                                                                                    child: Padding(
-                                                                                                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 2.0, 0.0, 2.0),
-                                                                                                      child: SizedBox(
-                                                                                                        width: 60.0,
-                                                                                                        height: 60.0,
-                                                                                                        child: SpinKitChasingDots(
-                                                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                                                          size: 60.0,
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  );
-                                                                                                }
-                                                                                                List<ObjetoEntregadoRecord> listTileObjetoEntregadoRecordList = snapshot.data!;
-                                                                                                final listTileObjetoEntregadoRecord = listTileObjetoEntregadoRecordList.isNotEmpty ? listTileObjetoEntregadoRecordList.first : null;
-                                                                                                return Slidable(
-                                                                                                  endActionPane: ActionPane(
-                                                                                                    motion: const ScrollMotion(),
-                                                                                                    extentRatio: 0.5,
-                                                                                                    children: [
-                                                                                                      SlidableAction(
-                                                                                                        label: 'Editar',
-                                                                                                        backgroundColor: FlutterFlowTheme.of(context).primaryText,
-                                                                                                        icon: FontAwesomeIcons.pencilAlt,
-                                                                                                        onPressed: (_) async {
-                                                                                                          if (dateTimeFormat(
-                                                                                                                'dd/MM/yyyy',
-                                                                                                                functions.toInitDayHour(getCurrentTimestamp),
-                                                                                                                locale: FFLocalizations.of(context).languageCode,
-                                                                                                              ) ==
-                                                                                                              _model.dateAsistenciaChipsValue) {
-                                                                                                            // Find Grupo Usuario
-                                                                                                            _model.editFilterFindGrupoUsuarioResponse = await GrupoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord!.grupoUsuario!);
-                                                                                                            // find user info
-                                                                                                            _model.editFilterFindUserInfoResponse = await UsuariosRecord.getDocumentOnce(_model.editFilterFindGrupoUsuarioResponse!.usuario!);
-                                                                                                            // Find tipo usuario
-                                                                                                            _model.editFilterfindTipoUsuarioResponse = await TipoUsuarioRecord.getDocumentOnce(listTileObjetoEntregadoRecord.tipoUsuario!);
-                                                                                                            // find objetos a entregar
-                                                                                                            _model.editFilterFindObjetosAEntregarResponsee = await queryActividadObjetoAEntregarRecordOnce(
-                                                                                                              parent: asistenciaFilterItem.parentReference,
-                                                                                                              queryBuilder: (actividadObjetoAEntregarRecord) => actividadObjetoAEntregarRecord
-                                                                                                                  .where(
-                                                                                                                    'grupo',
-                                                                                                                    isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                                                  )
-                                                                                                                  .where(
-                                                                                                                    'tipo_usuario',
-                                                                                                                    isEqualTo: listTileObjetoEntregadoRecord.tipoUsuario,
-                                                                                                                  )
-                                                                                                                  .where(
-                                                                                                                    'grupo_actividad',
-                                                                                                                    isEqualTo: widget.grupoActividad?.reference,
-                                                                                                                  ),
-                                                                                                            );
-                                                                                                            // Find Objetos Entregados
-                                                                                                            _model.editFilterFindObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                              parent: asistenciaFilterItem.parentReference,
-                                                                                                              queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord
-                                                                                                                  .where(
-                                                                                                                    'asistencia',
-                                                                                                                    isEqualTo: listTileObjetoEntregadoRecord.asistencia,
-                                                                                                                  )
-                                                                                                                  .where(
-                                                                                                                    'grupo',
-                                                                                                                    isEqualTo: FFAppState().grupoSeleccionado,
-                                                                                                                  ),
-                                                                                                            );
-                                                                                                            // open form asistencia
-                                                                                                            await showModalBottomSheet(
-                                                                                                              isScrollControlled: true,
-                                                                                                              backgroundColor: Colors.transparent,
-                                                                                                              isDismissible: false,
-                                                                                                              enableDrag: false,
-                                                                                                              context: context,
-                                                                                                              builder: (context) {
-                                                                                                                return GestureDetector(
-                                                                                                                  onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                                                  child: Padding(
-                                                                                                                    padding: MediaQuery.viewInsetsOf(context),
-                                                                                                                    child: SizedBox(
-                                                                                                                      height: MediaQuery.sizeOf(context).height * 0.55,
-                                                                                                                      child: FormAsistenciaWidget(
-                                                                                                                        user: _model.editFilterFindUserInfoResponse,
-                                                                                                                        action: FormAction.edit,
-                                                                                                                        grupoUsuario: _model.editFilterFindGrupoUsuarioResponse,
-                                                                                                                        tipoUsuario: _model.editFilterfindTipoUsuarioResponse!,
-                                                                                                                        actividadObjetosAEntregar: _model.editFilterFindObjetosAEntregarResponsee,
-                                                                                                                        grupoActividadDetalle: widget.grupoActividadDetalles!.where((e) => e.fecha == functions.toInitDayHour(getCurrentTimestamp)).toList().first,
-                                                                                                                        objetosEntregados: _model.editFilterFindObjetosEntregados,
-                                                                                                                        reloadChip: () async {
-                                                                                                                          // Reload List Asistencia
-                                                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
-                                                                                                                        },
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                );
-                                                                                                              },
-                                                                                                            ).then((value) => safeSetState(() {}));
-                                                                                                          } else {
-                                                                                                            // show msg error
-                                                                                                            ScaffoldMessenger.of(context).clearSnackBars();
-                                                                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                              SnackBar(
-                                                                                                                content: Text(
-                                                                                                                  'Solo puede editar asistencia del dia actual',
-                                                                                                                  style: TextStyle(
-                                                                                                                    color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                                duration: const Duration(milliseconds: 4000),
-                                                                                                                backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                              ),
-                                                                                                            );
-                                                                                                          }
-
-                                                                                                          setState(() {});
-                                                                                                        },
-                                                                                                      ),
-                                                                                                      Builder(
-                                                                                                        builder: (context) => SlidableAction(
-                                                                                                          label: 'Eliminar',
-                                                                                                          backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                          icon: FontAwesomeIcons.solidTrashAlt,
-                                                                                                          onPressed: (_) async {
-                                                                                                            if (dateTimeFormat(
-                                                                                                                  'dd/MM/yyyy',
-                                                                                                                  functions.toInitDayHour(getCurrentTimestamp),
-                                                                                                                  locale: FFLocalizations.of(context).languageCode,
-                                                                                                                ) ==
-                                                                                                                _model.dateAsistenciaChipsValue) {
-                                                                                                              await showDialog(
-                                                                                                                context: context,
-                                                                                                                builder: (dialogContext) {
-                                                                                                                  return Dialog(
-                                                                                                                    elevation: 0,
-                                                                                                                    insetPadding: EdgeInsets.zero,
-                                                                                                                    backgroundColor: Colors.transparent,
-                                                                                                                    alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                                                                    child: GestureDetector(
-                                                                                                                      onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                                                      child: DeleteModalWidget(
-                                                                                                                        deleteMsg: 'Esta accioón borrará la asistencia de:  ${asistenciaFilterItem.usuarioName}, de esta actividad. ¿Desea Continuar?',
-                                                                                                                        title: 'Confirmación',
-                                                                                                                        deleteAction: () async {
-                                                                                                                          // find objetos entregados
-                                                                                                                          _model.deleteFilterObjetosEntregados = await queryObjetoEntregadoRecordOnce(
-                                                                                                                            parent: asistenciaFilterItem.parentReference,
-                                                                                                                            queryBuilder: (objetoEntregadoRecord) => objetoEntregadoRecord.where(
-                                                                                                                              'asistencia',
-                                                                                                                              isEqualTo: asistenciaFilterItem.reference,
-                                                                                                                            ),
-                                                                                                                          );
-                                                                                                                          if (_model.deleteFilterObjetosEntregados != null && (_model.deleteFilterObjetosEntregados)!.isNotEmpty) {
-                                                                                                                            while (FFAppState().contador < _model.deleteFilterObjetosEntregados!.length) {
-                                                                                                                              // delete objeto entregado
-                                                                                                                              await _model.deleteFilterObjetosEntregados![FFAppState().contador].reference.delete();
-                                                                                                                              // increment Contador
-                                                                                                                              FFAppState().contador = FFAppState().contador + 1;
-                                                                                                                            }
-                                                                                                                            FFAppState().contador = 0;
-                                                                                                                          }
-                                                                                                                          // delete asistencia
-                                                                                                                          await asistenciaFilterItem.reference.delete();
-                                                                                                                          // Reload List Asistencia
-                                                                                                                          setState(() => _model.firestoreRequestCompleter1 = null);
-                                                                                                                          await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
-                                                                                                                        },
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  );
-                                                                                                                },
-                                                                                                              ).then((value) => setState(() {}));
-                                                                                                            } else {
-                                                                                                              // show msg error
-                                                                                                              ScaffoldMessenger.of(context).clearSnackBars();
-                                                                                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                                SnackBar(
-                                                                                                                  content: Text(
-                                                                                                                    'Solo puede eliminar asistencia del dia actual',
-                                                                                                                    style: TextStyle(
-                                                                                                                      color: FlutterFlowTheme.of(context).primaryText,
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                  duration: const Duration(milliseconds: 4000),
-                                                                                                                  backgroundColor: FlutterFlowTheme.of(context).error,
-                                                                                                                ),
-                                                                                                              );
-                                                                                                            }
-
-                                                                                                            setState(() {});
-                                                                                                          },
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                    ],
-                                                                                                  ),
-                                                                                                  child: ListTile(
-                                                                                                    title: Text(
-                                                                                                      asistenciaFilterItem.usuarioName,
-                                                                                                      style: FlutterFlowTheme.of(context).titleLarge.override(
-                                                                                                            fontFamily: 'Readex Pro',
-                                                                                                            fontSize: 16.0,
-                                                                                                          ),
-                                                                                                    ),
-                                                                                                    subtitle: Text(
-                                                                                                      listTileObjetoEntregadoRecord != null ? 'Entregado: ${listTileObjetoEntregadoRecord.cantidad.toString()}  ${listTileObjetoEntregadoRecord.objetoAEntregarLabel}' : '',
-                                                                                                      style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                                            fontFamily: 'Inter',
-                                                                                                            fontSize: 12.0,
-                                                                                                            fontWeight: FontWeight.normal,
-                                                                                                            lineHeight: 1.5,
-                                                                                                          ),
-                                                                                                    ),
-                                                                                                    trailing: Icon(
-                                                                                                      Icons.arrow_forward_ios,
-                                                                                                      color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                                      size: 20.0,
-                                                                                                    ),
-                                                                                                    dense: false,
-                                                                                                  ),
-                                                                                                );
-                                                                                              },
-                                                                                            );
-                                                                                          },
-                                                                                        ),
-                                                                                      );
+                                                                                return wrapWithModel(
+                                                                                  model: _model.filterAsistenciaListViewModel,
+                                                                                  updateCallback: () => setState(() {}),
+                                                                                  updateOnChange: true,
+                                                                                  child: AsistenciaListViewWidget(
+                                                                                    currentSelectedStringDate: _model.dateAsistenciaChipsValue!,
+                                                                                    asistenciaList: _model.simpleSearchResults,
+                                                                                    grupoActividad: widget.grupoActividad!.reference,
+                                                                                    grupoActividadDetalle: widget.grupoActividadDetalles!
+                                                                                        .where((e) =>
+                                                                                            dateTimeFormat(
+                                                                                              'dd/MM/yyyy',
+                                                                                              e.fecha,
+                                                                                              locale: FFLocalizations.of(context).languageCode,
+                                                                                            ) ==
+                                                                                            _model.dateAsistenciaChipsValue)
+                                                                                        .toList()
+                                                                                        .first,
+                                                                                    reloadAction: () async {
+                                                                                      // Reload List Asistencia
+                                                                                      setState(() => _model.firestoreRequestCompleter1 = null);
+                                                                                      await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
                                                                                     },
                                                                                   ),
                                                                                 );
@@ -2249,8 +1728,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                               action: FormAction.create,
                                                                                               reloadAction: () async {
                                                                                                 // Refresh request
-                                                                                                setState(() => _model.firestoreRequestCompleter3 = null);
-                                                                                                await _model.waitForFirestoreRequestCompleted3(minWait: 2000, maxWait: 7000);
+                                                                                                setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                                await _model.waitForFirestoreRequestCompleted2(minWait: 2000, maxWait: 7000);
                                                                                               },
                                                                                             ),
                                                                                           ),
@@ -2293,7 +1772,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                             -1.0),
                                                                         child: FutureBuilder<
                                                                             List<ActividadComentarioRecord>>(
-                                                                          future: (_model.firestoreRequestCompleter3 ??= Completer<List<ActividadComentarioRecord>>()
+                                                                          future: (_model.firestoreRequestCompleter2 ??= Completer<List<ActividadComentarioRecord>>()
                                                                                 ..complete(queryActividadComentarioRecordOnce(
                                                                                   parent: widget.grupoActividadDetalles
                                                                                       ?.where((e) =>
@@ -2350,8 +1829,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                               key: const Key('RefreshIndicator_zyfe49fz'),
                                                                               onRefresh: () async {
                                                                                 // Refresh request
-                                                                                setState(() => _model.firestoreRequestCompleter3 = null);
-                                                                                await _model.waitForFirestoreRequestCompleted3(maxWait: 7000);
+                                                                                setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                await _model.waitForFirestoreRequestCompleted2(maxWait: 7000);
                                                                               },
                                                                               child: ListView.separated(
                                                                                 padding: EdgeInsets.zero,
@@ -2451,8 +1930,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                               action: FormAction.edit,
                                                                                                               reloadAction: () async {
                                                                                                                 // Refresh request
-                                                                                                                setState(() => _model.firestoreRequestCompleter3 = null);
-                                                                                                                await _model.waitForFirestoreRequestCompleted3(minWait: 2000, maxWait: 7000);
+                                                                                                                setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                                                await _model.waitForFirestoreRequestCompleted2(minWait: 2000, maxWait: 7000);
                                                                                                               },
                                                                                                             ),
                                                                                                           ),
@@ -2511,8 +1990,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                                   // Delete Note
                                                                                                                   await listViewNotasActividadComentarioRecord.reference.delete();
                                                                                                                   // Refresh request
-                                                                                                                  setState(() => _model.firestoreRequestCompleter3 = null);
-                                                                                                                  await _model.waitForFirestoreRequestCompleted3(minWait: 2000, maxWait: 7000);
+                                                                                                                  setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                                                  await _model.waitForFirestoreRequestCompleted2(minWait: 2000, maxWait: 7000);
                                                                                                                 },
                                                                                                               ),
                                                                                                             ),

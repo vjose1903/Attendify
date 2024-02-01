@@ -1,4 +1,5 @@
 import '/backend/backend.dart';
+import '/components/asistencia_list_view_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
@@ -46,37 +47,16 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   TextEditingController? searchAsistenciaController;
   String? Function(BuildContext, String?)? searchAsistenciaControllerValidator;
   List<AsistenciaRecord> simpleSearchResults = [];
-  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
-  GrupoUsuarioRecord? editFindGrupoUsuarioResponse;
-  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
-  UsuariosRecord? editFindUserInfoResponse;
-  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
-  TipoUsuarioRecord? editFindTipoUsuarioResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
-  List<ActividadObjetoAEntregarRecord>? editFindObjetosAEntregarResponsee;
-  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
-  List<ObjetoEntregadoRecord>? editFindObjetosEntregados;
-  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
-  List<ObjetoEntregadoRecord>? deleteObjetosEntregados;
-  Completer<List<AsistenciaRecord>>? firestoreRequestCompleter1;
-  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
-  GrupoUsuarioRecord? editFilterFindGrupoUsuarioResponse;
-  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
-  UsuariosRecord? editFilterFindUserInfoResponse;
-  // Stores action output result for [Backend Call - Read Document] action in SlidableActionWidget widget.
-  TipoUsuarioRecord? editFilterfindTipoUsuarioResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
-  List<ActividadObjetoAEntregarRecord>? editFilterFindObjetosAEntregarResponsee;
-  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
-  List<ObjetoEntregadoRecord>? editFilterFindObjetosEntregados;
-  // Stores action output result for [Firestore Query - Query a collection] action in SlidableActionWidget widget.
-  List<ObjetoEntregadoRecord>? deleteFilterObjetosEntregados;
+  // Model for fullAsistenciaListView.
+  late AsistenciaListViewModel fullAsistenciaListViewModel;
+  // Model for filterAsistenciaListView.
+  late AsistenciaListViewModel filterAsistenciaListViewModel;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel1;
   // State field(s) for DateNotasChips widget.
   String? dateNotasChipsValue;
   FormFieldController<List<String>>? dateNotasChipsValueController;
-  Completer<List<ActividadComentarioRecord>>? firestoreRequestCompleter3;
+  Completer<List<ActividadComentarioRecord>>? firestoreRequestCompleter2;
   // Stores action output result for [Backend Call - Read Document] action in ListTile widget.
   GrupoUsuarioRecord? grupoUsuarioNotaResponse;
   // Stores action output result for [Backend Call - Read Document] action in ListTile widget.
@@ -101,6 +81,10 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
 
   @override
   void initState(BuildContext context) {
+    fullAsistenciaListViewModel =
+        createModel(context, () => AsistenciaListViewModel());
+    filterAsistenciaListViewModel =
+        createModel(context, () => AsistenciaListViewModel());
     emptyListModel1 = createModel(context, () => EmptyListModel());
     emptyListModel2 = createModel(context, () => EmptyListModel());
   }
@@ -111,6 +95,8 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
     searchAsistenciaFocusNode?.dispose();
     searchAsistenciaController?.dispose();
 
+    fullAsistenciaListViewModel.dispose();
+    filterAsistenciaListViewModel.dispose();
     emptyListModel1.dispose();
     emptyListModel2.dispose();
   }
@@ -134,7 +120,7 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
     }
   }
 
-  Future waitForFirestoreRequestCompleted1({
+  Future waitForFirestoreRequestCompleted2({
     double minWait = 0,
     double maxWait = double.infinity,
   }) async {
@@ -142,22 +128,7 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 50));
       final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = firestoreRequestCompleter1?.isCompleted ?? false;
-      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
-        break;
-      }
-    }
-  }
-
-  Future waitForFirestoreRequestCompleted3({
-    double minWait = 0,
-    double maxWait = double.infinity,
-  }) async {
-    final stopwatch = Stopwatch()..start();
-    while (true) {
-      await Future.delayed(const Duration(milliseconds: 50));
-      final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = firestoreRequestCompleter3?.isCompleted ?? false;
+      final requestComplete = firestoreRequestCompleter2?.isCompleted ?? false;
       if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
         break;
       }
