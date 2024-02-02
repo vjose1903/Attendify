@@ -157,13 +157,14 @@ class _ProfileWidgetState extends State<ProfileWidget>
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
                   child: Container(
-                    width: 100.0,
-                    height: 100.0,
+                    width: 120.0,
+                    height: 120.0,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                       shape: BoxShape.circle,
                     ),
                     child: Stack(
+                      alignment: const AlignmentDirectional(0.0, 0.0),
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(2.0),
@@ -212,7 +213,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                     : FFAppConstants.noUserImgUrl,
                                 transitionOnUserGestures: true,
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50.0),
+                                  borderRadius: BorderRadius.circular(100.0),
                                   child: OctoImage(
                                     placeholderBuilder:
                                         OctoPlaceholder.blurHash(
@@ -227,8 +228,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                           ? currentUserPhoto
                                           : FFAppConstants.noUserImgUrl,
                                     ),
-                                    width: 100.0,
-                                    height: 100.0,
+                                    width: double.infinity,
+                                    height: double.infinity,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -311,8 +312,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                               }
                             },
                             child: Container(
-                              width: 100.0,
-                              height: 100.0,
+                              width: 120.0,
+                              height: 120.0,
                               decoration: const BoxDecoration(
                                 color: Color(0x79797D8B),
                                 shape: BoxShape.circle,
@@ -369,12 +370,14 @@ class _ProfileWidgetState extends State<ProfileWidget>
                             decoration: InputDecoration(
                               labelStyle:
                                   FlutterFlowTheme.of(context).labelMedium,
+                              alignLabelWithHint: false,
                               hintText: 'Ingrese Nombre',
                               hintStyle:
                                   FlutterFlowTheme.of(context).labelMedium,
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).alternate,
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryImputBorder,
                                   width: 2.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
@@ -401,7 +404,12 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
-                            style: FlutterFlowTheme.of(context).bodyMedium,
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Inter',
+                                  fontSize: 20.0,
+                                ),
                             validator: _model.textController1Validator
                                 .asValidator(context),
                           ),
@@ -580,7 +588,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Settings',
+                                'Información',
                                 style:
                                     FlutterFlowTheme.of(context).headlineSmall,
                               ),
@@ -1254,21 +1262,6 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                                 ?.reference;
                                   });
                                 }
-                                // Show success msg
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Perfil Actualizado correctamente.',
-                                      style: TextStyle(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                    ),
-                                    duration: const Duration(milliseconds: 4000),
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context).success,
-                                  ),
-                                );
                                 // Hide btns
                                 if (animationsMap[
                                         'rowOnActionTriggerAnimation'] !=

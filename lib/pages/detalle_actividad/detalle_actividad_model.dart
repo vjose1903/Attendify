@@ -1,5 +1,5 @@
 import '/backend/backend.dart';
-import '/components/asistencia_list_view_widget.dart';
+import '/components/asistencia_list_view/asistencia_list_view_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';

@@ -10,6 +10,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'select_group_model.dart';
 export 'select_group_model.dart';
@@ -218,150 +219,253 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                 ],
               ),
               Expanded(
-                child: Container(
-                  width: double.infinity,
-                  height: 505.0,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(20.0, 15.0, 20.0, 15.0),
-                    child: StreamBuilder<List<GrupoRecord>>(
-                      stream: queryGrupoRecord(),
-                      builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              width: 60.0,
-                              height: 60.0,
-                              child: SpinKitChasingDots(
-                                color: FlutterFlowTheme.of(context).primary,
-                                size: 60.0,
-                              ),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+                  child: Container(
+                    width: double.infinity,
+                    height: 505.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          20.0, 15.0, 20.0, 15.0),
+                      child: Builder(
+                        builder: (context) {
+                          final grupoFollowed =
+                              FFAppState().gruposSeguidos.toList();
+                          return GridView.builder(
+                            padding: EdgeInsets.zero,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10.0,
+                              mainAxisSpacing: 10.0,
+                              childAspectRatio: 1.0,
                             ),
-                          );
-                        }
-                        List<GrupoRecord> gridViewGrupoRecordList =
-                            snapshot.data!;
-                        return GridView.builder(
-                          padding: EdgeInsets.zero,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
-                            childAspectRatio: 1.0,
-                          ),
-                          scrollDirection: Axis.vertical,
-                          itemCount: gridViewGrupoRecordList.length,
-                          itemBuilder: (context, gridViewIndex) {
-                            final gridViewGrupoRecord =
-                                gridViewGrupoRecordList[gridViewIndex];
-                            return InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                // FInd grupo usuario
-                                _model.grupoUsuaruiResponse =
-                                    await queryGrupoUsuarioRecordOnce(
-                                  queryBuilder: (grupoUsuarioRecord) =>
-                                      grupoUsuarioRecord
-                                          .where(
-                                            'grupo',
-                                            isEqualTo:
-                                                gridViewGrupoRecord.reference,
-                                          )
-                                          .where(
-                                            'usuario',
-                                            isEqualTo: currentUserReference,
-                                          ),
-                                  singleRecord: true,
-                                ).then((s) => s.firstOrNull);
-                                // update app state
-                                setState(() {
-                                  FFAppState().tipoUsuarioLoged =
-                                      _model.grupoUsuaruiResponse?.tipoUsuario;
-                                  FFAppState().grupoUsuarioLoged =
-                                      _model.grupoUsuaruiResponse?.reference;
-                                  FFAppState().grupoSeleccionado =
-                                      gridViewGrupoRecord.reference;
-                                  FFAppState().grupoSeleccionadoName =
-                                      gridViewGrupoRecord.nombre;
-                                  FFAppState().selectedGroupImg =
-                                      gridViewGrupoRecord.logo;
-                                });
-                                // start Loading
-                                setState(() {
-                                  FFAppState().loadingActividades = true;
-                                });
-                                // get proximas actividades
-                                _model.getProximasActividadesResponse =
-                                    await actions.getProximasActividades(
-                                  FFAppState().tipoUsuarioLoged!,
-                                  FFAppState().grupoSeleccionado!,
-                                );
-                                // End Loading
-                                setState(() {
-                                  FFAppState().loadingActividades = false;
-                                  FFAppState()
-                                      .proximasActividades = (getJsonField(
-                                    _model.getProximasActividadesResponse,
-                                    r'''$.primeras5Actividades''',
-                                    true,
-                                  )!
-                                              .toList()
-                                              .map<GrupoActividadHomeStruct?>(
-                                                  GrupoActividadHomeStruct
-                                                      .maybeFromMap)
-                                              .toList()
-                                          as Iterable<
-                                              GrupoActividadHomeStruct?>)
-                                      .withoutNulls
-                                      .toList()
-                                      .cast<GrupoActividadHomeStruct>();
-                                  FFAppState().restoActividades = (getJsonField(
-                                    _model.getProximasActividadesResponse,
-                                    r'''$.todasLasActividades''',
-                                    true,
-                                  )!
-                                              .toList()
-                                              .map<GrupoActividadHomeStruct?>(
-                                                  GrupoActividadHomeStruct
-                                                      .maybeFromMap)
-                                              .toList()
-                                          as Iterable<
-                                              GrupoActividadHomeStruct?>)
-                                      .withoutNulls
-                                      .toList()
-                                      .cast<GrupoActividadHomeStruct>();
-                                });
-                                // Clase Bottom Sheet
-                                Navigator.pop(context);
+                            scrollDirection: Axis.vertical,
+                            itemCount: grupoFollowed.length,
+                            itemBuilder: (context, grupoFollowedIndex) {
+                              final grupoFollowedItem =
+                                  grupoFollowed[grupoFollowedIndex];
+                              return StreamBuilder<GrupoRecord>(
+                                stream:
+                                    GrupoRecord.getDocument(grupoFollowedItem),
+                                builder: (context, snapshot) {
+                                  // Customize what your widget looks like when it's loading.
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                      child: SizedBox(
+                                        width: 60.0,
+                                        height: 60.0,
+                                        child: SpinKitChasingDots(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                          size: 60.0,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  final selecteingGroupGrupoRecord =
+                                      snapshot.data!;
+                                  return Builder(
+                                    builder: (context) {
+                                      if (_model.isLoading) {
+                                        return Stack(
+                                          alignment:
+                                              const AlignmentDirectional(0.0, 0.0),
+                                          children: [
+                                            wrapWithModel(
+                                              model: _model
+                                                  .selectingGrupoOptionModels
+                                                  .getModel(
+                                                grupoFollowedItem.id,
+                                                grupoFollowedIndex,
+                                              ),
+                                              updateCallback: () =>
+                                                  setState(() {}),
+                                              updateOnChange: true,
+                                              child: GrupoOptionWidget(
+                                                key: Key(
+                                                  'Keyzbn_${grupoFollowedItem.id}',
+                                                ),
+                                                grupoOption: grupoFollowedItem,
+                                              ),
+                                            ),
+                                            Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              decoration: BoxDecoration(
+                                                color: _model.selectedGroup ==
+                                                        grupoFollowedItem
+                                                    ? FlutterFlowTheme.of(
+                                                            context)
+                                                        .lightT30
+                                                    : FlutterFlowTheme.of(
+                                                            context)
+                                                        .darkT50,
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              child: Align(
+                                                alignment: const AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Lottie.asset(
+                                                  'assets/lottie_animations/Animation_-_1705844841203.json',
+                                                  width:
+                                                      MediaQuery.sizeOf(context)
+                                                              .width *
+                                                          0.2,
+                                                  height: 130.0,
+                                                  fit: BoxFit.contain,
+                                                  animate: true,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      } else {
+                                        return InkWell(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () async {
+                                            // Start Loading
+                                            setState(() {
+                                              _model.isLoading = true;
+                                              _model.selectedGroup =
+                                                  grupoFollowedItem;
+                                            });
+                                            // FInd grupo usuario
+                                            _model.grupoUsuaruiResponse =
+                                                await queryGrupoUsuarioRecordOnce(
+                                              queryBuilder:
+                                                  (grupoUsuarioRecord) =>
+                                                      grupoUsuarioRecord
+                                                          .where(
+                                                            'grupo',
+                                                            isEqualTo:
+                                                                grupoFollowedItem,
+                                                          )
+                                                          .where(
+                                                            'usuario',
+                                                            isEqualTo:
+                                                                currentUserReference,
+                                                          ),
+                                              singleRecord: true,
+                                            ).then((s) => s.firstOrNull);
+                                            // update app state
+                                            setState(() {
+                                              FFAppState().tipoUsuarioLoged =
+                                                  _model.grupoUsuaruiResponse
+                                                      ?.tipoUsuario;
+                                              FFAppState().grupoUsuarioLoged =
+                                                  _model.grupoUsuaruiResponse
+                                                      ?.reference;
+                                              FFAppState().grupoSeleccionado =
+                                                  grupoFollowedItem;
+                                              FFAppState()
+                                                      .grupoSeleccionadoName =
+                                                  selecteingGroupGrupoRecord
+                                                      .nombre;
+                                              FFAppState().selectedGroupImg =
+                                                  selecteingGroupGrupoRecord
+                                                      .logo;
+                                              FFAppState()
+                                                      .selectedGroupImgBlur =
+                                                  selecteingGroupGrupoRecord
+                                                      .logoBlurHash;
+                                            });
+                                            // start Loading actividades
+                                            setState(() {
+                                              FFAppState().loadingActividades =
+                                                  true;
+                                            });
+                                            // get proximas actividades
+                                            _model.getProximasActividadesResponse =
+                                                await actions
+                                                    .getProximasActividades(
+                                              FFAppState().tipoUsuarioLoged!,
+                                              FFAppState().grupoSeleccionado!,
+                                            );
+                                            // End Loading actividades
+                                            setState(() {
+                                              FFAppState().loadingActividades =
+                                                  false;
+                                              FFAppState().proximasActividades =
+                                                  (getJsonField(
+                                                _model
+                                                    .getProximasActividadesResponse,
+                                                r'''$.primeras5Actividades''',
+                                                true,
+                                              )!
+                                                              .toList()
+                                                              .map<GrupoActividadHomeStruct?>(
+                                                                  GrupoActividadHomeStruct
+                                                                      .maybeFromMap)
+                                                              .toList()
+                                                          as Iterable<
+                                                              GrupoActividadHomeStruct?>)
+                                                      .withoutNulls
+                                                      .toList()
+                                                      .cast<
+                                                          GrupoActividadHomeStruct>();
+                                              FFAppState().restoActividades =
+                                                  (getJsonField(
+                                                _model
+                                                    .getProximasActividadesResponse,
+                                                r'''$.todasLasActividades''',
+                                                true,
+                                              )!
+                                                              .toList()
+                                                              .map<GrupoActividadHomeStruct?>(
+                                                                  GrupoActividadHomeStruct
+                                                                      .maybeFromMap)
+                                                              .toList()
+                                                          as Iterable<
+                                                              GrupoActividadHomeStruct?>)
+                                                      .withoutNulls
+                                                      .toList()
+                                                      .cast<
+                                                          GrupoActividadHomeStruct>();
+                                            });
+                                            // End Loading
+                                            setState(() {
+                                              _model.isLoading = false;
+                                              _model.selectedGroup = null;
+                                            });
+                                            // Clase Bottom Sheet
+                                            Navigator.pop(context);
 
-                                setState(() {});
-                              },
-                              child: wrapWithModel(
-                                model: _model.grupoOptionModels.getModel(
-                                  gridViewGrupoRecord.reference.id,
-                                  gridViewIndex,
-                                ),
-                                updateCallback: () => setState(() {}),
-                                updateOnChange: true,
-                                child: GrupoOptionWidget(
-                                  key: Key(
-                                    'Keyzbn_${gridViewGrupoRecord.reference.id}',
-                                  ),
-                                  grupoOption: gridViewGrupoRecord.reference,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                                            setState(() {});
+                                          },
+                                          child: wrapWithModel(
+                                            model: _model.grupoOptionModels
+                                                .getModel(
+                                              grupoFollowedItem.id,
+                                              grupoFollowedIndex,
+                                            ),
+                                            updateCallback: () =>
+                                                setState(() {}),
+                                            updateOnChange: true,
+                                            child: GrupoOptionWidget(
+                                              key: Key(
+                                                'Keyxo9_${grupoFollowedItem.id}',
+                                              ),
+                                              grupoOption: grupoFollowedItem,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

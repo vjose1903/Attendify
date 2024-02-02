@@ -39,6 +39,16 @@ class AsistenciaRecord extends FirestoreRecord {
   DocumentReference? get grupoUsuario => _grupoUsuario;
   bool hasGrupoUsuario() => _grupoUsuario != null;
 
+  // "hora_llegada" field.
+  DateTime? _horaLlegada;
+  DateTime? get horaLlegada => _horaLlegada;
+  bool hasHoraLlegada() => _horaLlegada != null;
+
+  // "tipo_usuario_label" field.
+  String? _tipoUsuarioLabel;
+  String get tipoUsuarioLabel => _tipoUsuarioLabel ?? '';
+  bool hasTipoUsuarioLabel() => _tipoUsuarioLabel != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -47,6 +57,8 @@ class AsistenciaRecord extends FirestoreRecord {
     _grupo = snapshotData['grupo'] as DocumentReference?;
     _grupoName = snapshotData['grupo_name'] as String?;
     _grupoUsuario = snapshotData['grupo_usuario'] as DocumentReference?;
+    _horaLlegada = snapshotData['hora_llegada'] as DateTime?;
+    _tipoUsuarioLabel = snapshotData['tipo_usuario_label'] as String?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -94,6 +106,8 @@ Map<String, dynamic> createAsistenciaRecordData({
   DocumentReference? grupo,
   String? grupoName,
   DocumentReference? grupoUsuario,
+  DateTime? horaLlegada,
+  String? tipoUsuarioLabel,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -102,6 +116,8 @@ Map<String, dynamic> createAsistenciaRecordData({
       'grupo': grupo,
       'grupo_name': grupoName,
       'grupo_usuario': grupoUsuario,
+      'hora_llegada': horaLlegada,
+      'tipo_usuario_label': tipoUsuarioLabel,
     }.withoutNulls,
   );
 
@@ -117,12 +133,21 @@ class AsistenciaRecordDocumentEquality implements Equality<AsistenciaRecord> {
         e1?.presente == e2?.presente &&
         e1?.grupo == e2?.grupo &&
         e1?.grupoName == e2?.grupoName &&
-        e1?.grupoUsuario == e2?.grupoUsuario;
+        e1?.grupoUsuario == e2?.grupoUsuario &&
+        e1?.horaLlegada == e2?.horaLlegada &&
+        e1?.tipoUsuarioLabel == e2?.tipoUsuarioLabel;
   }
 
   @override
-  int hash(AsistenciaRecord? e) => const ListEquality().hash(
-      [e?.usuarioName, e?.presente, e?.grupo, e?.grupoName, e?.grupoUsuario]);
+  int hash(AsistenciaRecord? e) => const ListEquality().hash([
+        e?.usuarioName,
+        e?.presente,
+        e?.grupo,
+        e?.grupoName,
+        e?.grupoUsuario,
+        e?.horaLlegada,
+        e?.tipoUsuarioLabel
+      ]);
 
   @override
   bool isValidKey(Object? o) => o is AsistenciaRecord;

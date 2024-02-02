@@ -1,5 +1,7 @@
 import '/backend/schema/structs/index.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'register_page_widget.dart' show RegisterPageWidget;
 import 'package:flutter/material.dart';
 
@@ -57,9 +59,6 @@ class RegisterPageModel extends FlutterFlowModel<RegisterPageWidget> {
     return null;
   }
 
-  // Stores action output result for [Custom Action - registerWithEmail] action in Button widget.
-  AuthResponseStruct? resgiterResponse;
-
   /// Initialization and disposal methods.
 
   @override
@@ -86,6 +85,60 @@ class RegisterPageModel extends FlutterFlowModel<RegisterPageWidget> {
   }
 
   /// Action blocks are added here.
+
+  Future register(BuildContext context) async {
+    AuthResponseStruct? resgiterResponse;
+
+    // Init Processing
+    isProcessing = true;
+    // Register Call
+    resgiterResponse = await actions.registerWithEmail(
+      emailAddressCreateController.text,
+      passwordCreateController.text,
+      passwordConfirmController.text,
+    );
+    if (resgiterResponse.error == true) {
+      // change IsProcesing
+      isProcessing = false;
+      // Show Error Message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            resgiterResponse.message,
+            style: FlutterFlowTheme.of(context).titleSmall.override(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                ),
+          ),
+          duration: const Duration(milliseconds: 4000),
+          backgroundColor: FlutterFlowTheme.of(context).error,
+        ),
+      );
+    } else {
+      // Go to continue Register
+
+      context.goNamed(
+        'continueRegister',
+        queryParameters: {
+          'userUid': serializeParam(
+            resgiterResponse.userUid,
+            ParamType.String,
+          ),
+          'email': serializeParam(
+            emailAddressCreateController.text,
+            ParamType.String,
+          ),
+        }.withoutNulls,
+        extra: <String, dynamic>{
+          kTransitionInfoKey: const TransitionInfo(
+            hasTransition: true,
+            transitionType: PageTransitionType.leftToRight,
+            duration: Duration(milliseconds: 500),
+          ),
+        },
+      );
+    }
+  }
 
   /// Additional helper methods are added here.
 }

@@ -6,7 +6,6 @@ import '/components/select_group/select_group_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'dart:async';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:flip_card/flip_card.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -57,14 +56,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
       effects: [
         MoveEffect(
           curve: Curves.easeInOut,
-          delay: 800.ms,
+          delay: 900.ms,
           duration: 600.ms,
           begin: const Offset(-20.0, 0.0),
           end: const Offset(0.0, 0.0),
         ),
         FadeEffect(
           curve: Curves.easeInOut,
-          delay: 800.ms,
+          delay: 900.ms,
           duration: 600.ms,
           begin: 0.0,
           end: 1.0,
@@ -77,14 +76,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
       effects: [
         MoveEffect(
           curve: Curves.easeInOut,
-          delay: 700.ms,
+          delay: 800.ms,
           duration: 600.ms,
           begin: const Offset(-20.0, 0.0),
           end: const Offset(0.0, 0.0),
         ),
         FadeEffect(
           curve: Curves.easeInOut,
-          delay: 700.ms,
+          delay: 800.ms,
           duration: 600.ms,
           begin: 0.0,
           end: 1.0,
@@ -251,6 +250,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                   _model.findGrupoSelectedResult!.nombre;
               FFAppState().selectedGroupImg =
                   _model.findGrupoSelectedResult!.logo;
+              FFAppState().selectedGroupImgBlur =
+                  _model.findGrupoSelectedResult!.logoBlurHash;
+              FFAppState().gruposSeguidos = _model.finUserGruposSeguidos!
+                  .map((e) => e.grupo)
+                  .withoutNulls
+                  .toList()
+                  .toList()
+                  .cast<DocumentReference>();
             });
             // start Loading
             setState(() {
@@ -418,16 +425,28 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Container(
-                        width: 40.0,
-                        height: 40.0,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.network(
-                          FFAppState().selectedGroupImg,
-                          fit: BoxFit.cover,
+                      Hero(
+                        tag: FFAppState().selectedGroupImg != ''
+                            ? FFAppState().selectedGroupImg
+                            : FFAppConstants.noUserImgUrl,
+                        transitionOnUserGestures: true,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100.0),
+                          child: OctoImage(
+                            placeholderBuilder: OctoPlaceholder.blurHash(
+                              FFAppState().selectedGroupImgBlur != ''
+                                  ? FFAppState().selectedGroupImgBlur
+                                  : FFAppConstants.noUserUrlBlurHash,
+                            ),
+                            image: NetworkImage(
+                              FFAppState().selectedGroupImg != ''
+                                  ? FFAppState().selectedGroupImg
+                                  : FFAppConstants.noUserImgUrl,
+                            ),
+                            width: 40.0,
+                            height: 40.0,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                       Padding(
@@ -496,7 +515,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                             : FFAppConstants.noUserImgUrl,
                         transitionOnUserGestures: true,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(100.0),
                           child: OctoImage(
                             placeholderBuilder: OctoPlaceholder.blurHash(
                               currentUserPhoto != ''
@@ -1214,7 +1233,11 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                                                                         padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                                                                                         child: Text(
                                                                                           flippableCardActividadRecord.nombre,
-                                                                                          style: FlutterFlowTheme.of(context).bodyLarge,
+                                                                                          style: FlutterFlowTheme.of(context).bodyLarge.override(
+                                                                                                fontFamily: 'Inter',
+                                                                                                fontSize: 18.0,
+                                                                                                fontWeight: FontWeight.w500,
+                                                                                              ),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -1479,16 +1502,21 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                         },
                                       ).then((value) => setState(() {}));
 
-                                      // Hide Group option
-                                      unawaited(
-                                        () async {}(),
-                                      );
                                       // Hide Members option
                                       if (animationsMap[
                                               'containerOnActionTriggerAnimation5'] !=
                                           null) {
                                         animationsMap[
                                                 'containerOnActionTriggerAnimation5']!
+                                            .controller
+                                            .reverse();
+                                      }
+                                      // Hide Group option
+                                      if (animationsMap[
+                                              'containerOnActionTriggerAnimation4'] !=
+                                          null) {
+                                        animationsMap[
+                                                'containerOnActionTriggerAnimation4']!
                                             .controller
                                             .reverse();
                                       }
@@ -1590,16 +1618,21 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                       },
                                     );
 
-                                    // Hide Group option
-                                    unawaited(
-                                      () async {}(),
-                                    );
                                     // Hide Members option
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation5'] !=
                                         null) {
                                       animationsMap[
                                               'containerOnActionTriggerAnimation5']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide Group option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation4'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation4']!
                                           .controller
                                           .reverse();
                                     }
@@ -1681,14 +1714,86 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                   animationsMap[
                                       'containerOnActionTriggerAnimation3']!,
                                 ),
-                                if (responsiveVisibility(
-                                  context: context,
-                                  phone: false,
-                                  tablet: false,
-                                  tabletLandscape: false,
-                                  desktop: false,
-                                ))
-                                  Container(
+                                InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    // Go to grupo profile
+
+                                    context.pushNamed(
+                                      'GrupoProfile',
+                                      extra: <String, dynamic>{
+                                        kTransitionInfoKey: const TransitionInfo(
+                                          hasTransition: true,
+                                          transitionType:
+                                              PageTransitionType.leftToRight,
+                                          duration: Duration(milliseconds: 500),
+                                        ),
+                                      },
+                                    );
+
+                                    // Hide Members option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation5'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation5']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide Group option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation4'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation4']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide Activities option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation3'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation3']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide Qr option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation2'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation2']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide menu
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation1'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation1']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Revert  button icon
+                                    if (animationsMap[
+                                            'iconOnActionTriggerAnimation1'] !=
+                                        null) {
+                                      animationsMap[
+                                              'iconOnActionTriggerAnimation1']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Turn off expanded variable
+                                    setState(() {
+                                      _model.isOptionsExpanded = false;
+                                    });
+                                  },
+                                  child: Container(
                                     width: double.infinity,
                                     height: 50.0,
                                     decoration: BoxDecoration(
@@ -1720,10 +1825,11 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                         ],
                                       ),
                                     ),
-                                  ).animateOnActionTrigger(
-                                    animationsMap[
-                                        'containerOnActionTriggerAnimation4']!,
                                   ),
+                                ).animateOnActionTrigger(
+                                  animationsMap[
+                                      'containerOnActionTriggerAnimation4']!,
+                                ),
                                 InkWell(
                                   splashColor: Colors.transparent,
                                   focusColor: Colors.transparent,
@@ -1742,16 +1848,21 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                       },
                                     );
 
-                                    // Hide Group option
-                                    unawaited(
-                                      () async {}(),
-                                    );
                                     // Hide Members option
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation5'] !=
                                         null) {
                                       animationsMap[
                                               'containerOnActionTriggerAnimation5']!
+                                          .controller
+                                          .reverse();
+                                    }
+                                    // Hide Group option
+                                    if (animationsMap[
+                                            'containerOnActionTriggerAnimation4'] !=
+                                        null) {
+                                      animationsMap[
+                                              'containerOnActionTriggerAnimation4']!
                                           .controller
                                           .reverse();
                                     }
@@ -1850,25 +1961,21 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                           highlightColor: Colors.transparent,
                           onTap: () async {
                             if (_model.isOptionsExpanded) {
-                              // Hide menu
-                              if (animationsMap[
-                                      'containerOnActionTriggerAnimation1'] !=
-                                  null) {
-                                animationsMap[
-                                        'containerOnActionTriggerAnimation1']!
-                                    .controller
-                                    .reverse();
-                              }
-                              // Hide Group option
-                              unawaited(
-                                () async {}(),
-                              );
                               // Hide Members option
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation5'] !=
                                   null) {
                                 animationsMap[
                                         'containerOnActionTriggerAnimation5']!
+                                    .controller
+                                    .reverse();
+                              }
+                              // Hide Group option
+                              if (animationsMap[
+                                      'containerOnActionTriggerAnimation4'] !=
+                                  null) {
+                                animationsMap[
+                                        'containerOnActionTriggerAnimation4']!
                                     .controller
                                     .reverse();
                               }
@@ -1890,6 +1997,15 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .controller
                                     .reverse();
                               }
+                              // Hide menu
+                              if (animationsMap[
+                                      'containerOnActionTriggerAnimation1'] !=
+                                  null) {
+                                animationsMap[
+                                        'containerOnActionTriggerAnimation1']!
+                                    .controller
+                                    .reverse();
+                              }
                               // Revert  button icon
                               if (animationsMap[
                                       'iconOnActionTriggerAnimation1'] !=
@@ -1903,15 +2019,6 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                 _model.isOptionsExpanded = false;
                               });
                             } else {
-                              // show Qr option
-                              if (animationsMap[
-                                      'containerOnActionTriggerAnimation2'] !=
-                                  null) {
-                                animationsMap[
-                                        'containerOnActionTriggerAnimation2']!
-                                    .controller
-                                    .forward(from: 0.0);
-                              }
                               // Show menu
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation1'] !=
@@ -1921,12 +2028,12 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .controller
                                     .forward(from: 0.0);
                               }
-                              // Show Members option
+                              // show Qr option
                               if (animationsMap[
-                                      'containerOnActionTriggerAnimation5'] !=
+                                      'containerOnActionTriggerAnimation2'] !=
                                   null) {
                                 animationsMap[
-                                        'containerOnActionTriggerAnimation5']!
+                                        'containerOnActionTriggerAnimation2']!
                                     .controller
                                     .forward(from: 0.0);
                               }
@@ -1940,9 +2047,23 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .forward(from: 0.0);
                               }
                               // Show Group option
-                              unawaited(
-                                () async {}(),
-                              );
+                              if (animationsMap[
+                                      'containerOnActionTriggerAnimation4'] !=
+                                  null) {
+                                animationsMap[
+                                        'containerOnActionTriggerAnimation4']!
+                                    .controller
+                                    .forward(from: 0.0);
+                              }
+                              // Show Members option
+                              if (animationsMap[
+                                      'containerOnActionTriggerAnimation5'] !=
+                                  null) {
+                                animationsMap[
+                                        'containerOnActionTriggerAnimation5']!
+                                    .controller
+                                    .forward(from: 0.0);
+                              }
                               // animate button icon
                               if (animationsMap[
                                       'iconOnActionTriggerAnimation1'] !=

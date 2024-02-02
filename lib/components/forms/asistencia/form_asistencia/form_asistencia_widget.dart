@@ -491,6 +491,8 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                           grupo: FFAppState().grupoSeleccionado,
                           grupoName: FFAppState().grupoSeleccionadoName,
                           grupoUsuario: widget.grupoUsuario?.reference,
+                          horaLlegada: getCurrentTimestamp,
+                          tipoUsuarioLabel: widget.tipoUsuario?.descripcion,
                         ));
                         _model.createAsistenciaResponse =
                             AsistenciaRecord.getDocumentFromData(
@@ -500,6 +502,9 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                                   grupo: FFAppState().grupoSeleccionado,
                                   grupoName: FFAppState().grupoSeleccionadoName,
                                   grupoUsuario: widget.grupoUsuario?.reference,
+                                  horaLlegada: getCurrentTimestamp,
+                                  tipoUsuarioLabel:
+                                      widget.tipoUsuario?.descripcion,
                                 ),
                                 asistenciaRecordReference);
                         shouldSetState = true;

@@ -190,7 +190,7 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                                 focusNode: _model.searchActividadesFocusNode,
                                 onChanged: (_) => EasyDebounce.debounce(
                                   '_model.searchActividadesController',
-                                  const Duration(milliseconds: 500),
+                                  const Duration(milliseconds: 0),
                                   () async {
                                     if (_model.searchActividadesController
                                                 .text !=

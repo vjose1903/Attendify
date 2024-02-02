@@ -114,7 +114,12 @@ class _ContinueRegisterWidgetState extends State<ContinueRegisterWidget>
           _model.completed = true;
         });
         // Some wait for show animation
-        await Future.delayed(const Duration(milliseconds: 3500));
+        await Future.delayed(const Duration(milliseconds: 3000));
+        // Clear followed Groups
+        FFAppState().update(() {
+          FFAppState().gruposSeguidos = [];
+        });
+        // Go to follow
 
         context.goNamed(
           'followGroup',

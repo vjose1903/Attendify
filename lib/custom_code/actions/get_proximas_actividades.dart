@@ -25,9 +25,9 @@ Future<dynamic> getProximasActividades(
       FirebaseFirestore.instance.collection('grupo_actividad_detalle');
 
   QuerySnapshot grupoActividadSnapshot = await grupoActividadCollection
-      .where('fecha_inicio', isGreaterThanOrEqualTo: toInitDayHour(fechaActual))
+      .where('fecha_fin', isGreaterThanOrEqualTo: fechaActual)
       .where('grupos', arrayContains: grupo)
-      .orderBy('fecha_inicio', descending: false)
+      .orderBy('fecha_fin', descending: true)
       .get();
 
   List<dynamic> primeras5Actividades = [];
@@ -55,11 +55,13 @@ Future<dynamic> getProximasActividades(
                 fechaActividad.isBefore(toInitDayHour(fechaLimite)))) {
           primeras5Actividades.add({
             'actividad': grupoActividadDoc['actividad'],
+            'fecha_inicio': grupoActividadDoc['fecha_inicio'].toDate(),
             'index': primeras5Actividades.length + 1
           });
         } else {
           todasLasActividades.add({
             'actividad': grupoActividadDoc['actividad'],
+            'fecha_inicio': grupoActividadDoc['fecha_inicio'].toDate(),
             'index': primeras5Actividades.length + 1
           });
         }
@@ -69,7 +71,11 @@ Future<dynamic> getProximasActividades(
   }
 
   return {
-    'primeras5Actividades': primeras5Actividades,
-    'todasLasActividades': todasLasActividades
+    'primeras5Actividades':
+        primeras5Actividades.cast<Map<dynamic, dynamic>>().toList()
+          ..sort((a, b) => a['fecha_inicio'].compareTo(b['fecha_inicio'])),
+    'todasLasActividades':
+        todasLasActividades.cast<Map<dynamic, dynamic>>().toList()
+          ..sort((a, b) => a['fecha_inicio'].compareTo(b['fecha_inicio']))
   };
 }

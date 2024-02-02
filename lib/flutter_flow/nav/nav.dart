@@ -153,6 +153,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'ActivitiesListCopy',
           path: '/activitiesListCopy',
           builder: (context, params) => const ActivitiesListCopyWidget(),
+        ),
+        FFRoute(
+          name: 'GrupoProfile',
+          path: '/grupoProfile',
+          builder: (context, params) => const GrupoProfileWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

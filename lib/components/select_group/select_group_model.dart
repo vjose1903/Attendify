@@ -5,12 +5,20 @@ import 'select_group_widget.dart' show SelectGroupWidget;
 import 'package:flutter/material.dart';
 
 class SelectGroupModel extends FlutterFlowModel<SelectGroupWidget> {
+  ///  Local state fields for this component.
+
+  bool isLoading = false;
+
+  DocumentReference? selectedGroup;
+
   ///  State fields for stateful widgets in this component.
 
   // State field(s) for yourName widget.
   FocusNode? yourNameFocusNode;
   TextEditingController? yourNameController;
   String? Function(BuildContext, String?)? yourNameControllerValidator;
+  // Models for SelectingGrupoOption.
+  late FlutterFlowDynamicModels<GrupoOptionModel> selectingGrupoOptionModels;
   // Models for GrupoOption dynamic component.
   late FlutterFlowDynamicModels<GrupoOptionModel> grupoOptionModels;
   // Stores action output result for [Firestore Query - Query a collection] action in GrupoOption widget.
@@ -22,6 +30,8 @@ class SelectGroupModel extends FlutterFlowModel<SelectGroupWidget> {
 
   @override
   void initState(BuildContext context) {
+    selectingGrupoOptionModels =
+        FlutterFlowDynamicModels(() => GrupoOptionModel());
     grupoOptionModels = FlutterFlowDynamicModels(() => GrupoOptionModel());
   }
 
@@ -30,6 +40,7 @@ class SelectGroupModel extends FlutterFlowModel<SelectGroupWidget> {
     yourNameFocusNode?.dispose();
     yourNameController?.dispose();
 
+    selectingGrupoOptionModels.dispose();
     grupoOptionModels.dispose();
   }
 

@@ -12,9 +12,11 @@ class GrupoActividadHomeStruct extends FFFirebaseStruct {
   GrupoActividadHomeStruct({
     DocumentReference? actividad,
     int? index,
+    DateTime? fechaInicio,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _actividad = actividad,
         _index = index,
+        _fechaInicio = fechaInicio,
         super(firestoreUtilData);
 
   // "actividad" field.
@@ -30,10 +32,17 @@ class GrupoActividadHomeStruct extends FFFirebaseStruct {
   void incrementIndex(int amount) => _index = index + amount;
   bool hasIndex() => _index != null;
 
+  // "fecha_inicio" field.
+  DateTime? _fechaInicio;
+  DateTime? get fechaInicio => _fechaInicio;
+  set fechaInicio(DateTime? val) => _fechaInicio = val;
+  bool hasFechaInicio() => _fechaInicio != null;
+
   static GrupoActividadHomeStruct fromMap(Map<String, dynamic> data) =>
       GrupoActividadHomeStruct(
         actividad: data['actividad'] as DocumentReference?,
         index: castToType<int>(data['index']),
+        fechaInicio: data['fecha_inicio'] as DateTime?,
       );
 
   static GrupoActividadHomeStruct? maybeFromMap(dynamic data) => data is Map
@@ -43,6 +52,7 @@ class GrupoActividadHomeStruct extends FFFirebaseStruct {
   Map<String, dynamic> toMap() => {
         'actividad': _actividad,
         'index': _index,
+        'fecha_inicio': _fechaInicio,
       }.withoutNulls;
 
   @override
@@ -54,6 +64,10 @@ class GrupoActividadHomeStruct extends FFFirebaseStruct {
         'index': serializeParam(
           _index,
           ParamType.int,
+        ),
+        'fecha_inicio': serializeParam(
+          _fechaInicio,
+          ParamType.DateTime,
         ),
       }.withoutNulls;
 
@@ -71,6 +85,11 @@ class GrupoActividadHomeStruct extends FFFirebaseStruct {
           ParamType.int,
           false,
         ),
+        fechaInicio: deserializeParam(
+          data['fecha_inicio'],
+          ParamType.DateTime,
+          false,
+        ),
       );
 
   @override
@@ -80,16 +99,19 @@ class GrupoActividadHomeStruct extends FFFirebaseStruct {
   bool operator ==(Object other) {
     return other is GrupoActividadHomeStruct &&
         actividad == other.actividad &&
-        index == other.index;
+        index == other.index &&
+        fechaInicio == other.fechaInicio;
   }
 
   @override
-  int get hashCode => const ListEquality().hash([actividad, index]);
+  int get hashCode =>
+      const ListEquality().hash([actividad, index, fechaInicio]);
 }
 
 GrupoActividadHomeStruct createGrupoActividadHomeStruct({
   DocumentReference? actividad,
   int? index,
+  DateTime? fechaInicio,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -98,6 +120,7 @@ GrupoActividadHomeStruct createGrupoActividadHomeStruct({
     GrupoActividadHomeStruct(
       actividad: actividad,
       index: index,
+      fechaInicio: fechaInicio,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

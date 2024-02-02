@@ -1,7 +1,7 @@
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/components/alert_modal/alert_modal_widget.dart';
-import '/components/asistencia_list_view_widget.dart';
+import '/components/asistencia_list_view/asistencia_list_view_widget.dart';
 import '/components/delete_modal/delete_modal_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/asistencia/form_asistencia/form_asistencia_widget.dart';
@@ -1219,7 +1219,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                     focusNode: _model.searchAsistenciaFocusNode,
                                                                                     onChanged: (_) => EasyDebounce.debounce(
                                                                                       '_model.searchAsistenciaController',
-                                                                                      const Duration(milliseconds: 500),
+                                                                                      const Duration(milliseconds: 0),
                                                                                       () async {
                                                                                         if (_model.searchAsistenciaController.text != '') {
                                                                                           // filter asistencia
