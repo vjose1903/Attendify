@@ -16,6 +16,8 @@ class ProfileModel extends FlutterFlowModel<ProfileWidget> {
 
   DocumentReference? initialRefDoc;
 
+  DocumentReference? deleteUserRef;
+
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
@@ -35,12 +37,12 @@ class ProfileModel extends FlutterFlowModel<ProfileWidget> {
   TextEditingController? textController2;
   final textFieldMask2 = MaskTextInputFormatter(mask: '(###) ###-####');
   String? Function(BuildContext, String?)? textController2Validator;
+  // Stores action output result for [Firestore Query - Query a collection] action in deleteAccount widget.
+  List<GrupoUsuarioRecord>? gruposSeguidos;
   // Stores action output result for [Alert Dialog - Custom Dialog] action in deleteAccount widget.
   String? passwordConfirm;
   // Stores action output result for [Custom Action - deleteAccount] action in deleteAccount widget.
   FirestoreDefaultResponseStruct? deleteAuthResponse;
-  // Stores action output result for [Firestore Query - Query a collection] action in deleteAccount widget.
-  GrupoUsuarioRecord? deleteAccountGrupoUsuario;
   // Stores action output result for [Firestore Query - Query a collection] action in CancelBtn widget.
   DocumentoIdentidadRecord? findDocIdentidadCancel;
   // Stores action output result for [Firestore Query - Query a collection] action in SaveBtn widget.

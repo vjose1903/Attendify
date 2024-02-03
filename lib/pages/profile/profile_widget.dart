@@ -1118,7 +1118,20 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
                                           var shouldSetState = false;
-                                          Function() navigate = () {};
+                                          // Set delete user ref
+                                          _model.deleteUserRef =
+                                              currentUserReference;
+                                          // Find grupos usuario
+                                          _model.gruposSeguidos =
+                                              await queryGrupoUsuarioRecordOnce(
+                                            queryBuilder:
+                                                (grupoUsuarioRecord) =>
+                                                    grupoUsuarioRecord.where(
+                                              'usuario',
+                                              isEqualTo: _model.deleteUserRef,
+                                            ),
+                                          );
+                                          shouldSetState = true;
                                           // Delete modal
                                           await showDialog(
                                             context: context,
@@ -1197,85 +1210,27 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                               }
                                               return;
                                             } else {
+                                              // Delete user record
+                                              await _model.deleteUserRef!
+                                                  .delete();
                                               if (FFAppState()
                                                   .gruposSeguidos
                                                   .isNotEmpty) {
                                                 while (FFAppState().contador <
-                                                    FFAppState()
-                                                        .gruposSeguidos
+                                                    _model.gruposSeguidos!
                                                         .length) {
-                                                  // Find grupo usuario
-                                                  _model.deleteAccountGrupoUsuario =
-                                                      await queryGrupoUsuarioRecordOnce(
-                                                    queryBuilder:
-                                                        (grupoUsuarioRecord) =>
-                                                            grupoUsuarioRecord
-                                                                .where(
-                                                                  'grupo',
-                                                                  isEqualTo: FFAppState()
-                                                                          .gruposSeguidos[
-                                                                      FFAppState()
-                                                                          .contador],
-                                                                )
-                                                                .where(
-                                                                  'usuario',
-                                                                  isEqualTo:
-                                                                      currentUserReference,
-                                                                ),
-                                                    singleRecord: true,
-                                                  ).then((s) => s.firstOrNull);
-                                                  shouldSetState = true;
                                                   // Delete grupo usuario
                                                   await _model
-                                                      .deleteAccountGrupoUsuario!
+                                                      .gruposSeguidos![
+                                                          FFAppState().contador]
                                                       .reference
                                                       .delete();
                                                   // Increment Contador
-                                                  setState(() {
-                                                    FFAppState().contador =
-                                                        FFAppState().contador +
-                                                            1;
-                                                  });
+                                                  FFAppState().contador =
+                                                      FFAppState().contador + 1;
                                                 }
-                                                setState(() {
-                                                  FFAppState().contador = 0;
-                                                });
+                                                FFAppState().contador = 0;
                                               }
-                                              // Delete user record
-                                              await currentUserReference!
-                                                  .delete();
-                                              // LogOut
-                                              GoRouter.of(context)
-                                                  .prepareAuthEvent();
-                                              await authManager.signOut();
-                                              GoRouter.of(context)
-                                                  .clearRedirectLocation();
-
-                                              navigate = () =>
-                                                  context.goNamedAuth(
-                                                      'loginPage',
-                                                      context.mounted);
-                                              // Show success msg
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'Cuenta eliminada correctamente.',
-                                                    style: TextStyle(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText,
-                                                    ),
-                                                  ),
-                                                  duration: const Duration(
-                                                      milliseconds: 4000),
-                                                  backgroundColor:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .success,
-                                                ),
-                                              );
                                             }
                                           } else {
                                             if (shouldSetState) {
@@ -1284,7 +1239,6 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                             return;
                                           }
 
-                                          navigate();
                                           if (shouldSetState) setState(() {});
                                         },
                                         child: Row(
