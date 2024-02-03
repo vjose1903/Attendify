@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/schema/enums/enums.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -258,6 +259,7 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                           createdAt: getCurrentTimestamp,
                           grupo: FFAppState().grupoSeleccionado,
                           createdBy: FFAppState().grupoUsuarioLoged,
+                          createdByName: currentUserDisplayName,
                         ));
                         _model.createNotaResponse =
                             ActividadComentarioRecord.getDocumentFromData(
@@ -266,6 +268,7 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                                   createdAt: getCurrentTimestamp,
                                   grupo: FFAppState().grupoSeleccionado,
                                   createdBy: FFAppState().grupoUsuarioLoged,
+                                  createdByName: currentUserDisplayName,
                                 ),
                                 actividadComentarioRecordReference);
                         shouldSetState = true;

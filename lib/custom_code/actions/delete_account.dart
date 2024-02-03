@@ -28,20 +28,18 @@ Future<FirestoreDefaultResponseStruct> deleteAccount(
             EmailAuthProvider.credential(email: email, password: password);
 
         try {
-          print("--- REAUTHENTICATE ---");
           await user.reauthenticateWithCredential(credential);
-          print("--- A BORRARRRRR ---");
           await user.delete();
+
           completer.complete(Response("", false));
         } catch (e) {
-          print("--- ERROR ---");
           completer.complete(Response(
               'Las credenciales proporcionadas son incorrectas.',
               true)); // Resuelve el completer con error
         }
       }
     });
-    print("--- ESPERANDO RESPUESTA ---");
+
     return await completer.future;
   } catch (e) {
     return Response("Algo salio mal, vuelvalo a intentar mas tarde.", true);

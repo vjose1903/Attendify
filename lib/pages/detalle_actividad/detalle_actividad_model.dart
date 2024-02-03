@@ -57,10 +57,6 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   String? dateNotasChipsValue;
   FormFieldController<List<String>>? dateNotasChipsValueController;
   Completer<List<ActividadComentarioRecord>>? firestoreRequestCompleter2;
-  // Stores action output result for [Backend Call - Read Document] action in ListTile widget.
-  GrupoUsuarioRecord? grupoUsuarioNotaResponse;
-  // Stores action output result for [Backend Call - Read Document] action in ListTile widget.
-  UsuariosRecord? usuarioNotaResponse;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel2;
   var scanResponse = '';

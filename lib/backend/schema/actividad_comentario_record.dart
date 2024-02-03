@@ -34,6 +34,11 @@ class ActividadComentarioRecord extends FirestoreRecord {
   DocumentReference? get createdBy => _createdBy;
   bool hasCreatedBy() => _createdBy != null;
 
+  // "createdByName" field.
+  String? _createdByName;
+  String get createdByName => _createdByName ?? '';
+  bool hasCreatedByName() => _createdByName != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -41,6 +46,7 @@ class ActividadComentarioRecord extends FirestoreRecord {
     _createdAt = snapshotData['createdAt'] as DateTime?;
     _grupo = snapshotData['grupo'] as DocumentReference?;
     _createdBy = snapshotData['createdBy'] as DocumentReference?;
+    _createdByName = snapshotData['createdByName'] as String?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -88,6 +94,7 @@ Map<String, dynamic> createActividadComentarioRecordData({
   DateTime? createdAt,
   DocumentReference? grupo,
   DocumentReference? createdBy,
+  String? createdByName,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -95,6 +102,7 @@ Map<String, dynamic> createActividadComentarioRecordData({
       'createdAt': createdAt,
       'grupo': grupo,
       'createdBy': createdBy,
+      'createdByName': createdByName,
     }.withoutNulls,
   );
 
@@ -110,12 +118,13 @@ class ActividadComentarioRecordDocumentEquality
     return e1?.comentario == e2?.comentario &&
         e1?.createdAt == e2?.createdAt &&
         e1?.grupo == e2?.grupo &&
-        e1?.createdBy == e2?.createdBy;
+        e1?.createdBy == e2?.createdBy &&
+        e1?.createdByName == e2?.createdByName;
   }
 
   @override
-  int hash(ActividadComentarioRecord? e) => const ListEquality()
-      .hash([e?.comentario, e?.createdAt, e?.grupo, e?.createdBy]);
+  int hash(ActividadComentarioRecord? e) => const ListEquality().hash(
+      [e?.comentario, e?.createdAt, e?.grupo, e?.createdBy, e?.createdByName]);
 
   @override
   bool isValidKey(Object? o) => o is ActividadComentarioRecord;
