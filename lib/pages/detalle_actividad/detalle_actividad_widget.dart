@@ -15,6 +15,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'dart:async';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
@@ -1847,10 +1848,25 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                       hoverColor: Colors.transparent,
                                                                                       highlightColor: Colors.transparent,
                                                                                       onTap: () async {
+                                                                                        await actions.consoleLog(
+                                                                                          null,
+                                                                                          listViewNotasActividadComentarioRecord.createdBy?.id,
+                                                                                          null,
+                                                                                        );
                                                                                         // Get grupo usuario
                                                                                         _model.grupoUsuarioNotaResponse = await GrupoUsuarioRecord.getDocumentOnce(listViewNotasActividadComentarioRecord.createdBy!);
+                                                                                        await actions.consoleLog(
+                                                                                          null,
+                                                                                          _model.grupoUsuarioNotaResponse?.qr,
+                                                                                          null,
+                                                                                        );
                                                                                         // Get usuario
                                                                                         _model.usuarioNotaResponse = await UsuariosRecord.getDocumentOnce(_model.grupoUsuarioNotaResponse!.usuario!);
+                                                                                        await actions.consoleLog(
+                                                                                          null,
+                                                                                          _model.usuarioNotaResponse?.displayName,
+                                                                                          null,
+                                                                                        );
                                                                                         await showDialog(
                                                                                           context: context,
                                                                                           builder: (dialogContext) {

@@ -73,15 +73,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
-      errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? const HomeScreenWidget() : const LoginPageWidget(),
+      errorBuilder: (context, state) => RootPageContext.wrap(
+        appStateNotifier.loggedIn ? const HomeScreenWidget() : const LoginPageWidget(),
+        errorRoute: state.location,
+      ),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => appStateNotifier.loggedIn
-              ? const HomeScreenWidget()
-              : const LoginPageWidget(),
+          builder: (context, _) => RootPageContext.wrap(
+            appStateNotifier.loggedIn ? const HomeScreenWidget() : const LoginPageWidget(),
+          ),
         ),
         FFRoute(
           name: 'loginPage',
@@ -91,6 +93,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'homeScreen',
           path: '/homeScreen',
+          requireAuth: true,
           builder: (context, params) => const HomeScreenWidget(),
         ),
         FFRoute(
@@ -101,21 +104,25 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'followGroup',
           path: '/followGroup',
+          requireAuth: true,
           builder: (context, params) => const FollowGroupWidget(),
         ),
         FFRoute(
           name: 'profile',
           path: '/profile',
+          requireAuth: true,
           builder: (context, params) => const ProfileWidget(),
         ),
         FFRoute(
           name: 'UsersList',
           path: '/usersList',
+          requireAuth: true,
           builder: (context, params) => const UsersListWidget(),
         ),
         FFRoute(
           name: 'ActivitiesList',
           path: '/activitiesList',
+          requireAuth: true,
           builder: (context, params) => const ActivitiesListWidget(),
         ),
         FFRoute(
@@ -129,6 +136,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'DetalleActividad',
           path: '/detalleActividad',
+          requireAuth: true,
           asyncParams: {
             'actividad': getDoc(['actividad'], ActividadRecord.fromSnapshot),
             'grupoActividad':
@@ -152,11 +160,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'ActivitiesListCopy',
           path: '/activitiesListCopy',
+          requireAuth: true,
           builder: (context, params) => const ActivitiesListCopyWidget(),
         ),
         FFRoute(
           name: 'GrupoProfile',
           path: '/grupoProfile',
+          requireAuth: true,
           builder: (context, params) => const GrupoProfileWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),

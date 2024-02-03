@@ -18,3 +18,4 @@ export 'update_objeto_a_entregar_json.dart' show updateObjetoAEntregarJson;
 export 'try_dissmiss_modal.dart' show tryDissmissModal;
 export 'delete_actividad.dart' show deleteActividad;
 export 'get_proximas_actividades.dart' show getProximasActividades;
+export 'delete_account.dart' show deleteAccount;

@@ -179,6 +179,9 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (RootPageContext.isInactiveRootPage(context)) {
+        return;
+      }
       // start Loading
       setState(() {
         FFAppState().loadingActividades = true;

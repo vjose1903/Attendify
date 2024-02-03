@@ -2,6 +2,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
 import '/backend/schema/enums/enums.dart';
+import '/components/forms/confirmate_user/confirmate_user_widget.dart';
 import '/components/forms/form_doc_identidad/form_doc_identidad_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_expanded_image_view.dart';
@@ -10,6 +11,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/flutter_flow/permissions_util.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -1105,6 +1107,226 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                         ],
                                       ),
                                     ),
+                                  Builder(
+                                    builder: (context) => Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 8.0),
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        onTap: () async {
+                                          var shouldSetState = false;
+                                          Function() navigate = () {};
+                                          // Delete modal
+                                          await showDialog(
+                                            context: context,
+                                            builder: (dialogContext) {
+                                              return Dialog(
+                                                elevation: 0,
+                                                insetPadding: EdgeInsets.zero,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                alignment: const AlignmentDirectional(
+                                                        0.0, 0.0)
+                                                    .resolve(Directionality.of(
+                                                        context)),
+                                                child: GestureDetector(
+                                                  onTap: () => _model
+                                                          .unfocusNode
+                                                          .canRequestFocus
+                                                      ? FocusScope.of(context)
+                                                          .requestFocus(_model
+                                                              .unfocusNode)
+                                                      : FocusScope.of(context)
+                                                          .unfocus(),
+                                                  child: SizedBox(
+                                                    height: 350.0,
+                                                    width: double.infinity,
+                                                    child: ConfirmateUserWidget(
+                                                      title: 'Confirmación',
+                                                      colorBtn:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .error,
+                                                      labelBtn: 'Eliminar',
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ).then((value) => safeSetState(() =>
+                                              _model.passwordConfirm = value));
+
+                                          shouldSetState = true;
+                                          if (_model.passwordConfirm != null &&
+                                              _model.passwordConfirm != '') {
+                                            // Delete Auth User
+                                            _model.deleteAuthResponse =
+                                                await actions.deleteAccount(
+                                              currentUserEmail,
+                                              _model.passwordConfirm!,
+                                            );
+                                            shouldSetState = true;
+                                            if (_model
+                                                .deleteAuthResponse!.error) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    _model.deleteAuthResponse!
+                                                        .message,
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                  ),
+                                                  duration: const Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .error,
+                                                ),
+                                              );
+                                              if (shouldSetState) {
+                                                setState(() {});
+                                              }
+                                              return;
+                                            } else {
+                                              if (FFAppState()
+                                                  .gruposSeguidos
+                                                  .isNotEmpty) {
+                                                while (FFAppState().contador <
+                                                    FFAppState()
+                                                        .gruposSeguidos
+                                                        .length) {
+                                                  // Find grupo usuario
+                                                  _model.deleteAccountGrupoUsuario =
+                                                      await queryGrupoUsuarioRecordOnce(
+                                                    queryBuilder:
+                                                        (grupoUsuarioRecord) =>
+                                                            grupoUsuarioRecord
+                                                                .where(
+                                                                  'grupo',
+                                                                  isEqualTo: FFAppState()
+                                                                          .gruposSeguidos[
+                                                                      FFAppState()
+                                                                          .contador],
+                                                                )
+                                                                .where(
+                                                                  'usuario',
+                                                                  isEqualTo:
+                                                                      currentUserReference,
+                                                                ),
+                                                    singleRecord: true,
+                                                  ).then((s) => s.firstOrNull);
+                                                  shouldSetState = true;
+                                                  // Delete grupo usuario
+                                                  await _model
+                                                      .deleteAccountGrupoUsuario!
+                                                      .reference
+                                                      .delete();
+                                                  // Increment Contador
+                                                  setState(() {
+                                                    FFAppState().contador =
+                                                        FFAppState().contador +
+                                                            1;
+                                                  });
+                                                }
+                                                setState(() {
+                                                  FFAppState().contador = 0;
+                                                });
+                                              }
+                                              // Delete user record
+                                              await currentUserReference!
+                                                  .delete();
+                                              // LogOut
+                                              GoRouter.of(context)
+                                                  .prepareAuthEvent();
+                                              await authManager.signOut();
+                                              GoRouter.of(context)
+                                                  .clearRedirectLocation();
+
+                                              navigate = () =>
+                                                  context.goNamedAuth(
+                                                      'loginPage',
+                                                      context.mounted);
+                                              // Show success msg
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    'Cuenta eliminada correctamente.',
+                                                    style: TextStyle(
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
+                                                  ),
+                                                  duration: const Duration(
+                                                      milliseconds: 4000),
+                                                  backgroundColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .success,
+                                                ),
+                                              );
+                                            }
+                                          } else {
+                                            if (shouldSetState) {
+                                              setState(() {});
+                                            }
+                                            return;
+                                          }
+
+                                          navigate();
+                                          if (shouldSetState) setState(() {});
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      0.0, 8.0, 16.0, 8.0),
+                                              child: FaIcon(
+                                                FontAwesomeIcons.solidTrashAlt,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .error,
+                                                size: 24.0,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      3.0, 0.0, 12.0, 0.0),
+                                              child: Text(
+                                                'Eliminar Cuenta',
+                                                textAlign: TextAlign.start,
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Inter',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .error,
+                                                        ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
