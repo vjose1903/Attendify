@@ -10,7 +10,7 @@
         },
         {
           "fieldPath": "fecha_inicio",
-          "order": "ASCENDING"
+          "order": "DESCENDING"
         }
       ]
     },
@@ -25,6 +25,20 @@
         {
           "fieldPath": "createdAt",
           "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "grupo_actividad",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "grupos",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "fecha_inicio",
+          "order": "ASCENDING"
         }
       ]
     },

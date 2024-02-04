@@ -297,7 +297,7 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                                     arrayContains:
                                         FFAppState().grupoSeleccionado,
                                   )
-                                  .orderBy('fecha_inicio'),
+                                  .orderBy('fecha_inicio', descending: true),
                         ),
                         builder: (context, snapshot) {
                           // Customize what your widget looks like when it's loading.
