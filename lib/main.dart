@@ -16,6 +16,10 @@ void main() async {
   usePathUrlStrategy();
   await initFirebase();
 
+  // Start initial custom actions code
+  await actions.lockPortraitMode();
+  // End initial custom actions code
+
   final appState = FFAppState(); // Initialize FFAppState
   await appState.initializePersistedState();
 
@@ -61,7 +65,7 @@ class _MyAppState extends State<MyApp> {
       ..listen((user) => _appStateNotifier.update(user));
     jwtTokenStream.listen((_) {});
     Future.delayed(
-      const Duration(milliseconds: 3000),
+      const Duration(milliseconds: 2500),
       () => _appStateNotifier.stopShowingSplashImage(),
     );
   }
