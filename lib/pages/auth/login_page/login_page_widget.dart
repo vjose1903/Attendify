@@ -138,8 +138,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                     extra: <String, dynamic>{
                                       kTransitionInfoKey: const TransitionInfo(
                                         hasTransition: true,
-                                        transitionType: PageTransitionType.fade,
-                                        duration: Duration(milliseconds: 0),
+                                        transitionType:
+                                            PageTransitionType.rightToLeft,
+                                        duration: Duration(milliseconds: 500),
                                       ),
                                     },
                                   );
@@ -174,7 +175,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(4.0),
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(4.0, 90.0, 4.0, 4.0),
                         child: SingleChildScrollView(
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
@@ -184,7 +186,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 alignment: const AlignmentDirectional(0.0, 0.0),
                                 child: Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 24.0, 0.0, 24.0),
+                                      0.0, 0.0, 0.0, 24.0),
                                   child: Text(
                                     'Inicia Sesión',
                                     style: FlutterFlowTheme.of(context)
@@ -781,6 +783,22 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       stops: const [0.0, 1.0],
                       begin: const AlignmentDirectional(0.0, -1.0),
                       end: const AlignmentDirectional(0, 1.0),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: const AlignmentDirectional(0.58, -0.72),
+                child: Hero(
+                  tag: 'attendify-png',
+                  transitionOnUserGestures: true,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.asset(
+                      'assets/images/Attendify.png',
+                      width: 200.0,
+                      height: 200.0,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

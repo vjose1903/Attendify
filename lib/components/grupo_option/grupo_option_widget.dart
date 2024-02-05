@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
 import 'grupo_option_model.dart';
 export 'grupo_option_model.dart';
@@ -96,10 +97,18 @@ class _GrupoOptionWidgetState extends State<GrupoOptionWidget> {
                         decoration: const BoxDecoration(),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            valueOrDefault<String>(
-                              containerGrupoRecord.logo,
-                              'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fno_img_es_2.png?alt=media&token=5bf4ad9f-66fb-4272-83d2-73fef986362d',
+                          child: OctoImage(
+                            placeholderBuilder: OctoPlaceholder.blurHash(
+                              valueOrDefault<String>(
+                                containerGrupoRecord.logoBlurHash,
+                                'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fno_img_es_2.png?alt=media&token=5bf4ad9f-66fb-4272-83d2-73fef986362d',
+                              ),
+                            ),
+                            image: NetworkImage(
+                              valueOrDefault<String>(
+                                containerGrupoRecord.logo,
+                                'https://firebasestorage.googleapis.com/v0/b/carnaval-d2054.appspot.com/o/assets%2Fno_img_es_2.png?alt=media&token=5bf4ad9f-66fb-4272-83d2-73fef986362d',
+                              ),
                             ),
                             width: double.infinity,
                             height: double.infinity,
