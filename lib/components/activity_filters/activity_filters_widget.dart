@@ -81,7 +81,10 @@ class _ActivityFiltersWidgetState extends State<ActivityFiltersWidget> {
                           size: 24.0,
                         ),
                         onPressed: () async {
+                          logFirebaseEvent(
+                              'ACTIVITY_FILTERS_COMP_close_ICN_ON_TAP');
                           // Close filter
+                          logFirebaseEvent('IconButton_Closefilter');
                           Navigator.pop(context);
                         },
                       ),

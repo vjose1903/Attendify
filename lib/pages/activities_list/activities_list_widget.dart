@@ -32,6 +32,8 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
     super.initState();
     _model = createModel(context, () => ActivitiesListModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'ActivitiesList'});
     _model.searchActividadesController ??= TextEditingController();
     _model.searchActividadesFocusNode ??= FocusNode();
   }
@@ -65,6 +67,8 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
+            logFirebaseEvent('ACTIVITIES_LIST_FloatingActionButton_wv9');
+            logFirebaseEvent('FloatingActionButton_bottom_sheet');
             await showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
@@ -84,6 +88,7 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                       child: FormActivityWidget(
                         action: FormAction.create,
                         reloadChip: () async {
+                          logFirebaseEvent('_show_snack_bar');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -128,6 +133,8 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
               size: 30.0,
             ),
             onPressed: () async {
+              logFirebaseEvent('ACTIVITIES_LIST_arrow_back_rounded_ICN_O');
+              logFirebaseEvent('IconButton_navigate_back');
               context.pop();
             },
           ),
@@ -192,10 +199,14 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                                   '_model.searchActividadesController',
                                   const Duration(milliseconds: 0),
                                   () async {
+                                    logFirebaseEvent(
+                                        'ACTIVITIES_LIST_searchActividades_ON_TEX');
                                     if (_model.searchActividadesController
                                                 .text !=
                                             '') {
                                       // Simple search actividades
+                                      logFirebaseEvent(
+                                          'searchActividades_Simplesearchactividade');
                                       await queryGrupoActividadRecordOnce()
                                           .then(
                                             (records) => _model
@@ -220,11 +231,15 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                                           .whenComplete(() => setState(() {}));
 
                                       // Show filter List
+                                      logFirebaseEvent(
+                                          'searchActividades_ShowfilterList');
                                       setState(() {
                                         _model.showFullList = false;
                                       });
                                     } else {
                                       // Show full List
+                                      logFirebaseEvent(
+                                          'searchActividades_ShowfullList');
                                       setState(() {
                                         _model.showFullList = true;
                                       });
@@ -276,6 +291,9 @@ class _ActivitiesListWidgetState extends State<ActivitiesListWidget> {
                               size: 22.0,
                             ),
                             onPressed: () async {
+                              logFirebaseEvent(
+                                  'ACTIVITIES_LIST_tune_sharp_ICN_ON_TAP');
+                              logFirebaseEvent('IconButton_drawer');
                               scaffoldKey.currentState!.openEndDrawer();
                             },
                           ),

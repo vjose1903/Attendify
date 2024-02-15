@@ -137,7 +137,10 @@ class _DeleteModalWidgetState extends State<DeleteModalWidget> {
                               children: [
                                 FFButtonWidget(
                                   onPressed: () async {
+                                    logFirebaseEvent(
+                                        'DELETE_MODAL_COMP_CANCELAR_BTN_ON_TAP');
                                     // Hide modal
+                                    logFirebaseEvent('Button_Hidemodal');
                                     Navigator.pop(context);
                                   },
                                   text: 'Cancelar',
@@ -163,8 +166,14 @@ class _DeleteModalWidgetState extends State<DeleteModalWidget> {
                                 ),
                                 FFButtonWidget(
                                   onPressed: () async {
+                                    logFirebaseEvent(
+                                        'DELETE_MODAL_COMP_ACEPTAR_BTN_ON_TAP');
                                     // execute delete action
+                                    logFirebaseEvent(
+                                        'Button_executedeleteaction');
                                     await widget.deleteAction?.call();
+                                    logFirebaseEvent(
+                                        'Button_close_dialog,_drawer,_etc');
                                     Navigator.pop(context);
                                   },
                                   text: 'Aceptar',

@@ -67,16 +67,20 @@ class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
     AuthResponseStruct? loginResponseCopy;
 
     // change IsProcesing
+    logFirebaseEvent('loginAction_changeIsProcesing');
     isProcessing = true;
     // loginCall
+    logFirebaseEvent('loginAction_loginCall');
     loginResponseCopy = await actions.loginWithEmail(
       emailAddressController.text,
       passwordController.text,
     );
     // change IsProcesing
+    logFirebaseEvent('loginAction_changeIsProcesing');
     isProcessing = false;
     if (loginResponseCopy.error == true) {
       // Show Error MSG
+      logFirebaseEvent('loginAction_ShowErrorMSG');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -92,6 +96,7 @@ class LoginPageModel extends FlutterFlowModel<LoginPageWidget> {
       );
     } else {
       // Go to Login
+      logFirebaseEvent('loginAction_GotoLogin');
 
       context.goNamed(
         'homeScreen',

@@ -5,8 +5,8 @@ import '../base_auth_user_provider.dart';
 
 export '../base_auth_user_provider.dart';
 
-class AttendifyFirebaseUser extends BaseAuthUser {
-  AttendifyFirebaseUser(this.user);
+class SummitSyncFirebaseUser extends BaseAuthUser {
+  SummitSyncFirebaseUser(this.user);
   User? user;
   @override
   bool get loggedIn => user != null;
@@ -55,17 +55,17 @@ class AttendifyFirebaseUser extends BaseAuthUser {
   static BaseAuthUser fromUserCredential(UserCredential userCredential) =>
       fromFirebaseUser(userCredential.user);
   static BaseAuthUser fromFirebaseUser(User? user) =>
-      AttendifyFirebaseUser(user);
+      SummitSyncFirebaseUser(user);
 }
 
-Stream<BaseAuthUser> attendifyFirebaseUserStream() => FirebaseAuth.instance
+Stream<BaseAuthUser> summitSyncFirebaseUserStream() => FirebaseAuth.instance
         .authStateChanges()
         .debounce((user) => user == null && !loggedIn
             ? TimerStream(true, const Duration(seconds: 1))
             : Stream.value(user))
         .map<BaseAuthUser>(
       (user) {
-        currentUser = AttendifyFirebaseUser(user);
+        currentUser = SummitSyncFirebaseUser(user);
         return currentUser!;
       },
     );

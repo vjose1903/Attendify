@@ -25,6 +25,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     super.initState();
     _model = createModel(context, () => LoginPageModel());
 
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'loginPage'});
     _model.emailAddressController ??= TextEditingController();
     _model.emailAddressFocusNode ??= FocusNode();
 
@@ -122,7 +123,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                 labelText: 'Email',
                                                 labelStyle:
                                                     FlutterFlowTheme.of(context)
-                                                        .labelMedium,
+                                                        .labelMedium
+                                                        .override(
+                                                          fontFamily: 'Inter',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                        ),
                                                 enabledBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
@@ -206,7 +213,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                               focusNode:
                                                   _model.passwordFocusNode,
                                               onFieldSubmitted: (_) async {
+                                                logFirebaseEvent(
+                                                    'LOGIN_password_ON_TEXTFIELD_SUBMIT');
                                                 // Validate form
+                                                logFirebaseEvent(
+                                                    'password_Validateform');
                                                 if (_model.formKey
                                                             .currentState ==
                                                         null ||
@@ -216,6 +227,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                   return;
                                                 }
                                                 // Login
+                                                logFirebaseEvent(
+                                                    'password_Login');
                                                 await _model
                                                     .loginAction(context);
                                               },
@@ -341,7 +354,11 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                             0.0, 0.0),
                                                     child: FFButtonWidget(
                                                       onPressed: () async {
+                                                        logFirebaseEvent(
+                                                            'LOGIN_PAGE_PAGE_CONTINUAR_BTN_ON_TAP');
                                                         // Validate form
+                                                        logFirebaseEvent(
+                                                            'Button_Validateform');
                                                         if (_model.formKey
                                                                     .currentState ==
                                                                 null ||
@@ -351,6 +368,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                           return;
                                                         }
                                                         // Login
+                                                        logFirebaseEvent(
+                                                            'Button_Login');
                                                         await _model
                                                             .loginAction(
                                                                 context);
@@ -444,6 +463,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         if (responsiveVisibility(
                                           context: context,
                                           phone: false,
+                                          tablet: false,
+                                          tabletLandscape: false,
+                                          desktop: false,
                                         ))
                                           Align(
                                             alignment:
@@ -491,6 +513,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         if (responsiveVisibility(
                                           context: context,
                                           phone: false,
+                                          tablet: false,
+                                          tabletLandscape: false,
+                                          desktop: false,
                                         ))
                                           Column(
                                             mainAxisSize: MainAxisSize.max,
@@ -535,6 +560,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                                         highlightColor:
                                                             Colors.transparent,
                                                         onTap: () async {
+                                                          logFirebaseEvent(
+                                                              'LOGIN_Container_3z6wq3pa_ON_TAP');
+                                                          logFirebaseEvent(
+                                                              'Container_auth');
                                                           GoRouter.of(context)
                                                               .prepareAuthEvent();
                                                           final user =
@@ -665,6 +694,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                           child: Container(
                             width: MediaQuery.sizeOf(context).width * 0.75,
                             height: MediaQuery.sizeOf(context).height * 0.27,
+                            constraints: const BoxConstraints(
+                              maxWidth: 300.0,
+                            ),
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .secondaryBackground,
@@ -711,6 +743,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                         15.0, 10.0, 0.0, 0.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
+                                        logFirebaseEvent(
+                                            'LOGIN_PAGE_PAGE_REGÍSTRATE_BTN_ON_TAP');
+                                        logFirebaseEvent('Button_navigate_to');
+
                                         context.pushNamed(
                                           'registerPage',
                                           extra: <String, dynamic>{
@@ -757,17 +793,17 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                           ),
                         ),
                         Align(
-                          alignment: const AlignmentDirectional(0.79, -0.79),
+                          alignment: const AlignmentDirectional(1.17, -0.85),
                           child: Hero(
                             tag: 'attendify-png',
                             transitionOnUserGestures: true,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.asset(
-                                'assets/images/AppLogoMin.png',
+                                'assets/images/Logo.png',
                                 width: 200.0,
                                 height: 200.0,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),

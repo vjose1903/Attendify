@@ -136,7 +136,11 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                         hoverColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         onTap: () async {
+                          logFirebaseEvent(
+                              'ACTIVIDAD_ITEM_Container_4x2dy28j_ON_TAP');
                           // Find Grupo Actividad Detalle
+                          logFirebaseEvent(
+                              'Container_FindGrupoActividadDetalle');
                           _model.doubleGrupoActividadDetalleResponse =
                               await queryGrupoActividadDetalleRecordOnce(
                             queryBuilder: (grupoActividadDetalleRecord) =>
@@ -153,6 +157,7 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                     .orderBy('fecha'),
                           );
                           // Count imgs
+                          logFirebaseEvent('Container_Countimgs');
                           _model.doubleImagenesActividadResponse =
                               await queryActividadImagenesRecordCount(
                             queryBuilder: (actividadImagenesRecord) =>
@@ -168,6 +173,7 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                     ),
                           );
                           // View Details
+                          logFirebaseEvent('Container_ViewDetails');
 
                           context.pushNamed(
                             'DetalleActividad',
@@ -214,7 +220,11 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                           setState(() {});
                         },
                         onLongPress: () async {
+                          logFirebaseEvent(
+                              'ACTIVIDAD_ITEM_Container_4x2dy28j_ON_LON');
                           // Find Grupo Actividad Detalle
+                          logFirebaseEvent(
+                              'Container_FindGrupoActividadDetalle');
                           _model.longGrupoActividadDetalleResponse =
                               await queryGrupoActividadDetalleRecordOnce(
                             queryBuilder: (grupoActividadDetalleRecord) =>
@@ -230,6 +240,7 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                     ),
                           );
                           // Find Imgs
+                          logFirebaseEvent('Container_FindImgs');
                           _model.longImgResponse =
                               await queryActividadImagenesRecordOnce(
                             queryBuilder: (actividadImagenesRecord) =>
@@ -239,6 +250,7 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                             ),
                           );
                           // Find objetos a entregar
+                          logFirebaseEvent('Container_Findobjetosaentregar');
                           _model.longObjetosAEntregarResponse =
                               await queryActividadObjetoAEntregarRecordOnce(
                             parent: _model.longGrupoActividadDetalleResponse
@@ -250,6 +262,7 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                             ),
                           );
                           // find access
+                          logFirebaseEvent('Container_findaccess');
                           _model.longAccessResponse =
                               await queryAccesoRecordOnce(
                             parent: _model.longGrupoActividadDetalleResponse
@@ -260,6 +273,7 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                             ),
                           );
                           // open form
+                          logFirebaseEvent('Container_openform');
                           await showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
@@ -278,6 +292,8 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                               .fechaInicio! >
                                           functions.toInitDayHour(
                                               getCurrentTimestamp)) {
+                                        logFirebaseEvent(
+                                            'openform_bottom_sheet');
                                         await showModalBottomSheet(
                                           isScrollControlled: true,
                                           backgroundColor: Colors.transparent,
@@ -310,6 +326,8 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                                   grupoActividadDetalle: _model
                                                       .longGrupoActividadDetalleResponse,
                                                   reloadChip: () async {
+                                                    logFirebaseEvent(
+                                                        '_show_snack_bar');
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
@@ -338,6 +356,8 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                         ).then((value) => safeSetState(() {}));
                                       } else {
                                         // show error msg
+                                        logFirebaseEvent(
+                                            'openform_showerrormsg');
                                         ScaffoldMessenger.of(context)
                                             .clearSnackBars();
                                         ScaffoldMessenger.of(context)
@@ -365,6 +385,8 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                               .fechaInicio! >
                                           getCurrentTimestamp) {
                                         // Show delete modal
+                                        logFirebaseEvent(
+                                            'openform_Showdeletemodal');
                                         await showDialog(
                                           barrierDismissible: false,
                                           context: context,
@@ -387,6 +409,8 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                                       'Esta acción borrará definitivamente la actividad:  ${containerActividadRecord.nombre}, ¿Desea Continuar?',
                                                   title: 'Confirmar',
                                                   deleteAction: () async {
+                                                    logFirebaseEvent(
+                                                        'Showdeletemodal_custom_action');
                                                     _model.deleteActividadResponse =
                                                         await actions
                                                             .deleteActividad(
@@ -402,6 +426,8 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                                         .deleteActividadResponse!
                                                         .error) {
                                                       // show error msg
+                                                      logFirebaseEvent(
+                                                          'Showdeletemodal_showerrormsg');
                                                       await showDialog(
                                                         context: context,
                                                         builder:
@@ -442,6 +468,8 @@ class _ActividadItemWidgetState extends State<ActividadItemWidget> {
                                         ).then((value) => setState(() {}));
                                       } else {
                                         // show error msg
+                                        logFirebaseEvent(
+                                            'openform_showerrormsg');
                                         ScaffoldMessenger.of(context)
                                             .clearSnackBars();
                                         ScaffoldMessenger.of(context)

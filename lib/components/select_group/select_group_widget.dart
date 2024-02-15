@@ -331,13 +331,19 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                           hoverColor: Colors.transparent,
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
+                                            logFirebaseEvent(
+                                                'SELECT_GROUP_Container_xo96t1o8_ON_TAP');
                                             // Start Loading
+                                            logFirebaseEvent(
+                                                'GrupoOption_StartLoading');
                                             setState(() {
                                               _model.isLoading = true;
                                               _model.selectedGroup =
                                                   grupoFollowedItem;
                                             });
                                             // FInd grupo usuario
+                                            logFirebaseEvent(
+                                                'GrupoOption_FIndgrupousuario');
                                             _model.grupoUsuaruiResponse =
                                                 await queryGrupoUsuarioRecordOnce(
                                               queryBuilder:
@@ -356,6 +362,8 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                               singleRecord: true,
                                             ).then((s) => s.firstOrNull);
                                             // update app state
+                                            logFirebaseEvent(
+                                                'GrupoOption_updateappstate');
                                             setState(() {
                                               FFAppState().tipoUsuarioLoged =
                                                   _model.grupoUsuaruiResponse
@@ -378,11 +386,15 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                                       .logoBlurHash;
                                             });
                                             // start Loading actividades
+                                            logFirebaseEvent(
+                                                'GrupoOption_startLoadingactividades');
                                             setState(() {
                                               FFAppState().loadingActividades =
                                                   true;
                                             });
                                             // get proximas actividades
+                                            logFirebaseEvent(
+                                                'GrupoOption_getproximasactividades');
                                             _model.getProximasActividadesResponse =
                                                 await actions
                                                     .getProximasActividades(
@@ -390,6 +402,8 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                               FFAppState().grupoSeleccionado!,
                                             );
                                             // End Loading actividades
+                                            logFirebaseEvent(
+                                                'GrupoOption_EndLoadingactividades');
                                             setState(() {
                                               FFAppState().loadingActividades =
                                                   false;
@@ -431,11 +445,15 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                                           GrupoActividadHomeStruct>();
                                             });
                                             // End Loading
+                                            logFirebaseEvent(
+                                                'GrupoOption_EndLoading');
                                             setState(() {
                                               _model.isLoading = false;
                                               _model.selectedGroup = null;
                                             });
                                             // Clase Bottom Sheet
+                                            logFirebaseEvent(
+                                                'GrupoOption_ClaseBottomSheet');
                                             Navigator.pop(context);
 
                                             setState(() {});

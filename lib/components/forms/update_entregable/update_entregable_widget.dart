@@ -180,6 +180,9 @@ class _UpdateEntregableWidgetState extends State<UpdateEntregableWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        logFirebaseEvent(
+                            'UPDATE_ENTREGABLE_COMP_CERRAR_BTN_ON_TAP');
+                        logFirebaseEvent('Button_close_dialog,_drawer,_etc');
                         Navigator.pop(context);
                       },
                       text: 'Cerrar',
@@ -209,20 +212,26 @@ class _UpdateEntregableWidgetState extends State<UpdateEntregableWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        logFirebaseEvent(
+                            'UPDATE_ENTREGABLE_EDITAR_ENTREGABLE_BTN_');
                         // Validate Form
+                        logFirebaseEvent('Button_ValidateForm');
                         if (_model.formKey.currentState == null ||
                             !_model.formKey.currentState!.validate()) {
                           return;
                         }
                         // Edit Entregable
+                        logFirebaseEvent('Button_EditEntregable');
 
                         await widget.entregable!.reference
                             .update(createObjetoAEntregarRecordData(
                           descripcion: _model.entregableTxtController.text,
                         ));
                         // Close dialog
+                        logFirebaseEvent('Button_Closedialog');
                         Navigator.pop(context);
                         // Reload list
+                        logFirebaseEvent('Button_Reloadlist');
                         await widget.reloadList?.call();
                       },
                       text: 'Editar Entregable',

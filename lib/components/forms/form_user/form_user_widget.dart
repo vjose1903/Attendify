@@ -51,7 +51,9 @@ class _FormUserWidgetState extends State<FormUserWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('FORM_USER_COMP_FormUser_ON_INIT_STATE');
       // set state
+      logFirebaseEvent('FormUser_setstate');
       setState(() {
         _model.tipoUsuarioSelected = widget.tipoUsuario?.reference;
       });
@@ -219,13 +221,19 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                                       .map((e) => e.descripcion)
                                       .toList(),
                                   onChanged: (val) async {
-                                    setState(() => _model.tipoUsuarioDDValue =
-                                        val); // Find Tipo Usuario
+                                    setState(
+                                        () => _model.tipoUsuarioDDValue = val);
+                                    logFirebaseEvent(
+                                        'FORM_USER_TipoUsuarioDD_ON_FORM_WIDGET_S');
+                                    // Find Tipo Usuario
+                                    logFirebaseEvent(
+                                        'TipoUsuarioDD_FindTipoUsuario');
                                     _model.findTipoUsuarioResult = await actions
                                         .getTipoUsuarioByDescripcion(
                                       _model.tipoUsuarioDDValue!,
                                     );
                                     // set state
+                                    logFirebaseEvent('TipoUsuarioDD_setstate');
                                     setState(() {
                                       _model.tipoUsuarioSelected = _model
                                           .findTipoUsuarioResult?.reference;
@@ -496,7 +504,9 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      logFirebaseEvent('FORM_USER_COMP_CANCELAR_BTN_ON_TAP');
                       // Hide Bottom Sheet
+                      logFirebaseEvent('Button_HideBottomSheet');
                       Navigator.pop(context);
                     },
                     text: 'Cancelar',
@@ -527,12 +537,15 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        logFirebaseEvent('FORM_USER_COMP__BTN_ON_TAP');
                         var shouldSetState = false;
                         // Validate Form
+                        logFirebaseEvent('Button_ValidateForm');
                         if (_model.formKey.currentState == null ||
                             !_model.formKey.currentState!.validate()) {
                           return;
                         }
+                        logFirebaseEvent('Button_custom_action');
                         await actions.consoleLog(
                           null,
                           'form valid',
@@ -572,6 +585,7 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                             )) {
                           if (widget.action == FormAction.edit) {
                             // Update User Data
+                            logFirebaseEvent('Button_UpdateUserData');
 
                             await widget.user!.reference
                                 .update(createUsuariosRecordData(
@@ -580,6 +594,7 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                               phoneNumber: _model.phoneTxtController.text,
                             ));
                             // Update Grupo Usuario
+                            logFirebaseEvent('Button_UpdateGrupoUsuario');
 
                             await widget.grupoUsuario!
                                 .update(createGrupoUsuarioRecordData(
@@ -590,6 +605,7 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                                   .documentoIdentidadParam !=
                               null) {
                             // Update  documento Edit user
+                            logFirebaseEvent('Button_UpdatedocumentoEdituser');
 
                             await _model.formDocumentoIdentidadModel
                                 .documentoIdentidadParam!
@@ -615,6 +631,7 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                             ));
                           } else {
                             // Create  documento
+                            logFirebaseEvent('Button_Createdocumento');
 
                             var documentoIdentidadRecordReference =
                                 DocumentoIdentidadRecord.collection.doc();
@@ -675,18 +692,22 @@ class _FormUserWidgetState extends State<FormUserWidget> {
                           }
 
                           // Hide Bottom Sheet
+                          logFirebaseEvent('Button_HideBottomSheet');
                           Navigator.pop(context);
                           // Reload chips
+                          logFirebaseEvent('Button_Reloadchips');
                           await widget.reloadChip?.call();
                           if (shouldSetState) setState(() {});
                           return;
                         } else {
+                          logFirebaseEvent('Button_custom_action');
                           await actions.consoleLog(
                             null,
                             'no doc',
                             null,
                           );
                           // Show required Tipo Document
+                          logFirebaseEvent('Button_ShowrequiredTipoDocument');
                           await showDialog(
                             context: context,
                             builder: (dialogContext) {

@@ -82,7 +82,9 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
         }
         return RefreshIndicator(
           onRefresh: () async {
+            logFirebaseEvent('ASISTENCIA_LIST_VIEW_ListViewAsistencia_');
             // Reload Data
+            logFirebaseEvent('ListViewAsistencia_ReloadData');
             await widget.reloadAction?.call();
           },
           child: ListView.separated(
@@ -135,7 +137,10 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
+                        logFirebaseEvent(
+                            'ASISTENCIA_LIST_VIEW_ListTile_41fvielt_O');
                         // Find Objetos entregados
+                        logFirebaseEvent('ListTile_FindObjetosentregados');
                         _model.findViewObjetosEntregados =
                             await queryObjetoEntregadoRecordOnce(
                           parent: actividadAsistenciaItem.parentReference,
@@ -146,6 +151,7 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                           ),
                         );
                         // show asistencia modal
+                        logFirebaseEvent('ListTile_showasistenciamodal');
                         await showDialog(
                           context: context,
                           builder: (dialogContext) {
@@ -181,6 +187,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                   FlutterFlowTheme.of(context).primaryText,
                               icon: FontAwesomeIcons.pencilAlt,
                               onPressed: (_) async {
+                                logFirebaseEvent(
+                                    'ASISTENCIA_LIST_VIEW_SlidableActionWidge');
                                 if (dateTimeFormat(
                                       'dd/MM/yyyy',
                                       functions
@@ -190,21 +198,29 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                     ) ==
                                     widget.currentSelectedStringDate) {
                                   // Find Grupo Usuario
+                                  logFirebaseEvent(
+                                      'SlidableActionWidget_FindGrupoUsuario');
                                   _model.editFindGrupoUsuarioResponse =
                                       await GrupoUsuarioRecord.getDocumentOnce(
                                           actividadAsistenciaItem
                                               .grupoUsuario!);
                                   // find user info
+                                  logFirebaseEvent(
+                                      'SlidableActionWidget_finduserinfo');
                                   _model.editFindUserInfoResponse =
                                       await UsuariosRecord.getDocumentOnce(
                                           _model.editFindGrupoUsuarioResponse!
                                               .usuario!);
                                   // Find tipo usuario
+                                  logFirebaseEvent(
+                                      'SlidableActionWidget_Findtipousuario');
                                   _model.editFindTipoUsuarioResponse =
                                       await TipoUsuarioRecord.getDocumentOnce(
                                           _model.editFindGrupoUsuarioResponse!
                                               .tipoUsuario!);
                                   // find objetos a entregar
+                                  logFirebaseEvent(
+                                      'SlidableActionWidget_findobjetosaentrega');
                                   _model.editFindObjetosAEntregarResponsee =
                                       await queryActividadObjetoAEntregarRecordOnce(
                                     parent:
@@ -230,6 +246,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                                 ),
                                   );
                                   // Find Objetos Entregados
+                                  logFirebaseEvent(
+                                      'SlidableActionWidget_FindObjetosEntregad');
                                   _model.editFindObjetosEntregados =
                                       await queryObjetoEntregadoRecordOnce(
                                     parent:
@@ -249,6 +267,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                             ),
                                   );
                                   // open form asistencia
+                                  logFirebaseEvent(
+                                      'SlidableActionWidget_openformasistencia');
                                   await showModalBottomSheet(
                                     isScrollControlled: true,
                                     backgroundColor: Colors.transparent,
@@ -279,6 +299,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                                 .editFindObjetosEntregados,
                                             reloadChip: () async {
                                               // reload asistencia
+                                              logFirebaseEvent(
+                                                  'openformasistencia_reloadasistencia');
                                               await widget.reloadAction?.call();
                                             },
                                           ),
@@ -288,6 +310,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                   ).then((value) => safeSetState(() {}));
                                 } else {
                                   // show msg error
+                                  logFirebaseEvent(
+                                      'SlidableActionWidget_showmsgerror');
                                   ScaffoldMessenger.of(context)
                                       .clearSnackBars();
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -306,6 +330,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                   );
                                 }
 
+                                logFirebaseEvent(
+                                    'SlidableActionWidget_execute_callback');
                                 await widget.reloadAction?.call();
 
                                 setState(() {});
@@ -318,6 +344,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                     FlutterFlowTheme.of(context).error,
                                 icon: FontAwesomeIcons.solidTrashAlt,
                                 onPressed: (_) async {
+                                  logFirebaseEvent(
+                                      'ASISTENCIA_LIST_VIEW_SlidableActionWidge');
                                   if (dateTimeFormat(
                                         'dd/MM/yyyy',
                                         functions
@@ -326,6 +354,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                             .languageCode,
                                       ) ==
                                       widget.currentSelectedStringDate) {
+                                    logFirebaseEvent(
+                                        'SlidableActionWidget_alert_dialog');
                                     await showDialog(
                                       context: context,
                                       builder: (dialogContext) {
@@ -343,6 +373,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                             title: 'Confirmación',
                                             deleteAction: () async {
                                               // find objetos entregados
+                                              logFirebaseEvent(
+                                                  '_findobjetosentregados');
                                               _model.deleteObjetosEntregados =
                                                   await queryObjetoEntregadoRecordOnce(
                                                 parent: actividadAsistenciaItem
@@ -366,22 +398,32 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                                         .deleteObjetosEntregados!
                                                         .length) {
                                                   // delete objeto entregado
+                                                  logFirebaseEvent(
+                                                      '_deleteobjetoentregado');
                                                   await _model
                                                       .deleteObjetosEntregados![
                                                           FFAppState().contador]
                                                       .reference
                                                       .delete();
                                                   // increment Contador
+                                                  logFirebaseEvent(
+                                                      '_incrementContador');
                                                   FFAppState().contador =
                                                       FFAppState().contador + 1;
                                                 }
+                                                logFirebaseEvent(
+                                                    '_update_app_state');
                                                 FFAppState().contador = 0;
                                               }
                                               // delete asistencia
+                                              logFirebaseEvent(
+                                                  '_deleteasistencia');
                                               await actividadAsistenciaItem
                                                   .reference
                                                   .delete();
                                               // reload asistencia
+                                              logFirebaseEvent(
+                                                  '_reloadasistencia');
                                               await widget.reloadAction?.call();
                                             },
                                           ),
@@ -390,6 +432,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                     ).then((value) => setState(() {}));
                                   } else {
                                     // show msg error
+                                    logFirebaseEvent(
+                                        'SlidableActionWidget_showmsgerror');
                                     ScaffoldMessenger.of(context)
                                         .clearSnackBars();
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -409,6 +453,8 @@ class _AsistenciaListViewWidgetState extends State<AsistenciaListViewWidget> {
                                   }
 
                                   // reload asistencia
+                                  logFirebaseEvent(
+                                      'SlidableActionWidget_reloadasistencia');
                                   await widget.reloadAction?.call();
 
                                   setState(() {});

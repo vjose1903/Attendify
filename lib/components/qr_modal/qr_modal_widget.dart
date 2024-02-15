@@ -158,6 +158,9 @@ class _QrModalWidgetState extends State<QrModalWidget> {
                               children: [
                                 FFButtonWidget(
                                   onPressed: () async {
+                                    logFirebaseEvent(
+                                        'QR_MODAL_COMP_CERRAR_BTN_ON_TAP');
+                                    logFirebaseEvent('Button_dismiss_dialog');
                                     Navigator.pop(context);
                                   },
                                   text: 'Cerrar',

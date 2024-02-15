@@ -1,4 +1,4 @@
-# Attendify
+# SummitSync
 
 A new Flutter project.
 

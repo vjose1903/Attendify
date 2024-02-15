@@ -25,6 +25,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
     super.initState();
     _model = createModel(context, () => RegisterPageModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'registerPage'});
     _model.emailAddressCreateController ??= TextEditingController();
     _model.emailAddressCreateFocusNode ??= FocusNode();
 
@@ -300,7 +302,11 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                             focusNode:
                                                 _model.passwordConfirmFocusNode,
                                             onFieldSubmitted: (_) async {
+                                              logFirebaseEvent(
+                                                  'REGISTER_passwordConfirm_ON_TEXTFIELD_SU');
                                               // Validate Form
+                                              logFirebaseEvent(
+                                                  'passwordConfirm_ValidateForm');
                                               if (_model.formKey.currentState ==
                                                       null ||
                                                   !_model.formKey.currentState!
@@ -308,6 +314,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                                 return;
                                               }
                                               // Register action
+                                              logFirebaseEvent(
+                                                  'passwordConfirm_Registeraction');
                                               await _model.register(context);
                                             },
                                             autofillHints: const [
@@ -426,7 +434,11 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                                           0.0, 0.0),
                                                   child: FFButtonWidget(
                                                     onPressed: () async {
+                                                      logFirebaseEvent(
+                                                          'REGISTER_PAGE_PAGE_CONTINUAR_BTN_ON_TAP');
                                                       // Validate Form
+                                                      logFirebaseEvent(
+                                                          'Button_ValidateForm');
                                                       if (_model.formKey
                                                                   .currentState ==
                                                               null ||
@@ -436,6 +448,8 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                                         return;
                                                       }
                                                       // Register action
+                                                      logFirebaseEvent(
+                                                          'Button_Registeraction');
                                                       await _model
                                                           .register(context);
                                                     },
@@ -570,6 +584,10 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                                       highlightColor:
                                                           Colors.transparent,
                                                       onTap: () async {
+                                                        logFirebaseEvent(
+                                                            'REGISTER_Container_t4x5xdvn_ON_TAP');
+                                                        logFirebaseEvent(
+                                                            'Container_auth');
                                                         GoRouter.of(context)
                                                             .prepareAuthEvent();
                                                         final user =
@@ -642,6 +660,10 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                                       highlightColor:
                                                           Colors.transparent,
                                                       onTap: () async {
+                                                        logFirebaseEvent(
+                                                            'REGISTER_Container_8oh3ibx5_ON_TAP');
+                                                        logFirebaseEvent(
+                                                            'Container_auth');
                                                         GoRouter.of(context)
                                                             .prepareAuthEvent();
                                                         if (_model
@@ -797,6 +819,10 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                       0.0, 10.0, 15.0, 0.0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
+                                      logFirebaseEvent(
+                                          'REGISTER_INICIA_SESIÓN_BTN_ON_TAP');
+                                      logFirebaseEvent('Button_navigate_to');
+
                                       context.pushNamed(
                                         'loginPage',
                                         extra: <String, dynamic>{
@@ -849,10 +875,10 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
                             child: Image.asset(
-                              'assets/images/AppLogoMin.png',
+                              'assets/images/Logo.png',
                               width: 200.0,
                               height: 200.0,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                           ),
                         ),

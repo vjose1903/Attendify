@@ -224,12 +224,17 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
     super.initState();
     _model = createModel(context, () => DetalleActividadModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'DetalleActividad'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('DETALLE_ACTIVIDAD_DetalleActividad_ON_IN');
       if (FFAppState().tipoUsuarioLoged == FFAppState().TAdministrador) {
         // Add Asistecia
+        logFirebaseEvent('DetalleActividad_AddAsistecia');
         _model.addToCustomTabs('Asistencia');
         // Add Notas
+        logFirebaseEvent('DetalleActividad_AddNotas');
         setState(() {
           _model.addToCustomTabs('Notas');
         });
@@ -237,6 +242,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
       if (functions.toInitDayHour(getCurrentTimestamp) <
           widget.actividad!.fechaInicio!) {
         // Actividad aun no iniciada
+        logFirebaseEvent('DetalleActividad_Actividadaunnoiniciada');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -251,8 +257,10 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
         );
       }
       // wait
+      logFirebaseEvent('DetalleActividad_wait');
       await Future.delayed(const Duration(milliseconds: 250));
       // end searching imgs
+      logFirebaseEvent('DetalleActividad_endsearchingimgs');
       setState(() {});
     });
 
@@ -322,6 +330,9 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            logFirebaseEvent(
+                                'DETALLE_ACTIVIDAD_Image_jjrd75dw_ON_TAP');
+                            logFirebaseEvent('Image_expand_image');
                             await Navigator.push(
                               context,
                               PageTransition(
@@ -390,6 +401,10 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                       size: 20.0,
                                     ),
                                     onPressed: () async {
+                                      logFirebaseEvent(
+                                          'DETALLE_ACTIVIDAD_arrow_back_ios_rounded');
+                                      logFirebaseEvent(
+                                          'IconButton_navigate_back');
                                       context.pop();
                                     },
                                   ),
@@ -829,6 +844,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                               hoverColor: Colors.transparent,
                                                                               highlightColor: Colors.transparent,
                                                                               onTap: () async {
+                                                                                logFirebaseEvent('DETALLE_ACTIVIDAD_Image_2qj967tt_ON_TAP');
+                                                                                logFirebaseEvent('Image_expand_image');
                                                                                 await Navigator.push(
                                                                                   context,
                                                                                   PageTransition(
@@ -963,7 +980,12 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                   onChanged: (val) async {
                                                     setState(() => _model
                                                             .dateAsistenciaChipsValue =
-                                                        val?.first); // Reload List Asistencia
+                                                        val?.first);
+                                                    logFirebaseEvent(
+                                                        'DETALLE_ACTIVIDAD_DateAsistenciaChips_ON');
+                                                    // Reload List Asistencia
+                                                    logFirebaseEvent(
+                                                        'DateAsistenciaChips_ReloadListAsistencia');
                                                     setState(() => _model
                                                             .firestoreRequestCompleter1 =
                                                         null);
@@ -1221,8 +1243,10 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                       '_model.searchAsistenciaController',
                                                                                       const Duration(milliseconds: 0),
                                                                                       () async {
+                                                                                        logFirebaseEvent('DETALLE_ACTIVIDAD_searchAsistencia_ON_TE');
                                                                                         if (_model.searchAsistenciaController.text != '') {
                                                                                           // filter asistencia
+                                                                                          logFirebaseEvent('searchAsistencia_filterasistencia');
                                                                                           safeSetState(() {
                                                                                             _model.simpleSearchResults = TextSearch(
                                                                                               containerAsistenciaAsistenciaRecordList
@@ -1233,11 +1257,13 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                             ).search(_model.searchAsistenciaController.text).map((r) => r.object).toList();
                                                                                           });
                                                                                           // change To Filter list
+                                                                                          logFirebaseEvent('searchAsistencia_changeToFilterlist');
                                                                                           setState(() {
                                                                                             _model.showFullAsistenciaList = false;
                                                                                           });
                                                                                         } else {
                                                                                           // change To Full list
+                                                                                          logFirebaseEvent('searchAsistencia_changeToFulllist');
                                                                                           setState(() {
                                                                                             _model.showFullAsistenciaList = true;
                                                                                           });
@@ -1258,8 +1284,10 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                           ? InkWell(
                                                                                               onTap: () async {
                                                                                                 _model.searchAsistenciaController?.clear();
+                                                                                                logFirebaseEvent('DETALLE_ACTIVIDAD_searchAsistencia_ON_TE');
                                                                                                 if (_model.searchAsistenciaController.text != '') {
                                                                                                   // filter asistencia
+                                                                                                  logFirebaseEvent('searchAsistencia_filterasistencia');
                                                                                                   safeSetState(() {
                                                                                                     _model.simpleSearchResults = TextSearch(
                                                                                                       containerAsistenciaAsistenciaRecordList
@@ -1270,11 +1298,13 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                     ).search(_model.searchAsistenciaController.text).map((r) => r.object).toList();
                                                                                                   });
                                                                                                   // change To Filter list
+                                                                                                  logFirebaseEvent('searchAsistencia_changeToFilterlist');
                                                                                                   setState(() {
                                                                                                     _model.showFullAsistenciaList = false;
                                                                                                   });
                                                                                                 } else {
                                                                                                   // change To Full list
+                                                                                                  logFirebaseEvent('searchAsistencia_changeToFulllist');
                                                                                                   setState(() {
                                                                                                     _model.showFullAsistenciaList = true;
                                                                                                   });
@@ -1352,7 +1382,9 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                         .toList()
                                                                                         .first,
                                                                                     reloadAction: () async {
+                                                                                      logFirebaseEvent('DETALLE_ACTIVIDAD_fullAsistenciaListView');
                                                                                       // Reload List Asistencia
+                                                                                      logFirebaseEvent('fullAsistenciaListView_ReloadListAsisten');
                                                                                       setState(() => _model.firestoreRequestCompleter1 = null);
                                                                                       await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
                                                                                     },
@@ -1378,7 +1410,9 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                         .toList()
                                                                                         .first,
                                                                                     reloadAction: () async {
+                                                                                      logFirebaseEvent('DETALLE_ACTIVIDAD_filterAsistenciaListVi');
                                                                                       // Reload List Asistencia
+                                                                                      logFirebaseEvent('filterAsistenciaListView_ReloadListAsist');
                                                                                       setState(() => _model.firestoreRequestCompleter1 = null);
                                                                                       await _model.waitForFirestoreRequestCompleted1(minWait: 2000, maxWait: 10000);
                                                                                     },
@@ -1509,10 +1543,13 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                       .map((label) =>
                                                           ChipData(label))
                                                       .toList(),
-                                                  onChanged: (val) => setState(
-                                                      () => _model
-                                                              .dateNotasChipsValue =
-                                                          val?.first),
+                                                  onChanged: (val) async {
+                                                    setState(() => _model
+                                                            .dateNotasChipsValue =
+                                                        val?.first);
+                                                    logFirebaseEvent(
+                                                        'DETALLE_ACTIVIDAD_DateNotasChips_ON_FORM');
+                                                  },
                                                   selectedChipStyle: ChipStyle(
                                                     backgroundColor:
                                                         FlutterFlowTheme.of(
@@ -1699,7 +1736,9 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                       )))
                                                                               ? null
                                                                               : () async {
+                                                                                  logFirebaseEvent('DETALLE_ACTIVIDAD_PAGE_AddNote_ON_TAP');
                                                                                   // show form
+                                                                                  logFirebaseEvent('AddNote_showform');
                                                                                   await showModalBottomSheet(
                                                                                     isScrollControlled: true,
                                                                                     backgroundColor: Colors.transparent,
@@ -1728,6 +1767,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                               action: FormAction.create,
                                                                                               reloadAction: () async {
                                                                                                 // Refresh request
+                                                                                                logFirebaseEvent('showform_Refreshrequest');
                                                                                                 setState(() => _model.firestoreRequestCompleter2 = null);
                                                                                                 await _model.waitForFirestoreRequestCompleted2(minWait: 2000, maxWait: 7000);
                                                                                               },
@@ -1828,7 +1868,9 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                             return RefreshIndicator(
                                                                               key: const Key('RefreshIndicator_zyfe49fz'),
                                                                               onRefresh: () async {
+                                                                                logFirebaseEvent('DETALLE_ACTIVIDAD_ListViewNotas_ON_PULL_');
                                                                                 // Refresh request
+                                                                                logFirebaseEvent('ListViewNotas_Refreshrequest');
                                                                                 setState(() => _model.firestoreRequestCompleter2 = null);
                                                                                 await _model.waitForFirestoreRequestCompleted2(maxWait: 7000);
                                                                               },
@@ -1847,7 +1889,9 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                       hoverColor: Colors.transparent,
                                                                                       highlightColor: Colors.transparent,
                                                                                       onTap: () async {
+                                                                                        logFirebaseEvent('DETALLE_ACTIVIDAD_ListTile_6uc6ccku_ON_T');
                                                                                         // View Nota
+                                                                                        logFirebaseEvent('ListTile_ViewNota');
                                                                                         await showDialog(
                                                                                           context: context,
                                                                                           builder: (dialogContext) {
@@ -1889,6 +1933,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                               backgroundColor: FlutterFlowTheme.of(context).info,
                                                                                               icon: FontAwesomeIcons.pencilAlt,
                                                                                               onPressed: (_) async {
+                                                                                                logFirebaseEvent('DETALLE_ACTIVIDAD_SlidableActionWidget_l');
                                                                                                 if (dateTimeFormat(
                                                                                                       'dd/MM/yyyy',
                                                                                                       functions.toInitDayHour(getCurrentTimestamp),
@@ -1896,6 +1941,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                     ) ==
                                                                                                     _model.dateNotasChipsValue) {
                                                                                                   // open form
+                                                                                                  logFirebaseEvent('SlidableActionWidget_openform');
                                                                                                   await showModalBottomSheet(
                                                                                                     isScrollControlled: true,
                                                                                                     backgroundColor: Colors.transparent,
@@ -1925,6 +1971,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                               action: FormAction.edit,
                                                                                                               reloadAction: () async {
                                                                                                                 // Refresh request
+                                                                                                                logFirebaseEvent('openform_Refreshrequest');
                                                                                                                 setState(() => _model.firestoreRequestCompleter2 = null);
                                                                                                                 await _model.waitForFirestoreRequestCompleted2(minWait: 2000, maxWait: 7000);
                                                                                                               },
@@ -1936,6 +1983,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                   ).then((value) => safeSetState(() {}));
                                                                                                 } else {
                                                                                                   // show msg error
+                                                                                                  logFirebaseEvent('SlidableActionWidget_showmsgerror');
                                                                                                   ScaffoldMessenger.of(context).clearSnackBars();
                                                                                                   ScaffoldMessenger.of(context).showSnackBar(
                                                                                                     SnackBar(
@@ -1958,6 +2006,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                 backgroundColor: FlutterFlowTheme.of(context).error,
                                                                                                 icon: FontAwesomeIcons.solidTrashAlt,
                                                                                                 onPressed: (_) async {
+                                                                                                  logFirebaseEvent('DETALLE_ACTIVIDAD_SlidableActionWidget_x');
                                                                                                   if (dateTimeFormat(
                                                                                                         'dd/MM/yyyy',
                                                                                                         functions.toInitDayHour(getCurrentTimestamp),
@@ -1965,6 +2014,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                       ) ==
                                                                                                       _model.dateNotasChipsValue) {
                                                                                                     // show delete modal
+                                                                                                    logFirebaseEvent('SlidableActionWidget_showdeletemodal');
                                                                                                     await showDialog(
                                                                                                       context: context,
                                                                                                       builder: (dialogContext) {
@@ -1983,8 +2033,10 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                                 title: 'Confirmación',
                                                                                                                 deleteAction: () async {
                                                                                                                   // Delete Note
+                                                                                                                  logFirebaseEvent('showdeletemodal_DeleteNote');
                                                                                                                   await listViewNotasActividadComentarioRecord.reference.delete();
                                                                                                                   // Refresh request
+                                                                                                                  logFirebaseEvent('showdeletemodal_Refreshrequest');
                                                                                                                   setState(() => _model.firestoreRequestCompleter2 = null);
                                                                                                                   await _model.waitForFirestoreRequestCompleted2(minWait: 2000, maxWait: 7000);
                                                                                                                 },
@@ -1996,6 +2048,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                                                     ).then((value) => setState(() {}));
                                                                                                   } else {
                                                                                                     // show msg error
+                                                                                                    logFirebaseEvent('SlidableActionWidget_showmsgerror');
                                                                                                     ScaffoldMessenger.of(context).clearSnackBars();
                                                                                                     ScaffoldMessenger.of(context).showSnackBar(
                                                                                                       SnackBar(
@@ -2198,8 +2251,11 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                           widget.actividad!.fechaFin!))
                                   ? null
                                   : () async {
+                                      logFirebaseEvent(
+                                          'DETALLE_ACTIVIDAD_TOMAR_ASISTENCIA_BTN_O');
                                       var shouldSetState = false;
                                       // scan QR
+                                      logFirebaseEvent('Button_scanQR');
                                       _model.scanResponse =
                                           await FlutterBarcodeScanner
                                               .scanBarcode(
@@ -2216,6 +2272,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                             FFAppConstants.qrIncludeValidation
                                                 .toList())) {
                                           // Find Grupo usuario
+                                          logFirebaseEvent(
+                                              'Button_FindGrupousuario');
                                           _model.findGrupoUsuarioQrResponse =
                                               await queryGrupoUsuarioRecordOnce(
                                             queryBuilder:
@@ -2228,6 +2286,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                           ).then((s) => s.firstOrNull);
                                           shouldSetState = true;
                                           // User is present
+                                          logFirebaseEvent(
+                                              'Button_Userispresent');
                                           _model.qrFindUserIsPresent =
                                               await queryAsistenciaRecordOnce(
                                             parent: widget
@@ -2256,6 +2316,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                       ?.grupoName !=
                                                   '') {
                                             // Show user is already present
+                                            logFirebaseEvent(
+                                                'Button_Showuserisalreadypresent');
                                             await showDialog(
                                               context: context,
                                               builder: (dialogContext) {
@@ -2310,6 +2372,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                     .findGrupoUsuarioQrResponse !=
                                                 null) {
                                               // Get Detalle Access
+                                              logFirebaseEvent(
+                                                  'Button_GetDetalleAccess');
                                               _model.detalleAccessResponse =
                                                   await queryAccesoRecordOnce(
                                                 parent: widget
@@ -2341,6 +2405,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                           .withoutNulls
                                                           .toList())) {
                                                 // find user info
+                                                logFirebaseEvent(
+                                                    'Button_finduserinfo');
                                                 _model.qrfindUserInfoResponse =
                                                     await UsuariosRecord
                                                         .getDocumentOnce(_model
@@ -2348,6 +2414,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                             .usuario!);
                                                 shouldSetState = true;
                                                 // Find tipo usuario
+                                                logFirebaseEvent(
+                                                    'Button_Findtipousuario');
                                                 _model.qrfindTipoUsuarioResponse =
                                                     await TipoUsuarioRecord
                                                         .getDocumentOnce(_model
@@ -2355,6 +2423,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                             .tipoUsuario!);
                                                 shouldSetState = true;
                                                 // find objetos a entregar
+                                                logFirebaseEvent(
+                                                    'Button_findobjetosaentregar');
                                                 _model.qrfindObjetosAEntregarResponsee =
                                                     await queryActividadObjetoAEntregarRecordOnce(
                                                   parent: widget
@@ -2390,6 +2460,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                 );
                                                 shouldSetState = true;
                                                 // open form asistencia
+                                                logFirebaseEvent(
+                                                    'Button_openformasistencia');
                                                 await showModalBottomSheet(
                                                   isScrollControlled: true,
                                                   backgroundColor:
@@ -2444,6 +2516,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                             reloadChip:
                                                                 () async {
                                                               // Reload List Asistencia
+                                                              logFirebaseEvent(
+                                                                  'openformasistencia_ReloadListAsistencia');
                                                               setState(() =>
                                                                   _model.firestoreRequestCompleter1 =
                                                                       null);
@@ -2463,6 +2537,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                     safeSetState(() {}));
                                               } else {
                                                 // Show user not access QR msg
+                                                logFirebaseEvent(
+                                                    'Button_ShowusernotaccessQRmsg');
                                                 await showDialog(
                                                   context: context,
                                                   builder: (dialogContext) {
@@ -2523,6 +2599,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                               }
                                             } else {
                                               // Show user not follow the group QR msg
+                                              logFirebaseEvent(
+                                                  'Button_ShowusernotfollowthegroupQRmsg');
                                               await showDialog(
                                                 context: context,
                                                 builder: (dialogContext) {
@@ -2580,6 +2658,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                           }
                                         } else {
                                           // Show bad QR msg
+                                          logFirebaseEvent(
+                                              'Button_ShowbadQRmsg');
                                           await showDialog(
                                             context: context,
                                             builder: (dialogContext) {

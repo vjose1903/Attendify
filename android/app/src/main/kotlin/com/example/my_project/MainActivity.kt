@@ -1,4 +1,4 @@
-package com.inspot.technology.attendify
+package com.inspot.technology.SummitSync
 
 import io.flutter.embedding.android.FlutterActivity
 

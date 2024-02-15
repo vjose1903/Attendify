@@ -78,9 +78,12 @@ class _ActionsDocumentWidgetState extends State<ActionsDocumentWidget> {
           children: [
             FFButtonWidget(
               onPressed: () async {
+                logFirebaseEvent('ACTIONS_DOCUMENT_COMP_EDITAR_BTN_ON_TAP');
                 // Close bottom sheet
+                logFirebaseEvent('Button_Closebottomsheet');
                 Navigator.pop(context);
                 // Execute Edit action
+                logFirebaseEvent('Button_ExecuteEditaction');
                 unawaited(
                   () async {
                     await widget.editAction?.call();
@@ -110,9 +113,12 @@ class _ActionsDocumentWidgetState extends State<ActionsDocumentWidget> {
               padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
               child: FFButtonWidget(
                 onPressed: () async {
+                  logFirebaseEvent('ACTIONS_DOCUMENT_ELIMINAR_BTN_ON_TAP');
                   // Close bottom sheet
+                  logFirebaseEvent('Button_Closebottomsheet');
                   Navigator.pop(context);
                   // Execute Edit action
+                  logFirebaseEvent('Button_ExecuteEditaction');
                   unawaited(
                     () async {
                       await widget.deleteAction?.call();
@@ -144,9 +150,12 @@ class _ActionsDocumentWidgetState extends State<ActionsDocumentWidget> {
                 padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
                 child: FFButtonWidget(
                   onPressed: () async {
+                    logFirebaseEvent('ACTIONS_DOCUMENT_COMP_QR_BTN_ON_TAP');
                     // Close bottom sheet
+                    logFirebaseEvent('Button_Closebottomsheet');
                     Navigator.pop(context);
                     // Execute Qr action
+                    logFirebaseEvent('Button_ExecuteQraction');
                     unawaited(
                       () async {
                         await widget.showQRAction?.call();
@@ -178,6 +187,8 @@ class _ActionsDocumentWidgetState extends State<ActionsDocumentWidget> {
               padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
               child: FFButtonWidget(
                 onPressed: () async {
+                  logFirebaseEvent('ACTIONS_DOCUMENT_CANCELAR_BTN_ON_TAP');
+                  logFirebaseEvent('Button_bottom_sheet');
                   Navigator.pop(context);
                 },
                 text: 'Cancelar',

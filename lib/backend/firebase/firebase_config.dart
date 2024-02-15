@@ -10,8 +10,8 @@ Future initFirebase() async {
             projectId: "carnaval-d2054",
             storageBucket: "carnaval-d2054.appspot.com",
             messagingSenderId: "186859224506",
-            appId: "1:186859224506:web:bb43c67bc9cc292c4bf183",
-            measurementId: "G-5X3FLR9ZT4"));
+            appId: "1:186859224506:web:5c38e187fd837ee54bf183",
+            measurementId: "G-TRJZPG7WZY"));
   } else {
     await Firebase.initializeApp();
   }

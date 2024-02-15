@@ -90,8 +90,10 @@ class RegisterPageModel extends FlutterFlowModel<RegisterPageWidget> {
     AuthResponseStruct? resgiterResponse;
 
     // Init Processing
+    logFirebaseEvent('register_InitProcessing');
     isProcessing = true;
     // Register Call
+    logFirebaseEvent('register_RegisterCall');
     resgiterResponse = await actions.registerWithEmail(
       emailAddressCreateController.text,
       passwordCreateController.text,
@@ -99,8 +101,10 @@ class RegisterPageModel extends FlutterFlowModel<RegisterPageWidget> {
     );
     if (resgiterResponse.error == true) {
       // change IsProcesing
+      logFirebaseEvent('register_changeIsProcesing');
       isProcessing = false;
       // Show Error Message
+      logFirebaseEvent('register_ShowErrorMessage');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -116,6 +120,7 @@ class RegisterPageModel extends FlutterFlowModel<RegisterPageWidget> {
       );
     } else {
       // Go to continue Register
+      logFirebaseEvent('register_GotocontinueRegister');
 
       context.goNamed(
         'continueRegister',

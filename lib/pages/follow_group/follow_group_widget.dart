@@ -133,6 +133,8 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => FollowGroupModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'followGroup'});
   }
 
   @override
@@ -283,12 +285,16 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                                           hoverColor: Colors.transparent,
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
+                                            logFirebaseEvent(
+                                                'FOLLOW_GROUP_Container_zcec8m9o_ON_TAP');
                                             if (FFAppState()
                                                     .gruposSeguidos
                                                     .contains(
                                                         listViewGrupoRecord
                                                             .reference) ==
                                                 true) {
+                                              logFirebaseEvent(
+                                                  'Container_custom_action');
                                               _model.isRemoved = await actions
                                                   .grupoUsuarioDBAction(
                                                 currentUserReference!,
@@ -297,6 +303,8 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                                               );
                                               if (_model.isRemoved!) {
                                                 // Show Msg Success
+                                                logFirebaseEvent(
+                                                    'Container_ShowMsgSuccess');
                                                 ScaffoldMessenger.of(context)
                                                     .clearSnackBars();
                                                 ScaffoldMessenger.of(context)
@@ -320,6 +328,8 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                                                   ),
                                                 );
                                                 // Remover grupo del state
+                                                logFirebaseEvent(
+                                                    'Container_Removergrupodelstate');
                                                 setState(() {
                                                   FFAppState()
                                                       .removeFromGruposSeguidos(
@@ -328,6 +338,8 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                                                 });
                                               } else {
                                                 // Show Msg Error
+                                                logFirebaseEvent(
+                                                    'Container_ShowMsgError');
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
@@ -350,6 +362,8 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                                                 );
                                               }
                                             } else {
+                                              logFirebaseEvent(
+                                                  'Container_custom_action');
                                               _model.isAdded = await actions
                                                   .grupoUsuarioDBAction(
                                                 currentUserReference!,
@@ -358,6 +372,8 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                                               );
                                               if (_model.isAdded!) {
                                                 // Show Msg Success
+                                                logFirebaseEvent(
+                                                    'Container_ShowMsgSuccess');
                                                 ScaffoldMessenger.of(context)
                                                     .clearSnackBars();
                                                 ScaffoldMessenger.of(context)
@@ -381,6 +397,8 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                                                   ),
                                                 );
                                                 // Agregar grupo al state
+                                                logFirebaseEvent(
+                                                    'Container_Agregargrupoalstate');
                                                 setState(() {
                                                   FFAppState()
                                                       .addToGruposSeguidos(
@@ -389,6 +407,8 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                                                 });
                                               } else {
                                                 // Show Msg Error
+                                                logFirebaseEvent(
+                                                    'Container_ShowMsgError');
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(
@@ -507,6 +527,9 @@ class _FollowGroupWidgetState extends State<FollowGroupWidget>
                             onPressed: (FFAppState().gruposSeguidos.isEmpty)
                                 ? null
                                 : () async {
+                                    logFirebaseEvent(
+                                        'FOLLOW_GROUP_PAGE_CONTINUAR_BTN_ON_TAP');
+                                    logFirebaseEvent('Button_navigate_back');
                                     context.safePop();
                                   },
                             text: 'Continuar',

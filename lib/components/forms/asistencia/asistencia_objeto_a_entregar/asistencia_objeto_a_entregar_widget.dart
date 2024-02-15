@@ -50,6 +50,8 @@ class _AsistenciaObjetoAEntregarWidgetState
     _model.cantidadTxtFocusNode ??= FocusNode();
     _model.cantidadTxtFocusNode!.addListener(
       () async {
+        logFirebaseEvent('ASISTENCIA_OBJETO_A_ENTREGAR_CantidadTxt');
+        logFirebaseEvent('CantidadTxt_custom_action');
         await actions.updateObjetoAEntregarJson(
           widget.actividadObjetoEntregar!,
           <String, dynamic>{
@@ -57,6 +59,7 @@ class _AsistenciaObjetoAEntregarWidgetState
           },
         );
         // Set state
+        logFirebaseEvent('CantidadTxt_Setstate');
         setState(() {});
       },
     );
@@ -97,11 +100,15 @@ class _AsistenciaObjetoAEntregarWidgetState
                     '_model.cantidadTxtController',
                     const Duration(milliseconds: 2000),
                     () async {
+                      logFirebaseEvent(
+                          'ASISTENCIA_OBJETO_A_ENTREGAR_CantidadTxt');
+                      logFirebaseEvent('CantidadTxt_custom_action');
                       await actions.consoleLog(
                         null,
                         'cambiando input',
                         null,
                       );
+                      logFirebaseEvent('CantidadTxt_custom_action');
                       await actions.updateObjetoAEntregarJson(
                         widget.actividadObjetoEntregar!,
                         <String, dynamic>{
@@ -110,6 +117,7 @@ class _AsistenciaObjetoAEntregarWidgetState
                         },
                       );
                       // Set state
+                      logFirebaseEvent('CantidadTxt_Setstate');
                       setState(() {});
                     },
                   ),
@@ -263,7 +271,10 @@ class _AsistenciaObjetoAEntregarWidgetState
                                     .toString())
                             ? null
                             : () async {
+                                logFirebaseEvent(
+                                    'ASISTENCIA_OBJETO_A_ENTREGAR_addButton_O');
                                 // Add Deliver item
+                                logFirebaseEvent('addButton_AddDeliveritem');
                                 _model.addResponse =
                                     await actions.updateObjetoAEntregarJson(
                                   widget.actividadObjetoEntregar!,
@@ -279,6 +290,7 @@ class _AsistenciaObjetoAEntregarWidgetState
                                   },
                                 );
                                 // Set field
+                                logFirebaseEvent('addButton_Setfield');
                                 setState(() {
                                   _model.cantidadTxtController?.text = functions
                                       .parseObjetoAEntregarDataType(
@@ -317,7 +329,11 @@ class _AsistenciaObjetoAEntregarWidgetState
                                         ''))
                             ? null
                             : () async {
+                                logFirebaseEvent(
+                                    'ASISTENCIA_OBJETO_A_ENTREGAR_reduceButto');
                                 // Reduce Deliver item
+                                logFirebaseEvent(
+                                    'reduceButton_ReduceDeliveritem');
                                 _model.reduceResponse =
                                     await actions.updateObjetoAEntregarJson(
                                   widget.actividadObjetoEntregar!,
@@ -331,6 +347,7 @@ class _AsistenciaObjetoAEntregarWidgetState
                                   },
                                 );
                                 // set field
+                                logFirebaseEvent('reduceButton_setfield');
                                 setState(() {
                                   _model.cantidadTxtController?.text = functions
                                       .parseObjetoAEntregarDataType(

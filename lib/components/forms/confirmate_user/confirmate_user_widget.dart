@@ -233,6 +233,9 @@ class _ConfirmateUserWidgetState extends State<ConfirmateUserWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        logFirebaseEvent(
+                            'CONFIRMATE_USER_COMP_CERRAR_BTN_ON_TAP');
+                        logFirebaseEvent('Button_close_dialog,_drawer,_etc');
                         Navigator.pop(context);
                       },
                       text: 'Cerrar',
@@ -262,12 +265,16 @@ class _ConfirmateUserWidgetState extends State<ConfirmateUserWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        logFirebaseEvent(
+                            'CONFIRMATE_USER_EDITAR_ENTREGABLE_BTN_ON');
                         // Validate Form
+                        logFirebaseEvent('Button_ValidateForm');
                         if (_model.formKey.currentState == null ||
                             !_model.formKey.currentState!.validate()) {
                           return;
                         }
                         // return Password
+                        logFirebaseEvent('Button_returnPassword');
                         Navigator.pop(
                             context, _model.passowrdTxtController.text);
                       },

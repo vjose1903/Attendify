@@ -113,6 +113,8 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
     super.initState();
     _model = createModel(context, () => GrupoProfileModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'GrupoProfile'});
     _model.nombreFieldController ??= TextEditingController(
         text: FFAppState().grupoSeleccionadoName != ''
             ? FFAppState().grupoSeleccionadoName
@@ -168,7 +170,10 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
               size: 30.0,
             ),
             onPressed: () async {
+              logFirebaseEvent('GRUPO_PROFILE_arrow_back_rounded_ICN_ON_');
+              logFirebaseEvent('IconButton_update_app_state');
               FFAppState().update(() {});
+              logFirebaseEvent('IconButton_navigate_back');
               context.pop();
             },
           ),
@@ -208,6 +213,9 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
+                                  logFirebaseEvent(
+                                      'GRUPO_PROFILE_PAGE_Image_0fthatvt_ON_TAP');
+                                  logFirebaseEvent('Image_expand_image');
                                   await Navigator.push(
                                     context,
                                     PageTransition(
@@ -333,12 +341,19 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
+                                  logFirebaseEvent(
+                                      'GRUPO_PROFILE_PAGE_ChangePhoto_ON_TAP');
                                   // Req. permission galery
+                                  logFirebaseEvent(
+                                      'ChangePhoto_Req.permissiongalery');
                                   await requestPermission(
                                       photoLibraryPermission);
                                   // Req. permission camara
+                                  logFirebaseEvent(
+                                      'ChangePhoto_Req.permissioncamara');
                                   await requestPermission(cameraPermission);
                                   // upload logo
+                                  logFirebaseEvent('ChangePhoto_uploadlogo');
                                   final selectedMedia =
                                       await selectMediaWithSourceBottomSheet(
                                     context: context,
@@ -595,11 +610,17 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                           onPressed: (_model.isEditing == true)
                                               ? null
                                               : () async {
+                                                  logFirebaseEvent(
+                                                      'GRUPO_PROFILE_settings_sharp_ICN_ON_TAP');
                                                   // Change is Editing
+                                                  logFirebaseEvent(
+                                                      'IconButton_ChangeisEditing');
                                                   setState(() {
                                                     _model.isEditing = true;
                                                   });
                                                   // Show btns
+                                                  logFirebaseEvent(
+                                                      'IconButton_Showbtns');
                                                   if (animationsMap[
                                                           'rowOnActionTriggerAnimation'] !=
                                                       null) {
@@ -609,6 +630,8 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                                         .forward(from: 0.0);
                                                   }
                                                   // Show entregable
+                                                  logFirebaseEvent(
+                                                      'IconButton_Showentregable');
                                                   if (animationsMap[
                                                           'containerOnActionTriggerAnimation'] !=
                                                       null) {
@@ -676,7 +699,11 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                                 highlightColor:
                                                     Colors.transparent,
                                                 onTap: () async {
+                                                  logFirebaseEvent(
+                                                      'GRUPO_PROFILE_Container_a5fp3ow1_ON_TAP');
                                                   // Go to users
+                                                  logFirebaseEvent(
+                                                      'Container_Gotousers');
 
                                                   context.pushNamed(
                                                     'UsersList',
@@ -817,7 +844,11 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                                 highlightColor:
                                                     Colors.transparent,
                                                 onTap: () async {
+                                                  logFirebaseEvent(
+                                                      'GRUPO_PROFILE_Container_3omqao9l_ON_TAP');
                                                   // Go to activities
+                                                  logFirebaseEvent(
+                                                      'Container_Gotoactivities');
 
                                                   context.pushNamed(
                                                     'ActivitiesList',
@@ -958,7 +989,11 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                                 highlightColor:
                                                     Colors.transparent,
                                                 onTap: () async {
+                                                  logFirebaseEvent(
+                                                      'GRUPO_PROFILE_Container_mpijysmh_ON_TAP');
                                                   // Show form entregable
+                                                  logFirebaseEvent(
+                                                      'Container_Showformentregable');
                                                   await showModalBottomSheet(
                                                     isScrollControlled: true,
                                                     backgroundColor:
@@ -1106,12 +1141,18 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                 children: [
                                   FFButtonWidget(
                                     onPressed: () async {
+                                      logFirebaseEvent(
+                                          'GRUPO_PROFILE_PAGE_CancelBtn_ON_TAP');
                                       if (_model.uploadedFileUrl != '') {
                                         // Delete previous photo
+                                        logFirebaseEvent(
+                                            'CancelBtn_Deletepreviousphoto');
                                         await FirebaseStorage.instance
                                             .refFromURL(_model.uploadedFileUrl)
                                             .delete();
                                         // Clear photo data
+                                        logFirebaseEvent(
+                                            'CancelBtn_Clearphotodata');
                                         setState(() {
                                           _model.isDataUploading = false;
                                           _model.uploadedLocalFile =
@@ -1122,6 +1163,7 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                         });
                                       }
                                       // Hide btns
+                                      logFirebaseEvent('CancelBtn_Hidebtns');
                                       if (animationsMap[
                                               'rowOnActionTriggerAnimation'] !=
                                           null) {
@@ -1131,6 +1173,8 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                             .reverse();
                                       }
                                       // hide entregable
+                                      logFirebaseEvent(
+                                          'CancelBtn_hideentregable');
                                       if (animationsMap[
                                               'containerOnActionTriggerAnimation'] !=
                                           null) {
@@ -1140,6 +1184,8 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                             .reverse();
                                       }
                                       // Change is Editing
+                                      logFirebaseEvent(
+                                          'CancelBtn_ChangeisEditing');
                                       setState(() {
                                         _model.isEditing = false;
                                       });
@@ -1170,7 +1216,10 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                   ),
                                   FFButtonWidget(
                                     onPressed: () async {
+                                      logFirebaseEvent(
+                                          'GRUPO_PROFILE_PAGE_SaveBtn_ON_TAP');
                                       // Editar grupo
+                                      logFirebaseEvent('SaveBtn_Editargrupo');
 
                                       await FFAppState()
                                           .grupoSeleccionado!
@@ -1182,12 +1231,16 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                         if (FFAppState().selectedGroupImg !=
                                                 '') {
                                           // Delete previous photo
+                                          logFirebaseEvent(
+                                              'SaveBtn_Deletepreviousphoto');
                                           await FirebaseStorage.instance
                                               .refFromURL(
                                                   FFAppState().selectedGroupImg)
                                               .delete();
                                         }
                                         // update next photo
+                                        logFirebaseEvent(
+                                            'SaveBtn_updatenextphoto');
 
                                         await FFAppState()
                                             .grupoSeleccionado!
@@ -1197,6 +1250,8 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                                   .uploadedLocalFile.blurHash,
                                             ));
                                         // Updaltete  state img
+                                        logFirebaseEvent(
+                                            'SaveBtn_Updaltetestateimg');
                                         FFAppState().update(() {
                                           FFAppState().selectedGroupImg =
                                               _model.uploadedFileUrl;
@@ -1205,6 +1260,8 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                                   .uploadedLocalFile.blurHash!;
                                         });
                                         // Clear photo data
+                                        logFirebaseEvent(
+                                            'SaveBtn_Clearphotodata');
                                         setState(() {
                                           _model.isDataUploading = false;
                                           _model.uploadedLocalFile =
@@ -1215,6 +1272,7 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                         });
                                       }
                                       // Hide btns
+                                      logFirebaseEvent('SaveBtn_Hidebtns');
                                       if (animationsMap[
                                               'rowOnActionTriggerAnimation'] !=
                                           null) {
@@ -1224,11 +1282,15 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                             .reverse();
                                       }
                                       // Update name state
+                                      logFirebaseEvent(
+                                          'SaveBtn_Updatenamestate');
                                       FFAppState().update(() {
                                         FFAppState().grupoSeleccionadoName =
                                             _model.nombreFieldController.text;
                                       });
                                       // hide entregable
+                                      logFirebaseEvent(
+                                          'SaveBtn_hideentregable');
                                       if (animationsMap[
                                               'containerOnActionTriggerAnimation'] !=
                                           null) {
@@ -1238,6 +1300,8 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                             .reverse();
                                       }
                                       // Change is Editing
+                                      logFirebaseEvent(
+                                          'SaveBtn_ChangeisEditing');
                                       setState(() {
                                         _model.isEditing = false;
                                       });

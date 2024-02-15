@@ -204,12 +204,17 @@ class _FormEntregableWidgetState extends State<FormEntregableWidget> {
                               ),
                               showLoadingIndicator: true,
                               onPressed: () async {
+                                logFirebaseEvent(
+                                    'FORM_ENTREGABLE_addEntregable_ON_TAP');
                                 // Validate form
+                                logFirebaseEvent('addEntregable_Validateform');
                                 if (_model.formKey.currentState == null ||
                                     !_model.formKey.currentState!.validate()) {
                                   return;
                                 }
                                 // Create entregable
+                                logFirebaseEvent(
+                                    'addEntregable_Createentregable');
 
                                 var objetoAEntregarRecordReference =
                                     ObjetoAEntregarRecord.collection.doc();
@@ -230,6 +235,7 @@ class _FormEntregableWidgetState extends State<FormEntregableWidget> {
                                         ),
                                         objetoAEntregarRecordReference);
                                 // Reload list
+                                logFirebaseEvent('addEntregable_Reloadlist');
                                 setState(() =>
                                     _model.firestoreRequestCompleter = null);
                                 await _model.waitForFirestoreRequestCompleted(
@@ -296,6 +302,10 @@ class _FormEntregableWidgetState extends State<FormEntregableWidget> {
                                               FlutterFlowTheme.of(context).info,
                                           icon: FontAwesomeIcons.pencilAlt,
                                           onPressed: (_) async {
+                                            logFirebaseEvent(
+                                                'FORM_ENTREGABLE_SlidableActionWidget_jqf');
+                                            logFirebaseEvent(
+                                                'SlidableActionWidget_alert_dialog');
                                             await showDialog(
                                               context: context,
                                               builder: (dialogContext) {
@@ -319,6 +329,8 @@ class _FormEntregableWidgetState extends State<FormEntregableWidget> {
                                                           listViewEntregableObjetoAEntregarRecord,
                                                       reloadList: () async {
                                                         // ReloadList
+                                                        logFirebaseEvent(
+                                                            '_ReloadList');
                                                         setState(() => _model
                                                                 .firestoreRequestCompleter =
                                                             null);
@@ -381,7 +393,10 @@ class _FormEntregableWidgetState extends State<FormEntregableWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      logFirebaseEvent(
+                          'FORM_ENTREGABLE_COMP_CERRAR_BTN_ON_TAP');
                       // Hide Form
+                      logFirebaseEvent('Button_HideForm');
                       Navigator.pop(context);
                     },
                     text: 'Cerrar',

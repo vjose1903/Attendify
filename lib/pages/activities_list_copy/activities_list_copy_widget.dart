@@ -34,6 +34,8 @@ class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
     super.initState();
     _model = createModel(context, () => ActivitiesListCopyModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'ActivitiesListCopy'});
     _model.searchActividadesController ??= TextEditingController();
     _model.searchActividadesFocusNode ??= FocusNode();
   }
@@ -67,6 +69,8 @@ class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
+            logFirebaseEvent('ACTIVITIES_LIST_COPY_FloatingActionButto');
+            logFirebaseEvent('FloatingActionButton_bottom_sheet');
             await showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
@@ -86,6 +90,7 @@ class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
                       child: FormActivityWidget(
                         action: FormAction.create,
                         reloadChip: () async {
+                          logFirebaseEvent('_show_snack_bar');
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -141,6 +146,8 @@ class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
               size: 30.0,
             ),
             onPressed: () async {
+              logFirebaseEvent('ACTIVITIES_LIST_COPY_arrow_back_rounded_');
+              logFirebaseEvent('IconButton_navigate_back');
               context.pop();
             },
           ),
@@ -205,10 +212,14 @@ class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
                                   '_model.searchActividadesController',
                                   const Duration(milliseconds: 500),
                                   () async {
+                                    logFirebaseEvent(
+                                        'ACTIVITIES_LIST_COPY_searchActividades_O');
                                     if (_model.searchActividadesController
                                                 .text !=
                                             '') {
                                       // Simple search actividades
+                                      logFirebaseEvent(
+                                          'searchActividades_Simplesearchactividade');
                                       await queryGrupoActividadRecordOnce()
                                           .then(
                                             (records) => _model
@@ -233,11 +244,15 @@ class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
                                           .whenComplete(() => setState(() {}));
 
                                       // Show filter List
+                                      logFirebaseEvent(
+                                          'searchActividades_ShowfilterList');
                                       setState(() {
                                         _model.showFullList = false;
                                       });
                                     } else {
                                       // Show full List
+                                      logFirebaseEvent(
+                                          'searchActividades_ShowfullList');
                                       setState(() {
                                         _model.showFullList = true;
                                       });
@@ -282,6 +297,9 @@ class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
                             size: 22.0,
                           ),
                           onPressed: () async {
+                            logFirebaseEvent(
+                                'ACTIVITIES_LIST_COPY_tune_sharp_ICN_ON_T');
+                            logFirebaseEvent('IconButton_drawer');
                             scaffoldKey.currentState!.openEndDrawer();
                           },
                         ),

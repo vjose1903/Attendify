@@ -59,21 +59,26 @@ class _CustomSnackBarWidgetState extends State<CustomSnackBarWidget>
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('CUSTOM_SNACK_BAR_customSnackBar_ON_INIT_');
       // show custom snack bar
+      logFirebaseEvent('customSnackBar_showcustomsnackbar');
       if (animationsMap['containerOnActionTriggerAnimation'] != null) {
         await animationsMap['containerOnActionTriggerAnimation']!
             .controller
             .forward();
       }
       if (widget.automaticHide) {
+        logFirebaseEvent('customSnackBar_wait__delay');
         await Future.delayed(const Duration(milliseconds: 2000));
         // hide custom snack bar
+        logFirebaseEvent('customSnackBar_hidecustomsnackbar');
         if (animationsMap['containerOnActionTriggerAnimation'] != null) {
           await animationsMap['containerOnActionTriggerAnimation']!
               .controller
               .reverse();
         }
         // Close Dialog
+        logFirebaseEvent('customSnackBar_CloseDialog');
         await actions.tryDissmissModal(
           context,
         );

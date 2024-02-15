@@ -68,15 +68,19 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('FORM_ACTIVITY_FormActivity_ON_INIT_STATE');
       // Make Array for the creation activity group
+      logFirebaseEvent('FormActivity_MakeArrayforthecreationacti');
       _model.addToGruposParaLaActividad(FFAppState().grupoSeleccionado!);
       if (widget.imagenes != null && (widget.imagenes)!.isNotEmpty) {
         // start processing Imgs
+        logFirebaseEvent('FormActivity_startprocessingImgs');
         setState(() {
           _model.processingImgs = true;
         });
         while (FFAppState().contador < widget.imagenes!.length) {
           // Add img to state
+          logFirebaseEvent('FormActivity_Addimgtostate');
           setState(() {
             _model.addToImgsToSave(<String, dynamic>{
               'imgPath': widget.imagenes?[FFAppState().contador].imgPath,
@@ -89,13 +93,16 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
             });
           });
           // increment Contador
+          logFirebaseEvent('FormActivity_incrementContador');
           setState(() {
             FFAppState().contador = FFAppState().contador + 1;
           });
         }
         // reset Contador
+        logFirebaseEvent('FormActivity_resetContador');
         FFAppState().contador = 0;
         // end processing Imgs
+        logFirebaseEvent('FormActivity_endprocessingImgs');
         setState(() {
           _model.processingImgs = false;
         });
@@ -103,11 +110,13 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
       if (widget.objetosAEntregar != null &&
           (widget.objetosAEntregar)!.isNotEmpty) {
         // start processing deliver items
+        logFirebaseEvent('FormActivity_startprocessingdeliveritems');
         setState(() {
           _model.processingDeliverITems = true;
         });
         while (FFAppState().contador < widget.objetosAEntregar!.length) {
           // Add item to state
+          logFirebaseEvent('FormActivity_Additemtostate');
           setState(() {
             _model.addToObjetosAEntregarSelected(<String, dynamic>{
               'tipo_usuario': <String, dynamic>{
@@ -131,64 +140,79 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
             });
           });
           // increment Contador
+          logFirebaseEvent('FormActivity_incrementContador');
           setState(() {
             FFAppState().contador = FFAppState().contador + 1;
           });
         }
         // reset Contador
+        logFirebaseEvent('FormActivity_resetContador');
         setState(() {
           FFAppState().contador = 0;
         });
         // end processing deliver items
+        logFirebaseEvent('FormActivity_endprocessingdeliveritems');
         setState(() {
           _model.processingDeliverITems = false;
         });
       }
       if (widget.access != null && (widget.access)!.isNotEmpty) {
         // start processing access
+        logFirebaseEvent('FormActivity_startprocessingaccess');
         _model.processingAccess = true;
         while (FFAppState().contador < widget.access!.length) {
           // add access to state
+          logFirebaseEvent('FormActivity_addaccesstostate');
           _model.addToAccessToSave(
               widget.access![FFAppState().contador].tipoUsuarioLabel);
           // increment Contador
+          logFirebaseEvent('FormActivity_incrementContador');
           setState(() {
             FFAppState().contador = FFAppState().contador + 1;
           });
         }
         // reset Contador
+        logFirebaseEvent('FormActivity_resetContador');
         setState(() {
           FFAppState().contador = 0;
         });
         // end processing access
+        logFirebaseEvent('FormActivity_endprocessingaccess');
         setState(() {
           _model.processingAccess = false;
         });
       } else {
         // start processing access
+        logFirebaseEvent('FormActivity_startprocessingaccess');
         _model.processingAccess = true;
+        logFirebaseEvent('FormActivity_firestore_query');
         _model.allTipoUsuarioResponse = await queryTipoUsuarioRecordOnce();
         while (FFAppState().contador < _model.allTipoUsuarioResponse!.length) {
           // add tipo user to state
+          logFirebaseEvent('FormActivity_addtipousertostate');
           setState(() {
             _model.addToAccessToSave(_model
                 .allTipoUsuarioResponse![FFAppState().contador].descripcion);
           });
           // increment Contador
+          logFirebaseEvent('FormActivity_incrementContador');
           setState(() {
             FFAppState().contador = FFAppState().contador + 1;
           });
         }
         // reset Contador
+        logFirebaseEvent('FormActivity_resetContador');
         setState(() {
           FFAppState().contador = 0;
         });
         // end processing access
+        logFirebaseEvent('FormActivity_endprocessingaccess');
         setState(() {
           _model.processingAccess = false;
         });
       }
 
+      logFirebaseEvent('FormActivity_update_component_state');
       setState(() {});
     });
 
@@ -204,12 +228,15 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
     _model.fechaTxtFocusNode ??= FocusNode();
     _model.fechaTxtFocusNode!.addListener(
       () async {
+        logFirebaseEvent('FORM_ACTIVITY_fechaTxt_ON_FOCUS_CHANGE');
         if (widget.action == FormAction.edit) {
           // Blur current Input
+          logFirebaseEvent('fechaTxt_BlurcurrentInput');
           await actions.blurCurrentInput(
             context,
           );
           // dates can't edit
+          logFirebaseEvent('fechaTxt_datescan\'tedit');
           await showDialog(
             context: context,
             builder: (dialogContext) {
@@ -237,11 +264,13 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
           if ((_model.fechaTxtFocusNode?.hasFocus ?? false)) {
             if (_model.datePickerShow) {
               // Switch datePicker to false
+              logFirebaseEvent('fechaTxt_SwitchdatePickertofalse');
               setState(() {
                 _model.datePickerShow = false;
               });
             } else {
               // Show DatePicker
+              logFirebaseEvent('fechaTxt_ShowDatePicker');
               final datePicked1Date = await showDatePicker(
                 context: context,
                 initialDate: ((_model.fechaTxtController.text != ''
@@ -293,11 +322,13 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                 });
               }
               // Switch datePicker to true
+              logFirebaseEvent('fechaTxt_SwitchdatePickertotrue');
               setState(() {
                 _model.datePickerShow = true;
               });
               if (_model.datePicked1 != null) {
                 // Set fecha/desde Value
+                logFirebaseEvent('fechaTxt_Setfecha/desdeValue');
                 setState(() {
                   _model.fechaTxtController?.text = valueOrDefault<String>(
                     dateTimeFormat(
@@ -310,6 +341,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                 });
                 if (_model.oneDaySwitchValue!) {
                   // Set hasta Value
+                  logFirebaseEvent('fechaTxt_SethastaValue');
                   setState(() {
                     _model.hastaTxtController?.text = valueOrDefault<String>(
                       dateTimeFormat(
@@ -322,6 +354,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                   });
                 }
                 // Blur current Input
+                logFirebaseEvent('fechaTxt_BlurcurrentInput');
                 await actions.blurCurrentInput(
                   context,
                 );
@@ -329,6 +362,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
             }
           } else {
             // Switch datePicker to false
+            logFirebaseEvent('fechaTxt_SwitchdatePickertofalse');
             setState(() {
               _model.datePickerShow = false;
             });
@@ -340,12 +374,15 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
     _model.hastaTxtFocusNode ??= FocusNode();
     _model.hastaTxtFocusNode!.addListener(
       () async {
+        logFirebaseEvent('FORM_ACTIVITY_hastaTxt_ON_FOCUS_CHANGE');
         if (widget.action == FormAction.edit) {
           // Blur current Input
+          logFirebaseEvent('hastaTxt_BlurcurrentInput');
           await actions.blurCurrentInput(
             context,
           );
           // dates can't edit
+          logFirebaseEvent('hastaTxt_datescan\'tedit');
           await showDialog(
             context: context,
             builder: (dialogContext) {
@@ -373,11 +410,13 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
           if ((_model.hastaTxtFocusNode?.hasFocus ?? false)) {
             if (_model.datePickerShow) {
               // Switch datePicker to false
+              logFirebaseEvent('hastaTxt_SwitchdatePickertofalse');
               setState(() {
                 _model.datePickerShow = false;
               });
             } else {
               // Show DatePicker
+              logFirebaseEvent('hastaTxt_ShowDatePicker');
               final datePicked2Date = await showDatePicker(
                 context: context,
                 initialDate: (() {
@@ -436,11 +475,13 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                 });
               }
               // Switch datePicker to true
+              logFirebaseEvent('hastaTxt_SwitchdatePickertotrue');
               setState(() {
                 _model.datePickerShow = true;
               });
               if (_model.datePicked2 != null) {
                 // Set hasta Value
+                logFirebaseEvent('hastaTxt_SethastaValue');
                 setState(() {
                   _model.hastaTxtController?.text = valueOrDefault<String>(
                     dateTimeFormat(
@@ -453,12 +494,14 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                 });
               }
               // Blur current Input
+              logFirebaseEvent('hastaTxt_BlurcurrentInput');
               await actions.blurCurrentInput(
                 context,
               );
             }
           } else {
             // Switch datePicker to false
+            logFirebaseEvent('hastaTxt_SwitchdatePickertofalse');
             setState(() {
               _model.datePickerShow = false;
             });
@@ -903,8 +946,12 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
+                                      logFirebaseEvent(
+                                          'FORM_ACTIVITY_OneDayContainer_ON_TAP');
                                       if (widget.action == FormAction.edit) {
                                         // dates can't edit
+                                        logFirebaseEvent(
+                                            'OneDayContainer_datescan\'tedit');
                                         await showDialog(
                                           context: context,
                                           builder: (dialogContext) {
@@ -932,6 +979,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                         ).then((value) => setState(() {}));
                                       } else {
                                         // change switch
+                                        logFirebaseEvent(
+                                            'OneDayContainer_changeswitch');
                                         setState(() {
                                           _model.oneDaySwitchValue =
                                               (_model.oneDaySwitchValue!
@@ -942,6 +991,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                           if (_model.fechaTxtController.text !=
                                                   '') {
                                             // Set Same date on endDate
+                                            logFirebaseEvent(
+                                                'OneDayContainer_SetSamedateonendDate');
                                             setState(() {
                                               _model.hastaTxtController?.text =
                                                   dateTimeFormat(
@@ -959,6 +1010,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                           }
                                         } else {
                                           // Clear HastaTxt
+                                          logFirebaseEvent(
+                                              'OneDayContainer_ClearHastaTxt');
                                           setState(() {
                                             _model.hastaTxtController?.clear();
                                           });
@@ -1019,10 +1072,14 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                 .oneDaySwitchValue =
                                                             newValue);
                                                         if (newValue) {
+                                                          logFirebaseEvent(
+                                                              'FORM_ACTIVITY_OneDaySwitch_ON_TOGGLE_ON');
                                                           if (_model.fechaTxtController
                                                                       .text !=
                                                                   '') {
                                                             // Set Same date on endDate
+                                                            logFirebaseEvent(
+                                                                'OneDaySwitch_SetSamedateonendDate');
                                                             setState(() {
                                                               _model.hastaTxtController
                                                                       ?.text =
@@ -1039,7 +1096,11 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                             });
                                                           }
                                                         } else {
+                                                          logFirebaseEvent(
+                                                              'FORM_ACTIVITY_OneDaySwitch_ON_TOGGLE_OFF');
                                                           // Clear HastaTxt
+                                                          logFirebaseEvent(
+                                                              'OneDaySwitch_ClearHastaTxt');
                                                           setState(() {
                                                             _model
                                                                 .hastaTxtController
@@ -1248,7 +1309,11 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
+                                    logFirebaseEvent(
+                                        'FORM_ACTIVITY_COMP_FreeContainer_ON_TAP');
                                     // change free switch
+                                    logFirebaseEvent(
+                                        'FreeContainer_changefreeswitch');
                                     setState(() {
                                       _model.freeSwitchValue =
                                           (_model.freeSwitchValue!
@@ -1257,11 +1322,15 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                     });
                                     if (_model.freeSwitchValue!) {
                                       // Set Costo 0
+                                      logFirebaseEvent(
+                                          'FreeContainer_SetCosto0');
                                       setState(() {
                                         _model.costoTxtController?.text = '0';
                                       });
                                     } else {
                                       // Clean Costo
+                                      logFirebaseEvent(
+                                          'FreeContainer_CleanCosto');
                                       setState(() {
                                         _model.costoTxtController?.clear();
                                       });
@@ -1312,13 +1381,21 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                     _model.freeSwitchValue =
                                                         newValue);
                                                 if (newValue) {
+                                                  logFirebaseEvent(
+                                                      'FORM_ACTIVITY_freeSwitch_ON_TOGGLE_ON');
                                                   // Set Costo 0
+                                                  logFirebaseEvent(
+                                                      'freeSwitch_SetCosto0');
                                                   setState(() {
                                                     _model.costoTxtController
                                                         ?.text = '0';
                                                   });
                                                 } else {
+                                                  logFirebaseEvent(
+                                                      'FORM_ACTIVITY_freeSwitch_ON_TOGGLE_OFF');
                                                   // Reset costo field
+                                                  logFirebaseEvent(
+                                                      'freeSwitch_Resetcostofield');
                                                   setState(() {
                                                     _model.costoTxtController
                                                         ?.clear();
@@ -1480,15 +1557,23 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                         _model.uploadingIMG
                                                             ? null
                                                             : () async {
+                                                                logFirebaseEvent(
+                                                                    'FORM_ACTIVITY_COMP_ImgAddBtn_ON_TAP');
                                                                 // Req. permission galery
+                                                                logFirebaseEvent(
+                                                                    'ImgAddBtn_Req.permissiongalery');
                                                                 await requestPermission(
                                                                     photoLibraryPermission);
                                                                 // Is Uploading IMG
+                                                                logFirebaseEvent(
+                                                                    'ImgAddBtn_IsUploadingIMG');
                                                                 setState(() {
                                                                   _model.uploadingIMG =
                                                                       true;
                                                                 });
                                                                 // Upload files to firestore
+                                                                logFirebaseEvent(
+                                                                    'ImgAddBtn_Uploadfilestofirestore');
                                                                 final selectedMedia =
                                                                     await selectMedia(
                                                                   imageQuality:
@@ -1583,6 +1668,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                 }
 
                                                                 // IMGS uploaded
+                                                                logFirebaseEvent(
+                                                                    'ImgAddBtn_IMGSuploaded');
                                                                 setState(() {
                                                                   _model.uploadingIMG =
                                                                       false;
@@ -1594,6 +1681,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                       _model
                                                                           .uploadedFileUrls
                                                                           .length) {
+                                                                    logFirebaseEvent(
+                                                                        'ImgAddBtn_update_component_state');
                                                                     setState(
                                                                         () {
                                                                       _model.addToImgsToSave(<String,
@@ -1611,6 +1700,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                       });
                                                                     });
                                                                     // Increment Contador
+                                                                    logFirebaseEvent(
+                                                                        'ImgAddBtn_IncrementContador');
                                                                     setState(
                                                                         () {
                                                                       FFAppState()
@@ -1620,6 +1711,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                     });
                                                                   }
                                                                   // Reset contador
+                                                                  logFirebaseEvent(
+                                                                      'ImgAddBtn_Resetcontador');
                                                                   FFAppState()
                                                                       .contador = 0;
                                                                 }
@@ -1773,6 +1866,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                                     onChanged: (newValue) async {
                                                                                       setState(() => _model.checkboxPortadaValueMap[imgSelectedItem] = newValue!);
                                                                                       if (newValue!) {
+                                                                                        logFirebaseEvent('FORM_ACTIVITY_CheckboxPortada_ON_TOGGLE_');
                                                                                         while (FFAppState().contador < _model.imgsToSave.length) {
                                                                                           if (getJsonField(
                                                                                                 _model.imgsToSave[FFAppState().contador],
@@ -1783,6 +1877,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                                                 r'''$.imgPath''',
                                                                                               )) {
                                                                                             // Set all to false
+                                                                                            logFirebaseEvent('CheckboxPortada_Setalltofalse');
                                                                                             setState(() {
                                                                                               _model.updateImgsToSaveAtIndex(
                                                                                                 FFAppState().contador,
@@ -1807,6 +1902,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                                             });
                                                                                           } else {
                                                                                             // change Actual to true
+                                                                                            logFirebaseEvent('CheckboxPortada_changeActualtotrue');
                                                                                             setState(() {
                                                                                               _model.updateImgsToSaveAtIndex(
                                                                                                 FFAppState().contador,
@@ -1829,6 +1925,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                                                 },
                                                                                               );
                                                                                             });
+                                                                                            logFirebaseEvent('CheckboxPortada_custom_action');
                                                                                             await actions.consoleLog(
                                                                                               null,
                                                                                               getJsonField(
@@ -1840,11 +1937,13 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                                           }
 
                                                                                           // Increment Contador
+                                                                                          logFirebaseEvent('CheckboxPortada_IncrementContador');
                                                                                           setState(() {
                                                                                             FFAppState().contador = FFAppState().contador + 1;
                                                                                           });
                                                                                         }
                                                                                         // Reset Contador
+                                                                                        logFirebaseEvent('CheckboxPortada_ResetContador');
                                                                                         FFAppState().contador = 0;
                                                                                       }
                                                                                     },
@@ -1886,6 +1985,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                           ),
                                                                           onPressed:
                                                                               () async {
+                                                                            logFirebaseEvent('FORM_ACTIVITY_COMP_trashAlt_ICN_ON_TAP');
+                                                                            logFirebaseEvent('IconButton_alert_dialog');
                                                                             await showDialog(
                                                                               context: context,
                                                                               builder: (dialogContext) {
@@ -1907,9 +2008,11 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                                             ) !=
                                                                                             null) {
                                                                                           // Agregar al listado de remover
+                                                                                          logFirebaseEvent('_Agregarallistadoderemover');
                                                                                           _model.addToImgsToRemove(imgSelectedItem);
                                                                                         } else {
                                                                                           // Delete img from firestore
+                                                                                          logFirebaseEvent('_Deleteimgfromfirestore');
                                                                                           await FirebaseStorage.instance
                                                                                               .refFromURL(getJsonField(
                                                                                                 imgSelectedItem,
@@ -1919,6 +2022,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                                         }
 
                                                                                         // Quitar del listado de seleccionados
+                                                                                        logFirebaseEvent('_Quitardellistadodeseleccionados');
                                                                                         setState(() {
                                                                                           _model.removeFromImgsToSave(imgSelectedItem);
                                                                                         });
@@ -1992,7 +2096,11 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
+                                  logFirebaseEvent(
+                                      'FORM_ACTIVITY_DeliverContainer_ON_TAP');
                                   // Change deliver Items
+                                  logFirebaseEvent(
+                                      'DeliverContainer_ChangedeliverItems');
                                   setState(() {
                                     _model.deliverSwitchValue =
                                         (_model.deliverSwitchValue!
@@ -2001,6 +2109,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                   });
                                   if (_model.objetosAEntregarSelected.isNotEmpty) {
                                     // find objetos with reference
+                                    logFirebaseEvent(
+                                        'DeliverContainer_findobjetoswithreferenc');
                                     _model.objetosAEntregarWithReference =
                                         await actions.filterByKey(
                                       _model.objetosAEntregarSelected.toList(),
@@ -2011,10 +2121,14 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                         _model.objetosAEntregarWithReference!
                                             .length) {
                                       // Add item to remove state
+                                      logFirebaseEvent(
+                                          'DeliverContainer_Additemtoremovestate');
                                       _model.addToObjetosAEntregarToRemove(
                                           _model.objetosAEntregarWithReference![
                                               FFAppState().contador]);
                                       // Remove objeto selected
+                                      logFirebaseEvent(
+                                          'DeliverContainer_Removeobjetoselected');
                                       setState(() {
                                         _model
                                             .removeFromObjetosAEntregarSelected(
@@ -2022,9 +2136,13 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                     .first);
                                       });
                                       // Increment Contador
+                                      logFirebaseEvent(
+                                          'DeliverContainer_IncrementContador');
                                       FFAppState().contador =
                                           FFAppState().contador + 1;
                                     }
+                                    logFirebaseEvent(
+                                        'DeliverContainer_update_app_state');
                                     setState(() {
                                       FFAppState().contador = 0;
                                     });
@@ -2076,9 +2194,13 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                       newValue);
 
                                               if (!newValue) {
+                                                logFirebaseEvent(
+                                                    'FORM_ACTIVITY_deliverSwitch_ON_TOGGLE_OF');
                                                 if (_model
                                                         .objetosAEntregarSelected.isNotEmpty) {
                                                   // find objetos with reference
+                                                  logFirebaseEvent(
+                                                      'deliverSwitch_findobjetoswithreference');
                                                   _model.objetosAEntregarWithReferenceSwitch =
                                                       await actions.filterByKey(
                                                     _model
@@ -2092,11 +2214,15 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                           .objetosAEntregarWithReferenceSwitch!
                                                           .length) {
                                                     // Add item to remove state
+                                                    logFirebaseEvent(
+                                                        'deliverSwitch_Additemtoremovestate');
                                                     _model.addToObjetosAEntregarToRemove(
                                                         _model.objetosAEntregarWithReferenceSwitch![
                                                             FFAppState()
                                                                 .contador]);
                                                     // Remove objeto selected
+                                                    logFirebaseEvent(
+                                                        'deliverSwitch_Removeobjetoselected');
                                                     setState(() {
                                                       _model.removeFromObjetosAEntregarSelected(
                                                           _model
@@ -2104,10 +2230,14 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                               .first);
                                                     });
                                                     // Increment Contador
+                                                    logFirebaseEvent(
+                                                        'deliverSwitch_IncrementContador');
                                                     FFAppState().contador =
                                                         FFAppState().contador +
                                                             1;
                                                   }
+                                                  logFirebaseEvent(
+                                                      'deliverSwitch_update_app_state');
                                                   setState(() {
                                                     FFAppState().contador = 0;
                                                   });
@@ -2210,6 +2340,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                           setState(() => _model
                                                                   .deliverTipoUsuarioDDValue =
                                                               val);
+                                                          logFirebaseEvent(
+                                                              'FORM_ACTIVITY_DeliverTipoUsuarioDD_ON_FO');
                                                           var shouldSetState =
                                                               false;
                                                           if (_model.deliverTipoUsuarioDDValue !=
@@ -2218,6 +2350,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                   '') {
                                                             if (_model
                                                                     .objetosAEntregarSelected.isNotEmpty) {
+                                                              logFirebaseEvent(
+                                                                  'DeliverTipoUsuarioDD_custom_action');
                                                               _model.isObjAlreadyIncluded =
                                                                   await actions
                                                                       .arrayObjAEntregarHasTipoUsuario(
@@ -2232,6 +2366,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                               if (_model
                                                                   .isObjAlreadyIncluded!) {
                                                                 // Show error msg
+                                                                logFirebaseEvent(
+                                                                    'DeliverTipoUsuarioDD_Showerrormsg');
                                                                 showDialog(
                                                                   barrierColor:
                                                                       Colors
@@ -2275,6 +2411,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                         () {}));
 
                                                                 // reset Dropdowns
+                                                                logFirebaseEvent(
+                                                                    'DeliverTipoUsuarioDD_resetDropdowns');
                                                                 setState(() {
                                                                   _model
                                                                       .deliverTipoUsuarioDDValueController
@@ -2288,6 +2426,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                               }
                                                             }
                                                             // Find Tipo Usuario
+                                                            logFirebaseEvent(
+                                                                'DeliverTipoUsuarioDD_FindTipoUsuario');
                                                             _model.findTipoUsuarioResult =
                                                                 await actions
                                                                     .getTipoUsuarioByDescripcion(
@@ -2508,6 +2648,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                               setState(() =>
                                                                   _model.deliverItemDDValue =
                                                                       val);
+                                                              logFirebaseEvent(
+                                                                  'FORM_ACTIVITY_DeliverItemDD_ON_FORM_WIDG');
                                                               var shouldSetState =
                                                                   false;
                                                               if (_model.deliverItemDDValue !=
@@ -2515,6 +2657,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                   _model.deliverItemDDValue !=
                                                                       '') {
                                                                 // find Objeto a Entregar
+                                                                logFirebaseEvent(
+                                                                    'DeliverItemDD_findObjetoaEntregar');
                                                                 _model.findObjetoAEntregarResult =
                                                                     await actions
                                                                         .getObjetoAEntregarByDescripcion(
@@ -2610,7 +2754,11 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                           size: 20.0,
                                                         ),
                                                         onPressed: () async {
+                                                          logFirebaseEvent(
+                                                              'FORM_ACTIVITY_COMP_ImgAddBtn_ON_TAP');
                                                           // Validate Form
+                                                          logFirebaseEvent(
+                                                              'ImgAddBtn_ValidateForm');
                                                           if (_model.formKey2
                                                                       .currentState ==
                                                                   null ||
@@ -2630,6 +2778,8 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                             return;
                                                           }
                                                           // Add item to state
+                                                          logFirebaseEvent(
+                                                              'ImgAddBtn_Additemtostate');
                                                           setState(() {
                                                             _model
                                                                 .addToObjetosAEntregarSelected(<String,
@@ -2660,12 +2810,16 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                             });
                                                           });
                                                           // Reset Cantidad
+                                                          logFirebaseEvent(
+                                                              'ImgAddBtn_ResetCantidad');
                                                           setState(() {
                                                             _model
                                                                 .deliverCantTxtController
                                                                 ?.clear();
                                                           });
                                                           // reset Dropdowns
+                                                          logFirebaseEvent(
+                                                              'ImgAddBtn_resetDropdowns');
                                                           setState(() {
                                                             _model
                                                                 .deliverTipoUsuarioDDValueController
@@ -2845,6 +2999,10 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                         ),
                                                                         onPressed:
                                                                             () async {
+                                                                          logFirebaseEvent(
+                                                                              'FORM_ACTIVITY_COMP_trashAlt_ICN_ON_TAP');
+                                                                          logFirebaseEvent(
+                                                                              'IconButton_alert_dialog');
                                                                           await showDialog(
                                                                             context:
                                                                                 context,
@@ -2868,9 +3026,11 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                                                                           ) !=
                                                                                           null) {
                                                                                         // Agregar al listado de remover
+                                                                                        logFirebaseEvent('_Agregarallistadoderemover');
                                                                                         _model.addToObjetosAEntregarToRemove(objetosAEntregarItem);
                                                                                       }
                                                                                       // Quitar del listado de seleccionados
+                                                                                      logFirebaseEvent('_Quitardellistadodeseleccionados');
                                                                                       setState(() {
                                                                                         _model.removeFromObjetosAEntregarSelected(objetosAEntregarItem);
                                                                                       });
@@ -2942,8 +3102,11 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      logFirebaseEvent(
+                          'FORM_ACTIVITY_COMP_CANCELAR_BTN_ON_TAP');
                       if (_model.imgsToSave.isNotEmpty) {
                         // get ims without reference
+                        logFirebaseEvent('Button_getimswithoutreference');
                         _model.imgWithoutRefence = await actions.filterByKey(
                           _model.imgsToSave.toList(),
                           'reference',
@@ -2953,6 +3116,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                           while (FFAppState().contador <
                               _model.imgWithoutRefence!.length) {
                             // Delete img
+                            logFirebaseEvent('Button_Deleteimg');
                             await FirebaseStorage.instance
                                 .refFromURL(getJsonField(
                                   _model.imgWithoutRefence![
@@ -2961,17 +3125,20 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                                 ).toString())
                                 .delete();
                             // Increment Contador
+                            logFirebaseEvent('Button_IncrementContador');
                             setState(() {
                               FFAppState().contador = FFAppState().contador + 1;
                             });
                           }
                           // Reset Contador
+                          logFirebaseEvent('Button_ResetContador');
                           setState(() {
                             FFAppState().contador = 0;
                           });
                         }
                       }
                       // Hide Bottom Sheet
+                      logFirebaseEvent('Button_HideBottomSheet');
                       Navigator.pop(context);
 
                       setState(() {});
@@ -3004,19 +3171,23 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        logFirebaseEvent('FORM_ACTIVITY_COMP__BTN_ON_TAP');
                         // Scroll to top
+                        logFirebaseEvent('Button_Scrolltotop');
                         await _model.scrollColumn?.animateTo(
                           0,
                           duration: const Duration(milliseconds: 1000),
                           curve: Curves.ease,
                         );
                         // Validate Form
+                        logFirebaseEvent('Button_ValidateForm');
                         if (_model.formKey1.currentState == null ||
                             !_model.formKey1.currentState!.validate()) {
                           return;
                         }
                         if (widget.action == FormAction.create) {
                           // create activity
+                          logFirebaseEvent('Button_createactivity');
                           _model.activityCreatedResult =
                               await actions.createActivity(
                             _model.nombreTxtController.text,
@@ -3034,6 +3205,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                           );
                           if (_model.activityCreatedResult!.error) {
                             // show error msg
+                            logFirebaseEvent('Button_showerrormsg');
                             await showDialog(
                               context: context,
                               builder: (dialogContext) {
@@ -3057,10 +3229,12 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                             ).then((value) => setState(() {}));
                           } else {
                             // close bottom sheet
+                            logFirebaseEvent('Button_closebottomsheet');
                             Navigator.pop(context);
                           }
                         } else {
                           // Edit Activity
+                          logFirebaseEvent('Button_EditActivity');
                           _model.editActivityResponse =
                               await actions.editActivity(
                             _model.nombreTxtController.text,
@@ -3081,6 +3255,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                           );
                           if (_model.editActivityResponse!.error) {
                             // show error msg
+                            logFirebaseEvent('Button_showerrormsg');
                             await showDialog(
                               context: context,
                               builder: (dialogContext) {
@@ -3103,6 +3278,7 @@ class _FormActivityWidgetState extends State<FormActivityWidget> {
                             ).then((value) => setState(() {}));
                           } else {
                             // close bottom sheet
+                            logFirebaseEvent('Button_closebottomsheet');
                             Navigator.pop(context);
                           }
                         }

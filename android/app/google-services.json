@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:186859224506:android:f09d92e7dd05665e4bf183",
+        "mobilesdk_app_id": "1:186859224506:android:f3e96994990bbcba4bf183",
         "android_client_info": {
-          "package_name": "com.inspot.technology.attendify"
+          "package_name": "com.inspot.technology.SummitSync"
         }
       },
       "oauth_client": [
         {
-          "client_id": "186859224506-fcghri7cdqq16e0qt18sndp960vrd5au.apps.googleusercontent.com",
+          "client_id": "186859224506-g15ti1cbq68d7jli6lqo84nm2n2a00qd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.inspot.technology.attendify",
+            "package_name": "com.inspot.technology.SummitSync",
             "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
           }
         },

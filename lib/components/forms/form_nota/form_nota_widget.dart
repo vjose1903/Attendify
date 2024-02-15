@@ -212,7 +212,9 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      logFirebaseEvent('FORM_NOTA_COMP_CANCELAR_BTN_ON_TAP');
                       // Hide Form
+                      logFirebaseEvent('Button_HideForm');
                       Navigator.pop(context);
                     },
                     text: 'Cancelar',
@@ -241,14 +243,17 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      logFirebaseEvent('FORM_NOTA_COMP__BTN_ON_TAP');
                       var shouldSetState = false;
                       // Validate Form
+                      logFirebaseEvent('Button_ValidateForm');
                       if (_model.formKey.currentState == null ||
                           !_model.formKey.currentState!.validate()) {
                         return;
                       }
                       if (widget.action == FormAction.create) {
                         // Create Note
+                        logFirebaseEvent('Button_CreateNote');
 
                         var actividadComentarioRecordReference =
                             ActividadComentarioRecord.createDoc(
@@ -275,6 +280,7 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                         if (!(_model.createNotaResponse?.comentario != null &&
                             _model.createNotaResponse?.comentario != '')) {
                           // error msg
+                          logFirebaseEvent('Button_errormsg');
                           ScaffoldMessenger.of(context).clearSnackBars();
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -295,6 +301,7 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                         }
                       } else {
                         // Edit note
+                        logFirebaseEvent('Button_Editnote');
 
                         await widget.comentario!.reference
                             .update(createActividadComentarioRecordData(
@@ -303,8 +310,10 @@ class _FormNotaWidgetState extends State<FormNotaWidget> {
                       }
 
                       // close form
+                      logFirebaseEvent('Button_closeform');
                       Navigator.pop(context);
                       // Reload data
+                      logFirebaseEvent('Button_Reloaddata');
                       await widget.reloadAction?.call();
                       if (shouldSetState) setState(() {});
                     },

@@ -37,6 +37,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => UsersListModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'UsersList'});
   }
 
   @override
@@ -70,6 +72,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
           visible: false,
           child: FloatingActionButton(
             onPressed: () async {
+              logFirebaseEvent('USERS_LIST_FloatingActionButton_f76gty18');
+              logFirebaseEvent('FloatingActionButton_bottom_sheet');
               await showModalBottomSheet(
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
@@ -87,13 +91,16 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                         child: FormUserWidget(
                           action: FormAction.create,
                           reloadChip: () async {
+                            logFirebaseEvent('_update_page_state');
                             setState(() {
                               _model.selectedChip =
                                   _model.chipsTipoUsuarioValue!;
                             });
+                            logFirebaseEvent('_reset_form_fields');
                             setState(() {
                               _model.chipsTipoUsuarioValueController?.reset();
                             });
+                            logFirebaseEvent('_set_form_field');
                             setState(() {
                               _model.chipsTipoUsuarioValueController?.value = [
                                 _model.selectedChip
@@ -130,6 +137,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
               size: 30.0,
             ),
             onPressed: () async {
+              logFirebaseEvent('USERS_LIST_arrow_back_rounded_ICN_ON_TAP');
+              logFirebaseEvent('IconButton_navigate_back');
               context.pop();
             },
           ),
@@ -168,12 +177,18 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                           onChanged: (val) async {
                             setState(() =>
                                 _model.chipsTipoUsuarioValue = val?.first);
+                            logFirebaseEvent(
+                                'USERS_LIST_ChipsTipoUsuario_ON_FORM_WIDG');
                             if (_model.chipsTipoUsuarioValue == 'Todos') {
                               // Clear current tIpo
+                              logFirebaseEvent(
+                                  'ChipsTipoUsuario_ClearcurrenttIpo');
                               setState(() {
                                 _model.currentTipoUsuario = null;
                               });
                             } else {
+                              logFirebaseEvent(
+                                  'ChipsTipoUsuario_custom_action');
                               _model.findTipoUsuario =
                                   await actions.getTipoUsuarioByDescripcion(
                                 valueOrDefault<String>(
@@ -195,6 +210,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                                 ),
                               );
                               // Set current Tipo
+                              logFirebaseEvent(
+                                  'ChipsTipoUsuario_SetcurrentTipo');
                               setState(() {
                                 _model.currentTipoUsuario =
                                     _model.findTipoUsuario;
@@ -202,6 +219,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                             }
 
                             // Refresh Data user
+                            logFirebaseEvent(
+                                'ChipsTipoUsuario_RefreshDatauser');
                             setState(
                                 () => _model.firestoreRequestCompleter = null);
                             await _model.waitForFirestoreRequestCompleted(
@@ -374,6 +393,10 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                               }
                               return RefreshIndicator(
                                 onRefresh: () async {
+                                  logFirebaseEvent(
+                                      'USERS_LIST_ListViewUser_ON_PULL_TO_REFRE');
+                                  logFirebaseEvent(
+                                      'ListViewUser_refresh_database_request');
                                   setState(() =>
                                       _model.firestoreRequestCompleter = null);
                                   await _model
@@ -499,6 +522,10 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                                                         highlightColor:
                                                             Colors.transparent,
                                                         onTap: () async {
+                                                          logFirebaseEvent(
+                                                              'USERS_LIST_PAGE_Row_pd5m1pxp_ON_TAP');
+                                                          logFirebaseEvent(
+                                                              'Row_bottom_sheet');
                                                           await showModalBottomSheet(
                                                             isScrollControlled:
                                                                 true,
@@ -534,6 +561,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                                                                           true,
                                                                       editAction:
                                                                           () async {
+                                                                        logFirebaseEvent(
+                                                                            '_bottom_sheet');
                                                                         await showModalBottomSheet(
                                                                           isScrollControlled:
                                                                               true,
@@ -562,6 +591,7 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                                                                                     tipoUsuario: rowTipoUsuarioRecord,
                                                                                     reloadChip: () async {
                                                                                       // Refresh Data user
+                                                                                      logFirebaseEvent('_RefreshDatauser');
                                                                                       setState(() => _model.firestoreRequestCompleter = null);
                                                                                       await _model.waitForFirestoreRequestCompleted(minWait: 2000, maxWait: 10000);
                                                                                     },
@@ -576,6 +606,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                                                                       deleteAction:
                                                                           () async {
                                                                         // Show delete modal
+                                                                        logFirebaseEvent(
+                                                                            '_Showdeletemodal');
                                                                         await showDialog(
                                                                           context:
                                                                               context,
@@ -595,8 +627,10 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                                                                                   )}, del grupo, ¿Desea Continuar?',
                                                                                   title: 'Eliminar Usuario',
                                                                                   deleteAction: () async {
+                                                                                    logFirebaseEvent('Showdeletemodal_backend_call');
                                                                                     await listViewUserGrupoUsuarioRecord.reference.delete();
                                                                                     // Refresh Data user
+                                                                                    logFirebaseEvent('Showdeletemodal_RefreshDatauser');
                                                                                     setState(() => _model.firestoreRequestCompleter = null);
                                                                                     await _model.waitForFirestoreRequestCompleted(minWait: 2000, maxWait: 10000);
                                                                                   },
@@ -609,6 +643,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                                                                       },
                                                                       showQRAction:
                                                                           () async {
+                                                                        logFirebaseEvent(
+                                                                            '_alert_dialog');
                                                                         await showDialog(
                                                                           context:
                                                                               context,

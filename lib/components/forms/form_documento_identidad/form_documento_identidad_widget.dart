@@ -40,32 +40,39 @@ class _FormDocumentoIdentidadWidgetState
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('FORM_DOCUMENTO_IDENTIDAD_formDocumentoId');
       if (widget.documentoIdentidad?.tipo == TipoDocumentoIdentidad.cedula) {
         // set cedula values
+        logFirebaseEvent('formDocumentoIdentidad_setcedulavalues');
         setState(() {
           _model.tipoDocDDValueController?.value = 0;
         });
         // Set cedula value
+        logFirebaseEvent('formDocumentoIdentidad_Setcedulavalue');
         setState(() {
           _model.cedulaTxtController?.text = widget.documentoIdentidad!.valor;
         });
       } else if (widget.documentoIdentidad?.tipo ==
           TipoDocumentoIdentidad.rnc) {
         // set rnc values
+        logFirebaseEvent('formDocumentoIdentidad_setrncvalues');
         setState(() {
           _model.tipoDocDDValueController?.value = 1;
         });
         // Set rnc value
+        logFirebaseEvent('formDocumentoIdentidad_Setrncvalue');
         setState(() {
           _model.rncTxtController?.text = widget.documentoIdentidad!.valor;
         });
       } else if (widget.documentoIdentidad?.tipo ==
           TipoDocumentoIdentidad.pasaporte) {
         // set pasaporte values
+        logFirebaseEvent('formDocumentoIdentidad_setpasaportevalue');
         setState(() {
           _model.tipoDocDDValueController?.value = 2;
         });
         // Set pasaporte value
+        logFirebaseEvent('formDocumentoIdentidad_Setpasaportevalue');
         setState(() {
           _model.pasaporteTxtController?.text =
               widget.documentoIdentidad!.valor;
@@ -73,6 +80,7 @@ class _FormDocumentoIdentidadWidgetState
       }
 
       // Set current tido documento selected
+      logFirebaseEvent('formDocumentoIdentidad_Setcurrenttidodoc');
       setState(() {
         _model.currentTipoDoc = widget.documentoIdentidad?.tipo;
         _model.currentValueTipoDoc = _model.tipoDocDDValue;
@@ -120,26 +128,32 @@ class _FormDocumentoIdentidadWidgetState
                 optionLabels: const ['Cédula', 'Rnc', 'Pasaporte'],
                 onChanged: (val) async {
                   setState(() => _model.tipoDocDDValue = val);
+                  logFirebaseEvent('FORM_DOCUMENTO_IDENTIDAD_TipoDocDD_ON_FO');
                   if (_model.tipoDocDDValue == 0) {
                     // Set Tipo Documento = cedula
+                    logFirebaseEvent('TipoDocDD_SetTipoDocumento=cedula');
                     setState(() {
                       _model.currentTipoDoc = TipoDocumentoIdentidad.cedula;
                       _model.currentValueTipoDoc = _model.tipoDocDDValue;
                     });
                   } else if (_model.tipoDocDDValue == 1) {
                     // Set Tipo Documento = rnc
+                    logFirebaseEvent('TipoDocDD_SetTipoDocumento=rnc');
                     setState(() {
                       _model.currentTipoDoc = TipoDocumentoIdentidad.rnc;
                       _model.currentValueTipoDoc = _model.tipoDocDDValue;
                     });
                   } else if (_model.tipoDocDDValue == 2) {
                     // Set Tipo Documento = pasaporte
+                    logFirebaseEvent('TipoDocDD_SetTipoDocumento=pasaporte');
                     setState(() {
                       _model.currentTipoDoc = TipoDocumentoIdentidad.pasaporte;
                       _model.currentValueTipoDoc = _model.tipoDocDDValue;
                     });
                   } else {
                     // Tipo Documento identidad invalido
+                    logFirebaseEvent(
+                        'TipoDocDD_TipoDocumentoidentidadinvalido');
                     ScaffoldMessenger.of(context).clearSnackBars();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -156,14 +170,17 @@ class _FormDocumentoIdentidadWidgetState
                   }
 
                   // Reset cedula field
+                  logFirebaseEvent('TipoDocDD_Resetcedulafield');
                   setState(() {
                     _model.cedulaTxtController?.text = '';
                   });
                   // Reset rnc field
+                  logFirebaseEvent('TipoDocDD_Resetrncfield');
                   setState(() {
                     _model.rncTxtController?.text = '';
                   });
                   // Reset pasaporte field
+                  logFirebaseEvent('TipoDocDD_Resetpasaportefield');
                   setState(() {
                     _model.pasaporteTxtController?.text = '';
                   });

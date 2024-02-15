@@ -99,27 +99,36 @@ class _ContinueRegisterWidgetState extends State<ContinueRegisterWidget>
     super.initState();
     _model = createModel(context, () => ContinueRegisterModel());
 
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'continueRegister'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('CONTINUE_REGISTER_continueRegister_ON_IN');
       // Complete registration
+      logFirebaseEvent('continueRegister_Completeregistration');
       _model.registrationResult = await actions.continueRegisterWithEmail(
         widget.userUid!,
         widget.email!,
       );
       if (_model.registrationResult == true) {
         // Some wait
+        logFirebaseEvent('continueRegister_Somewait');
         await Future.delayed(const Duration(milliseconds: 1500));
         // Complete state
+        logFirebaseEvent('continueRegister_Completestate');
         setState(() {
           _model.completed = true;
         });
         // Some wait for show animation
+        logFirebaseEvent('continueRegister_Somewaitforshowanimatio');
         await Future.delayed(const Duration(milliseconds: 3000));
         // Clear followed Groups
+        logFirebaseEvent('continueRegister_ClearfollowedGroups');
         FFAppState().update(() {
           FFAppState().gruposSeguidos = [];
         });
         // Go to follow
+        logFirebaseEvent('continueRegister_Gotofollow');
 
         context.goNamed(
           'followGroup',
@@ -133,6 +142,7 @@ class _ContinueRegisterWidgetState extends State<ContinueRegisterWidget>
         );
       } else {
         // Change State Error
+        logFirebaseEvent('continueRegister_ChangeStateError');
         setState(() {
           _model.error = true;
         });

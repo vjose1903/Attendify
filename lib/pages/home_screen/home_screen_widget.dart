@@ -177,16 +177,20 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
     super.initState();
     _model = createModel(context, () => HomeScreenModel());
 
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'homeScreen'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (RootPageContext.isInactiveRootPage(context)) {
         return;
       }
+      logFirebaseEvent('HOME_SCREEN_homeScreen_ON_INIT_STATE');
       // start Loading
+      logFirebaseEvent('homeScreen_startLoading');
       setState(() {
         FFAppState().loadingActividades = true;
       });
       // Buscar los grupos que sigue el usuario
+      logFirebaseEvent('homeScreen_Buscarlosgruposquesigueelusua');
       _model.finUserGruposSeguidos = await queryGrupoUsuarioRecordOnce(
         queryBuilder: (grupoUsuarioRecord) => grupoUsuarioRecord.where(
           'usuario',
@@ -195,6 +199,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
       );
       if (_model.finUserGruposSeguidos.isEmpty) {
         // Ir a seguir Grupo
+        logFirebaseEvent('homeScreen_IraseguirGrupo');
 
         context.goNamed(
           'followGroup',
@@ -208,6 +213,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
         );
 
         // clean appStage
+        logFirebaseEvent('homeScreen_cleanappStage');
         setState(() {
           FFAppState().gruposSeguidos = [];
           FFAppState().grupoSeleccionado = null;
@@ -215,6 +221,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
         return;
       } else {
         // Set grupos followed
+        logFirebaseEvent('homeScreen_Setgruposfollowed');
         setState(() {
           FFAppState().gruposSeguidos = _model.finUserGruposSeguidos!
               .map((e) => e.grupo)
@@ -226,9 +233,11 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
         if (FFAppState().gruposSeguidos.isNotEmpty) {
           if (FFAppState().gruposSeguidos.length == 1) {
             // Find Group
+            logFirebaseEvent('homeScreen_FindGroup');
             _model.findGrupoSelectedResult = await GrupoRecord.getDocumentOnce(
                 FFAppState().gruposSeguidos.first);
             // find Grupo Usuario
+            logFirebaseEvent('homeScreen_findGrupoUsuario');
             _model.grupoUsuarioResponse = await queryGrupoUsuarioRecordOnce(
               queryBuilder: (grupoUsuarioRecord) => grupoUsuarioRecord
                   .where(
@@ -242,6 +251,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
               singleRecord: true,
             ).then((s) => s.firstOrNull);
             // Select First Group
+            logFirebaseEvent('homeScreen_SelectFirstGroup');
             setState(() {
               FFAppState().grupoSeleccionado =
                   _model.findGrupoSelectedResult?.reference;
@@ -263,16 +273,19 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                   .cast<DocumentReference>();
             });
             // start Loading
+            logFirebaseEvent('homeScreen_startLoading');
             setState(() {
               FFAppState().loadingActividades = true;
             });
             // get proximas actividades
+            logFirebaseEvent('homeScreen_getproximasactividades');
             _model.getProximasActividadesResponse =
                 await actions.getProximasActividades(
               FFAppState().tipoUsuarioLoged!,
               FFAppState().grupoSeleccionado!,
             );
             // End Loading
+            logFirebaseEvent('homeScreen_EndLoading');
             setState(() {
               FFAppState().loadingActividades = false;
               FFAppState().proximasActividades = (getJsonField(
@@ -303,6 +316,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
           } else {
             if (!(FFAppState().grupoSeleccionado != null)) {
               // Open Bottom sheet
+              logFirebaseEvent('homeScreen_OpenBottomsheet');
               await showModalBottomSheet(
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
@@ -328,6 +342,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
           }
         } else {
           // Go to Follow Group
+          logFirebaseEvent('homeScreen_GotoFollowGroup');
 
           context.goNamed(
             'followGroup',
@@ -341,6 +356,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
           );
 
           // clean appStage
+          logFirebaseEvent('homeScreen_cleanappStage');
           setState(() {
             FFAppState().gruposSeguidos = [];
             FFAppState().grupoSeleccionado = null;
@@ -398,6 +414,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () async {
+                  logFirebaseEvent('HOME_SCREEN_Container_ow30k9p1_ON_TAP');
+                  logFirebaseEvent('Container_bottom_sheet');
                   await showModalBottomSheet(
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
@@ -484,7 +502,9 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () async {
+                  logFirebaseEvent('HOME_SCREEN_Container_tlm4zvja_ON_TAP');
                   // go to profile
+                  logFirebaseEvent('Container_gotoprofile');
 
                   context.pushNamed(
                     'profile',
@@ -760,7 +780,9 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                                                                   hoverColor: Colors.transparent,
                                                                                   highlightColor: Colors.transparent,
                                                                                   onTap: () async {
+                                                                                    logFirebaseEvent('HOME_SCREEN_PAGE_Column_q8s4brgp_ON_TAP');
                                                                                     // find grupo actividad
+                                                                                    logFirebaseEvent('Column_findgrupoactividad');
                                                                                     _model.findGrupoActividad = await queryGrupoActividadRecordOnce(
                                                                                       queryBuilder: (grupoActividadRecord) => grupoActividadRecord
                                                                                           .where(
@@ -774,6 +796,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                                                                       singleRecord: true,
                                                                                     ).then((s) => s.firstOrNull);
                                                                                     // find grupo actividad detalle
+                                                                                    logFirebaseEvent('Column_findgrupoactividaddetalle');
                                                                                     _model.findGrupoActividadDetalle = await queryGrupoActividadDetalleRecordOnce(
                                                                                       queryBuilder: (grupoActividadDetalleRecord) => grupoActividadDetalleRecord
                                                                                           .where(
@@ -787,6 +810,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                                                                           .orderBy('fecha'),
                                                                                     );
                                                                                     // Count imgs
+                                                                                    logFirebaseEvent('Column_Countimgs');
                                                                                     _model.imagenesActividadResponse = await queryActividadImagenesRecordCount(
                                                                                       queryBuilder: (actividadImagenesRecord) => actividadImagenesRecord
                                                                                           .where(
@@ -798,6 +822,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                                                                             isEqualTo: containerActividadRecord.reference,
                                                                                           ),
                                                                                     );
+                                                                                    logFirebaseEvent('Column_navigate_to');
 
                                                                                     context.pushNamed(
                                                                                       'DetalleActividad',
@@ -1461,16 +1486,23 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     hoverColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
+                                      logFirebaseEvent(
+                                          'HOME_SCREEN_PAGE_QrOption_ON_TAP');
                                       // Find current user
+                                      logFirebaseEvent(
+                                          'QrOption_Findcurrentuser');
                                       _model.findAdminCurrenUserLogged =
                                           await UsuariosRecord.getDocumentOnce(
                                               currentUserReference!);
                                       // Find grupo usuario logged
+                                      logFirebaseEvent(
+                                          'QrOption_Findgrupousuariologged');
                                       _model.findAdminGrupoUsarioLogged =
                                           await GrupoUsuarioRecord
                                               .getDocumentOnce(FFAppState()
                                                   .grupoUsuarioLoged!);
                                       // Show QR
+                                      logFirebaseEvent('QrOption_ShowQR');
                                       showDialog(
                                         context: context,
                                         builder: (dialogContext) {
@@ -1506,6 +1538,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                       ).then((value) => setState(() {}));
 
                                       // Hide Members option
+                                      logFirebaseEvent(
+                                          'QrOption_HideMembersoption');
                                       if (animationsMap[
                                               'containerOnActionTriggerAnimation5'] !=
                                           null) {
@@ -1515,6 +1549,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                             .reverse();
                                       }
                                       // Hide Group option
+                                      logFirebaseEvent(
+                                          'QrOption_HideGroupoption');
                                       if (animationsMap[
                                               'containerOnActionTriggerAnimation4'] !=
                                           null) {
@@ -1524,6 +1560,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                             .reverse();
                                       }
                                       // Hide Activities option
+                                      logFirebaseEvent(
+                                          'QrOption_HideActivitiesoption');
                                       if (animationsMap[
                                               'containerOnActionTriggerAnimation3'] !=
                                           null) {
@@ -1533,6 +1571,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                             .reverse();
                                       }
                                       // Hide Qr option
+                                      logFirebaseEvent('QrOption_HideQroption');
                                       if (animationsMap[
                                               'containerOnActionTriggerAnimation2'] !=
                                           null) {
@@ -1542,6 +1581,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                             .reverse();
                                       }
                                       // Hide menu
+                                      logFirebaseEvent('QrOption_Hidemenu');
                                       if (animationsMap[
                                               'containerOnActionTriggerAnimation1'] !=
                                           null) {
@@ -1551,6 +1591,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                             .reverse();
                                       }
                                       // Revert  button icon
+                                      logFirebaseEvent(
+                                          'QrOption_Revertbuttonicon');
                                       if (animationsMap[
                                               'iconOnActionTriggerAnimation1'] !=
                                           null) {
@@ -1560,6 +1602,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                             .reverse();
                                       }
                                       // Turn off expanded variable
+                                      logFirebaseEvent(
+                                          'QrOption_Turnoffexpandedvariable');
                                       setState(() {
                                         _model.isOptionsExpanded = false;
                                       });
@@ -1609,6 +1653,11 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
+                                    logFirebaseEvent(
+                                        'HOME_SCREEN_PAGE_ActivitiesOption_ON_TAP');
+                                    logFirebaseEvent(
+                                        'ActivitiesOption_navigate_to');
+
                                     context.pushNamed(
                                       'ActivitiesList',
                                       extra: <String, dynamic>{
@@ -1622,6 +1671,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     );
 
                                     // Hide Members option
+                                    logFirebaseEvent(
+                                        'ActivitiesOption_HideMembersoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation5'] !=
                                         null) {
@@ -1631,6 +1682,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Group option
+                                    logFirebaseEvent(
+                                        'ActivitiesOption_HideGroupoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation4'] !=
                                         null) {
@@ -1640,6 +1693,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Activities option
+                                    logFirebaseEvent(
+                                        'ActivitiesOption_HideActivitiesoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation3'] !=
                                         null) {
@@ -1649,6 +1704,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Qr option
+                                    logFirebaseEvent(
+                                        'ActivitiesOption_HideQroption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation2'] !=
                                         null) {
@@ -1658,6 +1715,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide menu
+                                    logFirebaseEvent(
+                                        'ActivitiesOption_Hidemenu');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation1'] !=
                                         null) {
@@ -1667,6 +1726,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Revert  button icon
+                                    logFirebaseEvent(
+                                        'ActivitiesOption_Revertbuttonicon');
                                     if (animationsMap[
                                             'iconOnActionTriggerAnimation1'] !=
                                         null) {
@@ -1676,6 +1737,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Turn off expanded variable
+                                    logFirebaseEvent(
+                                        'ActivitiesOption_Turnoffexpandedvariable');
                                     setState(() {
                                       _model.isOptionsExpanded = false;
                                     });
@@ -1723,7 +1786,11 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
+                                    logFirebaseEvent(
+                                        'HOME_SCREEN_PAGE_GroupOption_ON_TAP');
                                     // Go to grupo profile
+                                    logFirebaseEvent(
+                                        'GroupOption_Gotogrupoprofile');
 
                                     context.pushNamed(
                                       'GrupoProfile',
@@ -1738,6 +1805,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     );
 
                                     // Hide Members option
+                                    logFirebaseEvent(
+                                        'GroupOption_HideMembersoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation5'] !=
                                         null) {
@@ -1747,6 +1816,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Group option
+                                    logFirebaseEvent(
+                                        'GroupOption_HideGroupoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation4'] !=
                                         null) {
@@ -1756,6 +1827,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Activities option
+                                    logFirebaseEvent(
+                                        'GroupOption_HideActivitiesoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation3'] !=
                                         null) {
@@ -1765,6 +1838,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Qr option
+                                    logFirebaseEvent(
+                                        'GroupOption_HideQroption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation2'] !=
                                         null) {
@@ -1774,6 +1849,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide menu
+                                    logFirebaseEvent('GroupOption_Hidemenu');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation1'] !=
                                         null) {
@@ -1783,6 +1859,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Revert  button icon
+                                    logFirebaseEvent(
+                                        'GroupOption_Revertbuttonicon');
                                     if (animationsMap[
                                             'iconOnActionTriggerAnimation1'] !=
                                         null) {
@@ -1792,6 +1870,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Turn off expanded variable
+                                    logFirebaseEvent(
+                                        'GroupOption_Turnoffexpandedvariable');
                                     setState(() {
                                       _model.isOptionsExpanded = false;
                                     });
@@ -1839,6 +1919,11 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                   hoverColor: Colors.transparent,
                                   highlightColor: Colors.transparent,
                                   onTap: () async {
+                                    logFirebaseEvent(
+                                        'HOME_SCREEN_PAGE_MembersOption_ON_TAP');
+                                    logFirebaseEvent(
+                                        'MembersOption_navigate_to');
+
                                     context.pushNamed(
                                       'UsersList',
                                       extra: <String, dynamic>{
@@ -1852,6 +1937,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     );
 
                                     // Hide Members option
+                                    logFirebaseEvent(
+                                        'MembersOption_HideMembersoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation5'] !=
                                         null) {
@@ -1861,6 +1948,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Group option
+                                    logFirebaseEvent(
+                                        'MembersOption_HideGroupoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation4'] !=
                                         null) {
@@ -1870,6 +1959,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Activities option
+                                    logFirebaseEvent(
+                                        'MembersOption_HideActivitiesoption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation3'] !=
                                         null) {
@@ -1879,6 +1970,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide Qr option
+                                    logFirebaseEvent(
+                                        'MembersOption_HideQroption');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation2'] !=
                                         null) {
@@ -1888,6 +1981,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Hide menu
+                                    logFirebaseEvent('MembersOption_Hidemenu');
                                     if (animationsMap[
                                             'containerOnActionTriggerAnimation1'] !=
                                         null) {
@@ -1897,6 +1991,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Revert  button icon
+                                    logFirebaseEvent(
+                                        'MembersOption_Revertbuttonicon');
                                     if (animationsMap[
                                             'iconOnActionTriggerAnimation1'] !=
                                         null) {
@@ -1906,6 +2002,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                           .reverse();
                                     }
                                     // Turn off expanded variable
+                                    logFirebaseEvent(
+                                        'MembersOption_Turnoffexpandedvariable');
                                     setState(() {
                                       _model.isOptionsExpanded = false;
                                     });
@@ -1963,8 +2061,12 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            logFirebaseEvent(
+                                'HOME_SCREEN_PAGE_ExpandableFAB_ON_TAP');
                             if (_model.isOptionsExpanded) {
                               // Hide Members option
+                              logFirebaseEvent(
+                                  'ExpandableFAB_HideMembersoption');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation5'] !=
                                   null) {
@@ -1974,6 +2076,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .reverse();
                               }
                               // Hide Group option
+                              logFirebaseEvent('ExpandableFAB_HideGroupoption');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation4'] !=
                                   null) {
@@ -1983,6 +2086,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .reverse();
                               }
                               // Hide Activities option
+                              logFirebaseEvent(
+                                  'ExpandableFAB_HideActivitiesoption');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation3'] !=
                                   null) {
@@ -1992,6 +2097,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .reverse();
                               }
                               // Hide Qr option
+                              logFirebaseEvent('ExpandableFAB_HideQroption');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation2'] !=
                                   null) {
@@ -2001,6 +2107,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .reverse();
                               }
                               // Hide menu
+                              logFirebaseEvent('ExpandableFAB_Hidemenu');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation1'] !=
                                   null) {
@@ -2010,6 +2117,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .reverse();
                               }
                               // Revert  button icon
+                              logFirebaseEvent(
+                                  'ExpandableFAB_Revertbuttonicon');
                               if (animationsMap[
                                       'iconOnActionTriggerAnimation1'] !=
                                   null) {
@@ -2018,11 +2127,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .reverse();
                               }
                               // Turn off expanded variable
+                              logFirebaseEvent(
+                                  'ExpandableFAB_Turnoffexpandedvariable');
                               setState(() {
                                 _model.isOptionsExpanded = false;
                               });
                             } else {
                               // Show menu
+                              logFirebaseEvent('ExpandableFAB_Showmenu');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation1'] !=
                                   null) {
@@ -2032,6 +2144,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .forward(from: 0.0);
                               }
                               // show Qr option
+                              logFirebaseEvent('ExpandableFAB_showQroption');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation2'] !=
                                   null) {
@@ -2041,6 +2154,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .forward(from: 0.0);
                               }
                               // Show Activities option
+                              logFirebaseEvent(
+                                  'ExpandableFAB_ShowActivitiesoption');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation3'] !=
                                   null) {
@@ -2050,6 +2165,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .forward(from: 0.0);
                               }
                               // Show Group option
+                              logFirebaseEvent('ExpandableFAB_ShowGroupoption');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation4'] !=
                                   null) {
@@ -2059,6 +2175,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .forward(from: 0.0);
                               }
                               // Show Members option
+                              logFirebaseEvent(
+                                  'ExpandableFAB_ShowMembersoption');
                               if (animationsMap[
                                       'containerOnActionTriggerAnimation5'] !=
                                   null) {
@@ -2068,6 +2186,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .forward(from: 0.0);
                               }
                               // animate button icon
+                              logFirebaseEvent(
+                                  'ExpandableFAB_animatebuttonicon');
                               if (animationsMap[
                                       'iconOnActionTriggerAnimation1'] !=
                                   null) {
@@ -2076,6 +2196,8 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                                     .forward(from: 0.0);
                               }
                               // Turn on expanded variable
+                              logFirebaseEvent(
+                                  'ExpandableFAB_Turnonexpandedvariable');
                               setState(() {
                                 _model.isOptionsExpanded = true;
                               });
@@ -2130,15 +2252,21 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
+                              logFirebaseEvent(
+                                  'HOME_SCREEN_PAGE_QrButton_ON_TAP');
                               // Find current user
+                              logFirebaseEvent('QrButton_Findcurrentuser');
                               _model.findCurrenUserLogged =
                                   await UsuariosRecord.getDocumentOnce(
                                       currentUserReference!);
                               // Find grupo usuario logged
+                              logFirebaseEvent(
+                                  'QrButton_Findgrupousuariologged');
                               _model.findGrupoUsarioLogged =
                                   await GrupoUsuarioRecord.getDocumentOnce(
                                       FFAppState().grupoUsuarioLoged!);
                               // Show QR
+                              logFirebaseEvent('QrButton_ShowQR');
                               await showDialog(
                                 context: context,
                                 builder: (dialogContext) {

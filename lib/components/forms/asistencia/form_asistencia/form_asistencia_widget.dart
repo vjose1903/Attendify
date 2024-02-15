@@ -56,10 +56,12 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
 
     // On component load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('FORM_ASISTENCIA_FormAsistencia_ON_INIT_S');
       if (widget.action == FormAction.create) {
         if (widget.actividadObjetosAEntregar!.isNotEmpty) {
           while (FFAppState().contador <
               widget.actividadObjetosAEntregar!.length) {
+            logFirebaseEvent('FormAsistencia_update_component_state');
             _model.addToObjetosEntregados(
                 ObjetoAEntregarStruct.maybeFromMap(<String, dynamic>{
               'cantidadMaxima': widget
@@ -76,9 +78,11 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
             })!
                     .toMap());
             // Increment Contador
+            logFirebaseEvent('FormAsistencia_IncrementContador');
             FFAppState().contador = FFAppState().contador + 1;
           }
           // Reset Contador
+          logFirebaseEvent('FormAsistencia_ResetContador');
           setState(() {
             FFAppState().contador = 0;
           });
@@ -86,6 +90,7 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
       } else {
         if (widget.objetosEntregados!.isNotEmpty) {
           while (FFAppState().contador < widget.objetosEntregados!.length) {
+            logFirebaseEvent('FormAsistencia_update_component_state');
             _model.addToObjetosEntregados(
                 ObjetoAEntregarStruct.maybeFromMap(<String, dynamic>{
               'cantidadMaxima': widget.actividadObjetosAEntregar
@@ -127,9 +132,11 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
             })!
                     .toMap());
             // Increment Contador
+            logFirebaseEvent('FormAsistencia_IncrementContador');
             FFAppState().contador = FFAppState().contador + 1;
           }
           // Reset Contador
+          logFirebaseEvent('FormAsistencia_ResetContador');
           setState(() {
             FFAppState().contador = 0;
           });
@@ -447,7 +454,10 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      logFirebaseEvent(
+                          'FORM_ASISTENCIA_COMP_CANCELAR_BTN_ON_TAP');
                       // Hide Bottom Sheet
+                      logFirebaseEvent('Button_HideBottomSheet');
                       Navigator.pop(context);
                     },
                     text: 'Cancelar',
@@ -478,8 +488,10 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        logFirebaseEvent('FORM_ASISTENCIA_COMP__BTN_ON_TAP');
                         var shouldSetState = false;
                         // Create asistencia
+                        logFirebaseEvent('Button_Createasistencia');
 
                         var asistenciaRecordReference =
                             AsistenciaRecord.createDoc(
@@ -514,9 +526,11 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                                   _model.objetosEntregados.toList())
                               .error) {
                             // Delete asistencia
+                            logFirebaseEvent('Button_Deleteasistencia');
                             await _model.createAsistenciaResponse!.reference
                                 .delete();
                             // show error overlap maximun
+                            logFirebaseEvent('Button_showerroroverlapmaximun');
                             await showDialog(
                               context: context,
                               builder: (dialogContext) {
@@ -549,6 +563,7 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                                 _model.objetosEntregados.length) {
                               if (widget.action == FormAction.create) {
                                 // Create Objeto Response
+                                logFirebaseEvent('Button_CreateObjetoResponse');
 
                                 var objetoEntregadoRecordReference =
                                     ObjetoEntregadoRecord.createDoc(widget
@@ -609,6 +624,7 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                                 shouldSetState = true;
                               } else {
                                 // edit Objeto Response
+                                logFirebaseEvent('Button_editObjetoResponse');
 
                                 await functions
                                     .parseObjetoAEntregarDataType(
@@ -625,19 +641,24 @@ class _FormAsistenciaWidgetState extends State<FormAsistenciaWidget> {
                               }
 
                               // Increment Contador
+                              logFirebaseEvent('Button_IncrementContador');
                               FFAppState().contador = FFAppState().contador + 1;
                             }
+                            logFirebaseEvent('Button_update_app_state');
                             FFAppState().contador = 0;
                           }
                         }
                         if (widget.action == FormAction.edit) {
                           // Delete asistencia
+                          logFirebaseEvent('Button_Deleteasistencia');
                           await _model.createAsistenciaResponse!.reference
                               .delete();
                         }
                         // Hide Bottom Sheet
+                        logFirebaseEvent('Button_HideBottomSheet');
                         Navigator.pop(context);
                         // Reload List
+                        logFirebaseEvent('Button_ReloadList');
                         await widget.reloadChip?.call();
                         if (shouldSetState) setState(() {});
                       },

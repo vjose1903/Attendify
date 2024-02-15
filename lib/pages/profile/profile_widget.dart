@@ -67,9 +67,12 @@ class _ProfileWidgetState extends State<ProfileWidget>
     super.initState();
     _model = createModel(context, () => ProfileModel());
 
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'profile'});
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('PROFILE_PAGE_profile_ON_INIT_STATE');
       // Find doc identidad
+      logFirebaseEvent('profile_Finddocidentidad');
       _model.findDocIdentidad = await queryDocumentoIdentidadRecordOnce(
         queryBuilder: (documentoIdentidadRecord) =>
             documentoIdentidadRecord.where(
@@ -80,6 +83,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
       ).then((s) => s.firstOrNull);
       if (_model.findDocIdentidad?.reference != null) {
         // Set document initial values
+        logFirebaseEvent('profile_Setdocumentinitialvalues');
         _model.initialValueDoc = _model.findDocIdentidad?.valor;
         _model.initialRefDoc = _model.findDocIdentidad?.reference;
         _model.initialTipoDoc = _model.findDocIdentidad?.tipo;
@@ -142,6 +146,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
               size: 30.0,
             ),
             onPressed: () async {
+              logFirebaseEvent('PROFILE_arrow_back_rounded_ICN_ON_TAP');
+              logFirebaseEvent('IconButton_navigate_back');
               context.pop();
             },
           ),
@@ -177,6 +183,9 @@ class _ProfileWidgetState extends State<ProfileWidget>
                               hoverColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: () async {
+                                logFirebaseEvent(
+                                    'PROFILE_PAGE_Image_grfd53z2_ON_TAP');
+                                logFirebaseEvent('Image_expand_image');
                                 await Navigator.push(
                                   context,
                                   PageTransition(
@@ -246,10 +255,18 @@ class _ProfileWidgetState extends State<ProfileWidget>
                             hoverColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () async {
+                              logFirebaseEvent(
+                                  'PROFILE_PAGE_ChangePhoto_ON_TAP');
                               // Req. permission galery
+                              logFirebaseEvent(
+                                  'ChangePhoto_Req.permissiongalery');
                               await requestPermission(photoLibraryPermission);
                               // Req. permission camara
+                              logFirebaseEvent(
+                                  'ChangePhoto_Req.permissioncamara');
                               await requestPermission(cameraPermission);
+                              logFirebaseEvent(
+                                  'ChangePhoto_upload_media_to_firebase');
                               final selectedMedia =
                                   await selectMediaWithSourceBottomSheet(
                                 context: context,
@@ -456,7 +473,10 @@ class _ProfileWidgetState extends State<ProfileWidget>
                             onPressed: (_model.isEditing == true)
                                 ? null
                                 : () async {
+                                    logFirebaseEvent(
+                                        'PROFILE_PAGE_group_add_ICN_ON_TAP');
                                     // go to login
+                                    logFirebaseEvent('IconButton_gotologin');
 
                                     context.pushNamed(
                                       'followGroup',
@@ -513,13 +533,17 @@ class _ProfileWidgetState extends State<ProfileWidget>
                             onPressed: (_model.isEditing == true)
                                 ? null
                                 : () async {
+                                    logFirebaseEvent(
+                                        'PROFILE_PAGE_login_sharp_ICN_ON_TAP');
                                     // logout
+                                    logFirebaseEvent('IconButton_logout');
                                     GoRouter.of(context).prepareAuthEvent();
                                     await authManager.signOut();
                                     GoRouter.of(context)
                                         .clearRedirectLocation();
 
                                     // go to login
+                                    logFirebaseEvent('IconButton_gotologin');
 
                                     context.goNamedAuth(
                                       'loginPage',
@@ -611,11 +635,16 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                 onPressed: (_model.isEditing == true)
                                     ? null
                                     : () async {
+                                        logFirebaseEvent(
+                                            'PROFILE_PAGE_settings_sharp_ICN_ON_TAP');
                                         // Change is Editing
+                                        logFirebaseEvent(
+                                            'IconButton_ChangeisEditing');
                                         setState(() {
                                           _model.isEditing = true;
                                         });
                                         // Show btns
+                                        logFirebaseEvent('IconButton_Showbtns');
                                         if (animationsMap[
                                                 'rowOnActionTriggerAnimation'] !=
                                             null) {
@@ -971,6 +1000,10 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                                   if (_model.isEditing == true)
                                                     FFButtonWidget(
                                                       onPressed: () async {
+                                                        logFirebaseEvent(
+                                                            'PROFILE_PAGE_CAMBIAR_BTN_ON_TAP');
+                                                        logFirebaseEvent(
+                                                            'Button_bottom_sheet');
                                                         await showModalBottomSheet(
                                                           isScrollControlled:
                                                               true,
@@ -1117,11 +1150,17 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                         hoverColor: Colors.transparent,
                                         highlightColor: Colors.transparent,
                                         onTap: () async {
+                                          logFirebaseEvent(
+                                              'PROFILE_PAGE_deleteAccount_ON_TAP');
                                           var shouldSetState = false;
                                           // Set delete user ref
+                                          logFirebaseEvent(
+                                              'deleteAccount_Setdeleteuserref');
                                           _model.deleteUserRef =
                                               currentUserReference;
                                           // Find grupos usuario
+                                          logFirebaseEvent(
+                                              'deleteAccount_Findgruposusuario');
                                           _model.gruposSeguidos =
                                               await queryGrupoUsuarioRecordOnce(
                                             queryBuilder:
@@ -1133,6 +1172,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                           );
                                           shouldSetState = true;
                                           // Delete modal
+                                          logFirebaseEvent(
+                                              'deleteAccount_Deletemodal');
                                           await showDialog(
                                             context: context,
                                             builder: (dialogContext) {
@@ -1176,6 +1217,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                           if (_model.passwordConfirm != null &&
                                               _model.passwordConfirm != '') {
                                             // Delete Auth User
+                                            logFirebaseEvent(
+                                                'deleteAccount_DeleteAuthUser');
                                             _model.deleteAuthResponse =
                                                 await actions.deleteAccount(
                                               currentUserEmail,
@@ -1184,6 +1227,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                             shouldSetState = true;
                                             if (_model
                                                 .deleteAuthResponse!.error) {
+                                              logFirebaseEvent(
+                                                  'deleteAccount_show_snack_bar');
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
@@ -1211,6 +1256,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                               return;
                                             } else {
                                               // Delete user record
+                                              logFirebaseEvent(
+                                                  'deleteAccount_Deleteuserrecord');
                                               await _model.deleteUserRef!
                                                   .delete();
                                               if (FFAppState()
@@ -1220,15 +1267,21 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                                     _model.gruposSeguidos!
                                                         .length) {
                                                   // Delete grupo usuario
+                                                  logFirebaseEvent(
+                                                      'deleteAccount_Deletegrupousuario');
                                                   await _model
                                                       .gruposSeguidos![
                                                           FFAppState().contador]
                                                       .reference
                                                       .delete();
                                                   // Increment Contador
+                                                  logFirebaseEvent(
+                                                      'deleteAccount_IncrementContador');
                                                   FFAppState().contador =
                                                       FFAppState().contador + 1;
                                                 }
+                                                logFirebaseEvent(
+                                                    'deleteAccount_update_app_state');
                                                 FFAppState().contador = 0;
                                               }
                                             }
@@ -1292,12 +1345,17 @@ class _ProfileWidgetState extends State<ProfileWidget>
                           children: [
                             FFButtonWidget(
                               onPressed: () async {
+                                logFirebaseEvent(
+                                    'PROFILE_PAGE_CancelBtn_ON_TAP');
                                 if (_model.uploadedFileUrl != '') {
                                   // Delete previous photo
+                                  logFirebaseEvent(
+                                      'CancelBtn_Deletepreviousphoto');
                                   await FirebaseStorage.instance
                                       .refFromURL(_model.uploadedFileUrl)
                                       .delete();
                                   // Clear photo data
+                                  logFirebaseEvent('CancelBtn_Clearphotodata');
                                   setState(() {
                                     _model.isDataUploading = false;
                                     _model.uploadedLocalFile = FFUploadedFile(
@@ -1306,6 +1364,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                   });
                                 }
                                 // Find doc identidad
+                                logFirebaseEvent('CancelBtn_Finddocidentidad');
                                 _model.findDocIdentidadCancel =
                                     await queryDocumentoIdentidadRecordOnce(
                                   queryBuilder: (documentoIdentidadRecord) =>
@@ -1324,6 +1383,8 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                         (_model.findDocIdentidadCancel?.tipo !=
                                             _model.initialTipoDoc)) {
                                       // Return initial doc values
+                                      logFirebaseEvent(
+                                          'CancelBtn_Returninitialdocvalues');
 
                                       await _model.initialRefDoc!.update(
                                           createDocumentoIdentidadRecordData(
@@ -1333,12 +1394,15 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                     }
                                   } else {
                                     // delete new documento
+                                    logFirebaseEvent(
+                                        'CancelBtn_deletenewdocumento');
                                     await _model
                                         .findDocIdentidadCancel!.reference
                                         .delete();
                                   }
                                 }
                                 // Hide btns
+                                logFirebaseEvent('CancelBtn_Hidebtns');
                                 if (animationsMap[
                                         'rowOnActionTriggerAnimation'] !=
                                     null) {
@@ -1347,6 +1411,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                       .reverse();
                                 }
                                 // Change is Editing
+                                logFirebaseEvent('CancelBtn_ChangeisEditing');
                                 setState(() {
                                   _model.isEditing = false;
                                 });
@@ -1378,7 +1443,9 @@ class _ProfileWidgetState extends State<ProfileWidget>
                             ),
                             FFButtonWidget(
                               onPressed: () async {
+                                logFirebaseEvent('PROFILE_PAGE_SaveBtn_ON_TAP');
                                 // Editar perfil
+                                logFirebaseEvent('SaveBtn_Editarperfil');
 
                                 await currentUserReference!
                                     .update(createUsuariosRecordData(
@@ -1388,11 +1455,14 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                 if (_model.uploadedFileUrl != '') {
                                   if (currentUserPhoto != '') {
                                     // Delete previous photo
+                                    logFirebaseEvent(
+                                        'SaveBtn_Deletepreviousphoto');
                                     await FirebaseStorage.instance
                                         .refFromURL(currentUserPhoto)
                                         .delete();
                                   }
                                   // update next photo
+                                  logFirebaseEvent('SaveBtn_updatenextphoto');
 
                                   await currentUserReference!
                                       .update(createUsuariosRecordData(
@@ -1401,6 +1471,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                         _model.uploadedLocalFile.blurHash,
                                   ));
                                   // Clear photo data
+                                  logFirebaseEvent('SaveBtn_Clearphotodata');
                                   setState(() {
                                     _model.isDataUploading = false;
                                     _model.uploadedLocalFile = FFUploadedFile(
@@ -1409,6 +1480,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                   });
                                 }
                                 // Find doc identidad
+                                logFirebaseEvent('SaveBtn_Finddocidentidad');
                                 _model.findDocIdentidadAceptar =
                                     await queryDocumentoIdentidadRecordOnce(
                                   queryBuilder: (documentoIdentidadRecord) =>
@@ -1425,6 +1497,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                             .id !=
                                         '') {
                                   // update doc state
+                                  logFirebaseEvent('SaveBtn_updatedocstate');
                                   setState(() {
                                     _model.initialTipoDoc =
                                         _model.findDocIdentidadAceptar?.tipo;
@@ -1439,6 +1512,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                   });
                                 }
                                 // Hide btns
+                                logFirebaseEvent('SaveBtn_Hidebtns');
                                 if (animationsMap[
                                         'rowOnActionTriggerAnimation'] !=
                                     null) {
@@ -1447,6 +1521,7 @@ class _ProfileWidgetState extends State<ProfileWidget>
                                       .reverse();
                                 }
                                 // Change is Editing
+                                logFirebaseEvent('SaveBtn_ChangeisEditing');
                                 setState(() {
                                   _model.isEditing = false;
                                 });

@@ -158,7 +158,10 @@ class _FormDocIdentidadWidgetState extends State<FormDocIdentidadWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                   child: FFButtonWidget(
                     onPressed: () async {
+                      logFirebaseEvent(
+                          'FORM_DOC_IDENTIDAD_CANCELAR_BTN_ON_TAP');
                       // Hide Bottom Sheet
+                      logFirebaseEvent('Button_HideBottomSheet');
                       Navigator.pop(context);
                     },
                     text: 'Cancelar',
@@ -189,6 +192,8 @@ class _FormDocIdentidadWidgetState extends State<FormDocIdentidadWidget> {
                         const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 20.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        logFirebaseEvent(
+                            'FORM_DOC_IDENTIDAD_MODIFICAR_BTN_ON_TAP');
                         var shouldSetState = false;
                         if ((_model.formDocumentoIdentidadModel
                                     .tipoDocDDValue !=
@@ -224,6 +229,7 @@ class _FormDocIdentidadWidgetState extends State<FormDocIdentidadWidget> {
                             )) {
                           if (widget.documentoIdentidad != null) {
                             // Update  documento Edit user
+                            logFirebaseEvent('Button_UpdatedocumentoEdituser');
 
                             await widget.documentoIdentidad!.reference
                                 .update(createDocumentoIdentidadRecordData(
@@ -248,6 +254,7 @@ class _FormDocIdentidadWidgetState extends State<FormDocIdentidadWidget> {
                             ));
                           } else {
                             // Create  documento
+                            logFirebaseEvent('Button_Createdocumento');
 
                             var documentoIdentidadRecordReference =
                                 DocumentoIdentidadRecord.collection.doc();
@@ -308,11 +315,13 @@ class _FormDocIdentidadWidgetState extends State<FormDocIdentidadWidget> {
                           }
 
                           // Hide Bottom Sheet
+                          logFirebaseEvent('Button_HideBottomSheet');
                           Navigator.pop(context);
                           if (shouldSetState) setState(() {});
                           return;
                         } else {
                           // Show required Tipo Document
+                          logFirebaseEvent('Button_ShowrequiredTipoDocument');
                           await showDialog(
                             context: context,
                             builder: (dialogContext) {

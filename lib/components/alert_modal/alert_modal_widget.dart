@@ -193,7 +193,11 @@ class _AlertModalWidgetState extends State<AlertModalWidget> {
                                         children: [
                                           FFButtonWidget(
                                             onPressed: () async {
+                                              logFirebaseEvent(
+                                                  'ALERT_MODAL_COMP_CERRAR_BTN_ON_TAP');
                                               // Hide modal
+                                              logFirebaseEvent(
+                                                  'Button_Hidemodal');
                                               Navigator.pop(context);
                                             },
                                             text: 'Cerrar',

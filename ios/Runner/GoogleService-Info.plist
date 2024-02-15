@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>186859224506-480lcf4pq3gg4310siocmu941dnobng3.apps.googleusercontent.com</string>
+	<string>186859224506-g3udmdk2v16ne5kn3qshmlned39os33d.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.186859224506-480lcf4pq3gg4310siocmu941dnobng3</string>
+	<string>com.googleusercontent.apps.186859224506-g3udmdk2v16ne5kn3qshmlned39os33d</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>186859224506-1t6q5gnh1oeg9s4ccvfe12j5cesm8ola.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.inspot.technology.attendify</string>
+	<string>com.inspot.technology.SummitSync</string>
 	<key>PROJECT_ID</key>
 	<string>carnaval-d2054</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:186859224506:ios:af589846ee159de34bf183</string>
+	<string>1:186859224506:ios:fba0a3bae265ed204bf183</string>
 </dict>
 </plist>
