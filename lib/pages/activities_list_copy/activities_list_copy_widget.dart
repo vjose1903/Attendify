@@ -4,6 +4,7 @@ import '/components/actividad_item/actividad_item_widget.dart';
 import '/components/activity_filters/activity_filters_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/form_activity/form_activity_widget.dart';
+import '/components/suspencion_por_pago_modal/suspencion_por_pago_modal_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -67,58 +68,91 @@ class _ActivitiesListCopyWidgetState extends State<ActivitiesListCopyWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            logFirebaseEvent('ACTIVITIES_LIST_COPY_FloatingActionButto');
-            logFirebaseEvent('FloatingActionButton_bottom_sheet');
-            await showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              isDismissible: false,
-              enableDrag: false,
-              useSafeArea: true,
-              context: context,
-              builder: (context) {
-                return GestureDetector(
-                  onTap: () => _model.unfocusNode.canRequestFocus
-                      ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                      : FocusScope.of(context).unfocus(),
-                  child: Padding(
-                    padding: MediaQuery.viewInsetsOf(context),
-                    child: SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.75,
-                      child: FormActivityWidget(
-                        action: FormAction.create,
-                        reloadChip: () async {
-                          logFirebaseEvent('_show_snack_bar');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'reload',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
+        floatingActionButton: Builder(
+          builder: (context) => FloatingActionButton(
+            onPressed: () async {
+              logFirebaseEvent('ACTIVITIES_LIST_COPY_FloatingActionButto');
+              if (FFAppState().pagoStatus) {
+                logFirebaseEvent('FloatingActionButton_bottom_sheet');
+                await showModalBottomSheet(
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  isDismissible: false,
+                  enableDrag: false,
+                  useSafeArea: true,
+                  context: context,
+                  builder: (context) {
+                    return GestureDetector(
+                      onTap: () => _model.unfocusNode.canRequestFocus
+                          ? FocusScope.of(context)
+                              .requestFocus(_model.unfocusNode)
+                          : FocusScope.of(context).unfocus(),
+                      child: Padding(
+                        padding: MediaQuery.viewInsetsOf(context),
+                        child: SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.75,
+                          child: FormActivityWidget(
+                            action: FormAction.create,
+                            reloadChip: () async {
+                              logFirebaseEvent('_show_snack_bar');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'reload',
+                                    style: TextStyle(
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryText,
+                                    ),
+                                  ),
+                                  duration: const Duration(milliseconds: 4000),
+                                  backgroundColor:
+                                      FlutterFlowTheme.of(context).secondary,
                                 ),
-                              ),
-                              duration: const Duration(milliseconds: 4000),
-                              backgroundColor:
-                                  FlutterFlowTheme.of(context).secondary,
-                            ),
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ).then((value) => safeSetState(() {}));
-          },
-          backgroundColor: FlutterFlowTheme.of(context).primary,
-          elevation: 8.0,
-          child: Icon(
-            Icons.add,
-            color: FlutterFlowTheme.of(context).info,
-            size: 24.0,
+                    );
+                  },
+                ).then((value) => safeSetState(() {}));
+              } else {
+                // No pago Made
+                logFirebaseEvent('FloatingActionButton_NopagoMade');
+                await showDialog(
+                  context: context,
+                  builder: (dialogContext) {
+                    return Dialog(
+                      elevation: 0,
+                      insetPadding: EdgeInsets.zero,
+                      backgroundColor: Colors.transparent,
+                      alignment: const AlignmentDirectional(0.0, 0.0)
+                          .resolve(Directionality.of(context)),
+                      child: GestureDetector(
+                        onTap: () => _model.unfocusNode.canRequestFocus
+                            ? FocusScope.of(context)
+                                .requestFocus(_model.unfocusNode)
+                            : FocusScope.of(context).unfocus(),
+                        child: const SizedBox(
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: SuspencionPorPagoModalWidget(),
+                        ),
+                      ),
+                    );
+                  },
+                ).then((value) => setState(() {}));
+
+                return;
+              }
+            },
+            backgroundColor: FlutterFlowTheme.of(context).primary,
+            elevation: 8.0,
+            child: Icon(
+              Icons.add,
+              color: FlutterFlowTheme.of(context).info,
+              size: 24.0,
+            ),
           ),
         ),
         endDrawer: SizedBox(

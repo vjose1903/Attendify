@@ -384,6 +384,9 @@ class _SelectGroupWidgetState extends State<SelectGroupWidget>
                                                       .selectedGroupImgBlur =
                                                   selecteingGroupGrupoRecord
                                                       .logoBlurHash;
+                                              FFAppState().pagoStatus =
+                                                  selecteingGroupGrupoRecord
+                                                      .pago;
                                             });
                                             // start Loading actividades
                                             logFirebaseEvent(

@@ -271,6 +271,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget>
                   .toList()
                   .toList()
                   .cast<DocumentReference>();
+              FFAppState().pagoStatus = _model.findGrupoSelectedResult!.pago;
             });
             // start Loading
             logFirebaseEvent('homeScreen_startLoading');

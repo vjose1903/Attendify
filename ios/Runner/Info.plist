@@ -54,9 +54,9 @@
 	<true/>
 
 	<key>NSCameraUsageDescription</key>
-    <string>La aplicacion necesita permiso para acceder a la camara</string>
+    <string>Para cambiar tu foto de perfil y tomar asistencia, necesitamos acceso a tu cámara. Tu privacidad es importante; solo usaremos la cámara para estas funciones.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>La aplicacion necesita permiso para acceder a la galeria</string>
+    <string>Para cambiar tu foto de perfil y eventos registrados, necesitamos acceder a tu galería de fotos. Solo usaremos esto para seleccionar imágenes. Tu privacidad es importante; solo usaremos la galeria para estas funciones.</string>
 
 
 

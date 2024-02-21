@@ -190,27 +190,6 @@ class FFAppState extends ChangeNotifier {
         : prefs.remove('ff_TUsuarioRegular');
   }
 
-  String _marta =
-      'usuario-sa3dNl475MSbSdWhcxImFQgpv552-grupo-mu9lgafcgPHW5TWIbGP7-1705622308798';
-  String get marta => _marta;
-  set marta(String value) {
-    _marta = value;
-  }
-
-  String _lola =
-      'usuario-yfl6v4gyCGWulcVTFfHRvzM7yk62-grupo-mu9lgafcgPHW5TWIbGP7-1706244134805';
-  String get lola => _lola;
-  set lola(String value) {
-    _lola = value;
-  }
-
-  String _victor =
-      'usuario-ynUHgX8amtV8Z1HN9QZDhY5vsAx2-grupo-mu9lgafcgPHW5TWIbGP7-1705356733111';
-  String get victor => _victor;
-  set victor(String value) {
-    _victor = value;
-  }
-
   String _grupoSeleccionadoName = '';
   String get grupoSeleccionadoName => _grupoSeleccionadoName;
   set grupoSeleccionadoName(String value) {
@@ -305,6 +284,12 @@ class FFAppState extends ChangeNotifier {
   set selectedGroupImgBlur(String value) {
     _selectedGroupImgBlur = value;
     prefs.setString('ff_selectedGroupImgBlur', value);
+  }
+
+  bool _pagoStatus = true;
+  bool get pagoStatus => _pagoStatus;
+  set pagoStatus(bool value) {
+    _pagoStatus = value;
   }
 }
 

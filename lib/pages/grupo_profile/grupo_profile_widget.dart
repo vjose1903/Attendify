@@ -1,6 +1,7 @@
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
 import '/components/forms/form_entregable/form_entregable_widget.dart';
+import '/components/suspencion_por_pago_modal/suspencion_por_pago_modal_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_expanded_image_view.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -591,56 +592,112 @@ class _GrupoProfileWidgetState extends State<GrupoProfileWidget>
                                           style: FlutterFlowTheme.of(context)
                                               .headlineSmall,
                                         ),
-                                        FlutterFlowIconButton(
-                                          borderColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .selectedOption,
-                                          borderRadius: 20.0,
-                                          borderWidth: 1.0,
-                                          buttonSize: 40.0,
-                                          fillColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .primaryBackground,
-                                          icon: Icon(
-                                            Icons.settings_sharp,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryImputBorder,
-                                            size: 22.0,
+                                        Builder(
+                                          builder: (context) =>
+                                              FlutterFlowIconButton(
+                                            borderColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .selectedOption,
+                                            borderRadius: 20.0,
+                                            borderWidth: 1.0,
+                                            buttonSize: 40.0,
+                                            fillColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .primaryBackground,
+                                            icon: Icon(
+                                              Icons.settings_sharp,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryImputBorder,
+                                              size: 22.0,
+                                            ),
+                                            onPressed: (_model.isEditing ==
+                                                    true)
+                                                ? null
+                                                : () async {
+                                                    logFirebaseEvent(
+                                                        'GRUPO_PROFILE_settings_sharp_ICN_ON_TAP');
+                                                    if (FFAppState()
+                                                        .pagoStatus) {
+                                                      // Change is Editing
+                                                      logFirebaseEvent(
+                                                          'IconButton_ChangeisEditing');
+                                                      setState(() {
+                                                        _model.isEditing = true;
+                                                      });
+                                                      // Show btns
+                                                      logFirebaseEvent(
+                                                          'IconButton_Showbtns');
+                                                      if (animationsMap[
+                                                              'rowOnActionTriggerAnimation'] !=
+                                                          null) {
+                                                        animationsMap[
+                                                                'rowOnActionTriggerAnimation']!
+                                                            .controller
+                                                            .forward(from: 0.0);
+                                                      }
+                                                      // Show entregable
+                                                      logFirebaseEvent(
+                                                          'IconButton_Showentregable');
+                                                      if (animationsMap[
+                                                              'containerOnActionTriggerAnimation'] !=
+                                                          null) {
+                                                        animationsMap[
+                                                                'containerOnActionTriggerAnimation']!
+                                                            .controller
+                                                            .forward();
+                                                      }
+                                                    } else {
+                                                      // No pago Made
+                                                      logFirebaseEvent(
+                                                          'IconButton_NopagoMade');
+                                                      await showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (dialogContext) {
+                                                          return Dialog(
+                                                            elevation: 0,
+                                                            insetPadding:
+                                                                EdgeInsets.zero,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            alignment: const AlignmentDirectional(
+                                                                    0.0, 0.0)
+                                                                .resolve(
+                                                                    Directionality.of(
+                                                                        context)),
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () => _model
+                                                                      .unfocusNode
+                                                                      .canRequestFocus
+                                                                  ? FocusScope.of(
+                                                                          context)
+                                                                      .requestFocus(
+                                                                          _model
+                                                                              .unfocusNode)
+                                                                  : FocusScope.of(
+                                                                          context)
+                                                                      .unfocus(),
+                                                              child: const SizedBox(
+                                                                height: double
+                                                                    .infinity,
+                                                                width: double
+                                                                    .infinity,
+                                                                child:
+                                                                    SuspencionPorPagoModalWidget(),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ).then((value) =>
+                                                          setState(() {}));
+
+                                                      return;
+                                                    }
+                                                  },
                                           ),
-                                          onPressed: (_model.isEditing == true)
-                                              ? null
-                                              : () async {
-                                                  logFirebaseEvent(
-                                                      'GRUPO_PROFILE_settings_sharp_ICN_ON_TAP');
-                                                  // Change is Editing
-                                                  logFirebaseEvent(
-                                                      'IconButton_ChangeisEditing');
-                                                  setState(() {
-                                                    _model.isEditing = true;
-                                                  });
-                                                  // Show btns
-                                                  logFirebaseEvent(
-                                                      'IconButton_Showbtns');
-                                                  if (animationsMap[
-                                                          'rowOnActionTriggerAnimation'] !=
-                                                      null) {
-                                                    animationsMap[
-                                                            'rowOnActionTriggerAnimation']!
-                                                        .controller
-                                                        .forward(from: 0.0);
-                                                  }
-                                                  // Show entregable
-                                                  logFirebaseEvent(
-                                                      'IconButton_Showentregable');
-                                                  if (animationsMap[
-                                                          'containerOnActionTriggerAnimation'] !=
-                                                      null) {
-                                                    animationsMap[
-                                                            'containerOnActionTriggerAnimation']!
-                                                        .controller
-                                                        .forward();
-                                                  }
-                                                },
                                         ),
                                       ],
                                     ),

@@ -7,6 +7,7 @@ import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/asistencia/form_asistencia/form_asistencia_widget.dart';
 import '/components/forms/form_nota/form_nota_widget.dart';
 import '/components/info_modal/info_modal_widget.dart';
+import '/components/suspencion_por_pago_modal/suspencion_por_pago_modal_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_choice_chips.dart';
 import '/flutter_flow/flutter_flow_expanded_image_view.dart';
@@ -629,8 +630,8 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                   options: _model.customTabs
                                       .map((label) => ChipData(label))
                                       .toList(),
-                                  onChanged: (val) => setState(() =>
-                                      _model.customTabsValue = val?.first),
+                                  onChanged: (val) => setState(() => _model
+                                      .customTabsValue = val?.firstOrNull),
                                   selectedChipStyle: ChipStyle(
                                     backgroundColor: Colors.transparent,
                                     textStyle: FlutterFlowTheme.of(context)
@@ -980,7 +981,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                   onChanged: (val) async {
                                                     setState(() => _model
                                                             .dateAsistenciaChipsValue =
-                                                        val?.first);
+                                                        val?.firstOrNull);
                                                     logFirebaseEvent(
                                                         'DETALLE_ACTIVIDAD_DateAsistenciaChips_ON');
                                                     // Reload List Asistencia
@@ -1546,7 +1547,7 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                   onChanged: (val) async {
                                                     setState(() => _model
                                                             .dateNotasChipsValue =
-                                                        val?.first);
+                                                        val?.firstOrNull);
                                                     logFirebaseEvent(
                                                         'DETALLE_ACTIVIDAD_DateNotasChips_ON_FORM');
                                                   },
@@ -1706,78 +1707,105 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                                           MainAxisAlignment
                                                                               .end,
                                                                       children: [
-                                                                        FlutterFlowIconButton(
-                                                                          borderColor:
-                                                                              FlutterFlowTheme.of(context).primary,
-                                                                          borderRadius:
-                                                                              20.0,
-                                                                          borderWidth:
-                                                                              1.0,
-                                                                          buttonSize:
-                                                                              35.0,
-                                                                          fillColor:
-                                                                              FlutterFlowTheme.of(context).primary,
-                                                                          disabledColor:
-                                                                              FlutterFlowTheme.of(context).disablePrimaryColor,
-                                                                          icon:
-                                                                              Icon(
-                                                                            Icons.add,
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).primaryText,
-                                                                            size:
+                                                                        Builder(
+                                                                          builder: (context) =>
+                                                                              FlutterFlowIconButton(
+                                                                            borderColor:
+                                                                                FlutterFlowTheme.of(context).primary,
+                                                                            borderRadius:
                                                                                 20.0,
-                                                                          ),
-                                                                          onPressed: ((_model.dateNotasChipsValue == null || _model.dateNotasChipsValue == '') ||
-                                                                                  (_model.dateNotasChipsValue !=
-                                                                                      dateTimeFormat(
-                                                                                        'dd/MM/yyyy',
-                                                                                        getCurrentTimestamp,
-                                                                                        locale: FFLocalizations.of(context).languageCode,
-                                                                                      )))
-                                                                              ? null
-                                                                              : () async {
-                                                                                  logFirebaseEvent('DETALLE_ACTIVIDAD_PAGE_AddNote_ON_TAP');
-                                                                                  // show form
-                                                                                  logFirebaseEvent('AddNote_showform');
-                                                                                  await showModalBottomSheet(
-                                                                                    isScrollControlled: true,
-                                                                                    backgroundColor: Colors.transparent,
-                                                                                    isDismissible: false,
-                                                                                    enableDrag: false,
-                                                                                    useSafeArea: true,
-                                                                                    context: context,
-                                                                                    builder: (context) {
-                                                                                      return GestureDetector(
-                                                                                        onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                        child: Padding(
-                                                                                          padding: MediaQuery.viewInsetsOf(context),
-                                                                                          child: SizedBox(
-                                                                                            height: 400.0,
-                                                                                            child: FormNotaWidget(
-                                                                                              grupoActividadDetalle: widget.grupoActividadDetalles
-                                                                                                  ?.where((e) =>
-                                                                                                      dateTimeFormat(
-                                                                                                        'dd/MM/yyyy',
-                                                                                                        e.fecha,
-                                                                                                        locale: FFLocalizations.of(context).languageCode,
-                                                                                                      ) ==
-                                                                                                      _model.dateNotasChipsValue)
-                                                                                                  .toList()
-                                                                                                  .first,
-                                                                                              action: FormAction.create,
-                                                                                              reloadAction: () async {
-                                                                                                // Refresh request
-                                                                                                logFirebaseEvent('showform_Refreshrequest');
-                                                                                                setState(() => _model.firestoreRequestCompleter2 = null);
-                                                                                                await _model.waitForFirestoreRequestCompleted2(minWait: 2000, maxWait: 7000);
-                                                                                              },
+                                                                            borderWidth:
+                                                                                1.0,
+                                                                            buttonSize:
+                                                                                35.0,
+                                                                            fillColor:
+                                                                                FlutterFlowTheme.of(context).primary,
+                                                                            disabledColor:
+                                                                                FlutterFlowTheme.of(context).disablePrimaryColor,
+                                                                            icon:
+                                                                                Icon(
+                                                                              Icons.add,
+                                                                              color: FlutterFlowTheme.of(context).primaryText,
+                                                                              size: 20.0,
+                                                                            ),
+                                                                            onPressed: ((_model.dateNotasChipsValue == null || _model.dateNotasChipsValue == '') ||
+                                                                                    (_model.dateNotasChipsValue !=
+                                                                                        dateTimeFormat(
+                                                                                          'dd/MM/yyyy',
+                                                                                          getCurrentTimestamp,
+                                                                                          locale: FFLocalizations.of(context).languageCode,
+                                                                                        )))
+                                                                                ? null
+                                                                                : () async {
+                                                                                    logFirebaseEvent('DETALLE_ACTIVIDAD_PAGE_AddNote_ON_TAP');
+                                                                                    if (FFAppState().pagoStatus) {
+                                                                                      // show form
+                                                                                      logFirebaseEvent('AddNote_showform');
+                                                                                      await showModalBottomSheet(
+                                                                                        isScrollControlled: true,
+                                                                                        backgroundColor: Colors.transparent,
+                                                                                        isDismissible: false,
+                                                                                        enableDrag: false,
+                                                                                        useSafeArea: true,
+                                                                                        context: context,
+                                                                                        builder: (context) {
+                                                                                          return GestureDetector(
+                                                                                            onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                            child: Padding(
+                                                                                              padding: MediaQuery.viewInsetsOf(context),
+                                                                                              child: SizedBox(
+                                                                                                height: 400.0,
+                                                                                                child: FormNotaWidget(
+                                                                                                  grupoActividadDetalle: widget.grupoActividadDetalles
+                                                                                                      ?.where((e) =>
+                                                                                                          dateTimeFormat(
+                                                                                                            'dd/MM/yyyy',
+                                                                                                            e.fecha,
+                                                                                                            locale: FFLocalizations.of(context).languageCode,
+                                                                                                          ) ==
+                                                                                                          _model.dateNotasChipsValue)
+                                                                                                      .toList()
+                                                                                                      .first,
+                                                                                                  action: FormAction.create,
+                                                                                                  reloadAction: () async {
+                                                                                                    // Refresh request
+                                                                                                    logFirebaseEvent('showform_Refreshrequest');
+                                                                                                    setState(() => _model.firestoreRequestCompleter2 = null);
+                                                                                                    await _model.waitForFirestoreRequestCompleted2(minWait: 2000, maxWait: 7000);
+                                                                                                  },
+                                                                                                ),
+                                                                                              ),
                                                                                             ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      );
-                                                                                    },
-                                                                                  ).then((value) => safeSetState(() {}));
-                                                                                },
+                                                                                          );
+                                                                                        },
+                                                                                      ).then((value) => safeSetState(() {}));
+                                                                                    } else {
+                                                                                      // No pago Made
+                                                                                      logFirebaseEvent('AddNote_NopagoMade');
+                                                                                      await showDialog(
+                                                                                        context: context,
+                                                                                        builder: (dialogContext) {
+                                                                                          return Dialog(
+                                                                                            elevation: 0,
+                                                                                            insetPadding: EdgeInsets.zero,
+                                                                                            backgroundColor: Colors.transparent,
+                                                                                            alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                            child: GestureDetector(
+                                                                                              onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                              child: const SizedBox(
+                                                                                                height: double.infinity,
+                                                                                                width: double.infinity,
+                                                                                                child: SuspencionPorPagoModalWidget(),
+                                                                                              ),
+                                                                                            ),
+                                                                                          );
+                                                                                        },
+                                                                                      ).then((value) => setState(() {}));
+
+                                                                                      return;
+                                                                                    }
+                                                                                  },
+                                                                          ),
                                                                         ),
                                                                       ],
                                                                     ),
@@ -2254,223 +2282,88 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                       logFirebaseEvent(
                                           'DETALLE_ACTIVIDAD_TOMAR_ASISTENCIA_BTN_O');
                                       var shouldSetState = false;
-                                      // scan QR
-                                      logFirebaseEvent('Button_scanQR');
-                                      _model.scanResponse =
-                                          await FlutterBarcodeScanner
-                                              .scanBarcode(
-                                        '#C62828', // scanning line color
-                                        'Cancelar', // cancel button text
-                                        true, // whether to show the flash icon
-                                        ScanMode.QR,
-                                      );
+                                      if (FFAppState().pagoStatus) {
+                                        // scan QR
+                                        logFirebaseEvent('Button_scanQR');
+                                        _model.scanResponse =
+                                            await FlutterBarcodeScanner
+                                                .scanBarcode(
+                                          '#C62828', // scanning line color
+                                          'Cancelar', // cancel button text
+                                          true, // whether to show the flash icon
+                                          ScanMode.QR,
+                                        );
 
-                                      shouldSetState = true;
-                                      if (_model.scanResponse != '-1') {
-                                        if (functions.stringInclude(
-                                            _model.scanResponse,
-                                            FFAppConstants.qrIncludeValidation
-                                                .toList())) {
-                                          // Find Grupo usuario
-                                          logFirebaseEvent(
-                                              'Button_FindGrupousuario');
-                                          _model.findGrupoUsuarioQrResponse =
-                                              await queryGrupoUsuarioRecordOnce(
-                                            queryBuilder:
-                                                (grupoUsuarioRecord) =>
-                                                    grupoUsuarioRecord.where(
-                                              'qr',
-                                              isEqualTo: _model.scanResponse,
-                                            ),
-                                            singleRecord: true,
-                                          ).then((s) => s.firstOrNull);
-                                          shouldSetState = true;
-                                          // User is present
-                                          logFirebaseEvent(
-                                              'Button_Userispresent');
-                                          _model.qrFindUserIsPresent =
-                                              await queryAsistenciaRecordOnce(
-                                            parent: widget
-                                                .grupoActividadDetalles
-                                                ?.where((e) =>
-                                                    e.fecha ==
-                                                    functions.toInitDayHour(
-                                                        getCurrentTimestamp))
-                                                .toList()
-                                                .first
-                                                .reference,
-                                            queryBuilder: (asistenciaRecord) =>
-                                                asistenciaRecord.where(
-                                              'grupo_usuario',
-                                              isEqualTo: _model
-                                                  .findGrupoUsuarioQrResponse
-                                                  ?.reference,
-                                            ),
-                                            singleRecord: true,
-                                          ).then((s) => s.firstOrNull);
-                                          shouldSetState = true;
-                                          if (_model.qrFindUserIsPresent
-                                                      ?.grupoName !=
-                                                  null &&
-                                              _model.qrFindUserIsPresent
-                                                      ?.grupoName !=
-                                                  '') {
-                                            // Show user is already present
+                                        shouldSetState = true;
+                                        if (_model.scanResponse != '-1') {
+                                          if (functions.stringInclude(
+                                              _model.scanResponse,
+                                              FFAppConstants.qrIncludeValidation
+                                                  .toList())) {
+                                            // Find Grupo usuario
                                             logFirebaseEvent(
-                                                'Button_Showuserisalreadypresent');
-                                            await showDialog(
-                                              context: context,
-                                              builder: (dialogContext) {
-                                                return Dialog(
-                                                  elevation: 0,
-                                                  insetPadding: EdgeInsets.zero,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  alignment:
-                                                      const AlignmentDirectional(
-                                                              0.0, 0.0)
-                                                          .resolve(
-                                                              Directionality.of(
-                                                                  context)),
-                                                  child: GestureDetector(
-                                                    onTap: () => _model
-                                                            .unfocusNode
-                                                            .canRequestFocus
-                                                        ? FocusScope.of(context)
-                                                            .requestFocus(_model
-                                                                .unfocusNode)
-                                                        : FocusScope.of(context)
-                                                            .unfocus(),
-                                                    child: SizedBox(
-                                                      height: double.infinity,
-                                                      width: double.infinity,
-                                                      child: AlertModalWidget(
-                                                        message:
-                                                            'El usuario escaneado ya ingresó a la actividad',
-                                                        icon: FaIcon(
-                                                          FontAwesomeIcons
-                                                              .userTag,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .error,
-                                                          size: 90.0,
-                                                        ),
-                                                        type: ToastType.error,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ).then((value) => setState(() {}));
-
-                                            if (shouldSetState) {
-                                              setState(() {});
-                                            }
-                                            return;
-                                          } else {
-                                            if (_model
-                                                    .findGrupoUsuarioQrResponse !=
-                                                null) {
-                                              // Get Detalle Access
+                                                'Button_FindGrupousuario');
+                                            _model.findGrupoUsuarioQrResponse =
+                                                await queryGrupoUsuarioRecordOnce(
+                                              queryBuilder:
+                                                  (grupoUsuarioRecord) =>
+                                                      grupoUsuarioRecord.where(
+                                                'qr',
+                                                isEqualTo: _model.scanResponse,
+                                              ),
+                                              singleRecord: true,
+                                            ).then((s) => s.firstOrNull);
+                                            shouldSetState = true;
+                                            // User is present
+                                            logFirebaseEvent(
+                                                'Button_Userispresent');
+                                            _model.qrFindUserIsPresent =
+                                                await queryAsistenciaRecordOnce(
+                                              parent: widget
+                                                  .grupoActividadDetalles
+                                                  ?.where((e) =>
+                                                      e.fecha ==
+                                                      functions.toInitDayHour(
+                                                          getCurrentTimestamp))
+                                                  .toList()
+                                                  .first
+                                                  .reference,
+                                              queryBuilder:
+                                                  (asistenciaRecord) =>
+                                                      asistenciaRecord.where(
+                                                'grupo_usuario',
+                                                isEqualTo: _model
+                                                    .findGrupoUsuarioQrResponse
+                                                    ?.reference,
+                                              ),
+                                              singleRecord: true,
+                                            ).then((s) => s.firstOrNull);
+                                            shouldSetState = true;
+                                            if (_model.qrFindUserIsPresent
+                                                        ?.grupoName !=
+                                                    null &&
+                                                _model.qrFindUserIsPresent
+                                                        ?.grupoName !=
+                                                    '') {
+                                              // Show user is already present
                                               logFirebaseEvent(
-                                                  'Button_GetDetalleAccess');
-                                              _model.detalleAccessResponse =
-                                                  await queryAccesoRecordOnce(
-                                                parent: widget
-                                                    .grupoActividadDetalles
-                                                    ?.where((e) =>
-                                                        e.fecha ==
-                                                        functions.toInitDayHour(
-                                                            getCurrentTimestamp))
-                                                    .toList()
-                                                    .first
-                                                    .reference,
-                                                queryBuilder: (accesoRecord) =>
-                                                    accesoRecord.where(
-                                                  'grupo',
-                                                  isEqualTo: FFAppState()
-                                                      .grupoSeleccionado,
-                                                ),
-                                              );
-                                              shouldSetState = true;
-                                              if (functions
-                                                  .activityAccessIncludeUser(
-                                                      _model
-                                                          .findGrupoUsuarioQrResponse!
-                                                          .tipoUsuario!,
-                                                      _model
-                                                          .detalleAccessResponse!
-                                                          .map((e) =>
-                                                              e.tipoUsuario)
-                                                          .withoutNulls
-                                                          .toList())) {
-                                                // find user info
-                                                logFirebaseEvent(
-                                                    'Button_finduserinfo');
-                                                _model.qrfindUserInfoResponse =
-                                                    await UsuariosRecord
-                                                        .getDocumentOnce(_model
-                                                            .findGrupoUsuarioQrResponse!
-                                                            .usuario!);
-                                                shouldSetState = true;
-                                                // Find tipo usuario
-                                                logFirebaseEvent(
-                                                    'Button_Findtipousuario');
-                                                _model.qrfindTipoUsuarioResponse =
-                                                    await TipoUsuarioRecord
-                                                        .getDocumentOnce(_model
-                                                            .findGrupoUsuarioQrResponse!
-                                                            .tipoUsuario!);
-                                                shouldSetState = true;
-                                                // find objetos a entregar
-                                                logFirebaseEvent(
-                                                    'Button_findobjetosaentregar');
-                                                _model.qrfindObjetosAEntregarResponsee =
-                                                    await queryActividadObjetoAEntregarRecordOnce(
-                                                  parent: widget
-                                                      .grupoActividadDetalles
-                                                      ?.where((e) =>
-                                                          e.fecha ==
-                                                          functions.toInitDayHour(
-                                                              getCurrentTimestamp))
-                                                      .toList()
-                                                      .first
-                                                      .reference,
-                                                  queryBuilder:
-                                                      (actividadObjetoAEntregarRecord) =>
-                                                          actividadObjetoAEntregarRecord
-                                                              .where(
-                                                                'grupo',
-                                                                isEqualTo:
-                                                                    FFAppState()
-                                                                        .grupoSeleccionado,
-                                                              )
-                                                              .where(
-                                                                'tipo_usuario',
-                                                                isEqualTo: _model
-                                                                    .findGrupoUsuarioQrResponse
-                                                                    ?.tipoUsuario,
-                                                              )
-                                                              .where(
-                                                                'grupo_actividad',
-                                                                isEqualTo: widget
-                                                                    .grupoActividad
-                                                                    ?.reference,
-                                                              ),
-                                                );
-                                                shouldSetState = true;
-                                                // open form asistencia
-                                                logFirebaseEvent(
-                                                    'Button_openformasistencia');
-                                                await showModalBottomSheet(
-                                                  isScrollControlled: true,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  isDismissible: false,
-                                                  enableDrag: false,
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return GestureDetector(
+                                                  'Button_Showuserisalreadypresent');
+                                              await showDialog(
+                                                context: context,
+                                                builder: (dialogContext) {
+                                                  return Dialog(
+                                                    elevation: 0,
+                                                    insetPadding:
+                                                        EdgeInsets.zero,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    alignment:
+                                                        const AlignmentDirectional(
+                                                                0.0, 0.0)
+                                                            .resolve(
+                                                                Directionality.of(
+                                                                    context)),
+                                                    child: GestureDetector(
                                                       onTap: () => _model
                                                               .unfocusNode
                                                               .canRequestFocus
@@ -2481,64 +2374,269 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                           : FocusScope.of(
                                                                   context)
                                                               .unfocus(),
-                                                      child: Padding(
-                                                        padding: MediaQuery
-                                                            .viewInsetsOf(
-                                                                context),
-                                                        child: SizedBox(
-                                                          height:
-                                                              MediaQuery.sizeOf(
-                                                                          context)
-                                                                      .height *
-                                                                  0.55,
-                                                          child:
-                                                              FormAsistenciaWidget(
-                                                            user: _model
-                                                                .qrfindUserInfoResponse,
-                                                            action: FormAction
-                                                                .create,
-                                                            grupoUsuario: _model
-                                                                .findGrupoUsuarioQrResponse,
-                                                            tipoUsuario: _model
-                                                                .qrfindTipoUsuarioResponse!,
-                                                            actividadObjetosAEntregar:
-                                                                _model
-                                                                    .qrfindObjetosAEntregarResponsee,
-                                                            grupoActividadDetalle: widget
-                                                                .grupoActividadDetalles!
-                                                                .where((e) =>
-                                                                    e.fecha ==
-                                                                    functions
-                                                                        .toInitDayHour(
-                                                                            getCurrentTimestamp))
-                                                                .toList()
-                                                                .first,
-                                                            reloadChip:
-                                                                () async {
-                                                              // Reload List Asistencia
-                                                              logFirebaseEvent(
-                                                                  'openformasistencia_ReloadListAsistencia');
-                                                              setState(() =>
-                                                                  _model.firestoreRequestCompleter1 =
-                                                                      null);
-                                                              await _model
-                                                                  .waitForFirestoreRequestCompleted1(
-                                                                      minWait:
-                                                                          2000,
-                                                                      maxWait:
-                                                                          10000);
-                                                            },
+                                                      child: SizedBox(
+                                                        height: double.infinity,
+                                                        width: double.infinity,
+                                                        child: AlertModalWidget(
+                                                          message:
+                                                              'El usuario escaneado ya ingresó a la actividad',
+                                                          icon: FaIcon(
+                                                            FontAwesomeIcons
+                                                                .userTag,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .error,
+                                                            size: 90.0,
                                                           ),
+                                                          type: ToastType.error,
                                                         ),
                                                       ),
-                                                    );
-                                                  },
-                                                ).then((value) =>
-                                                    safeSetState(() {}));
-                                              } else {
-                                                // Show user not access QR msg
+                                                    ),
+                                                  );
+                                                },
+                                              ).then(
+                                                  (value) => setState(() {}));
+
+                                              if (shouldSetState) {
+                                                setState(() {});
+                                              }
+                                              return;
+                                            } else {
+                                              if (_model
+                                                      .findGrupoUsuarioQrResponse !=
+                                                  null) {
+                                                // Get Detalle Access
                                                 logFirebaseEvent(
-                                                    'Button_ShowusernotaccessQRmsg');
+                                                    'Button_GetDetalleAccess');
+                                                _model.detalleAccessResponse =
+                                                    await queryAccesoRecordOnce(
+                                                  parent: widget
+                                                      .grupoActividadDetalles
+                                                      ?.where((e) =>
+                                                          e.fecha ==
+                                                          functions.toInitDayHour(
+                                                              getCurrentTimestamp))
+                                                      .toList()
+                                                      .first
+                                                      .reference,
+                                                  queryBuilder:
+                                                      (accesoRecord) =>
+                                                          accesoRecord.where(
+                                                    'grupo',
+                                                    isEqualTo: FFAppState()
+                                                        .grupoSeleccionado,
+                                                  ),
+                                                );
+                                                shouldSetState = true;
+                                                if (functions
+                                                    .activityAccessIncludeUser(
+                                                        _model
+                                                            .findGrupoUsuarioQrResponse!
+                                                            .tipoUsuario!,
+                                                        _model
+                                                            .detalleAccessResponse!
+                                                            .map((e) =>
+                                                                e.tipoUsuario)
+                                                            .withoutNulls
+                                                            .toList())) {
+                                                  // find user info
+                                                  logFirebaseEvent(
+                                                      'Button_finduserinfo');
+                                                  _model.qrfindUserInfoResponse =
+                                                      await UsuariosRecord
+                                                          .getDocumentOnce(_model
+                                                              .findGrupoUsuarioQrResponse!
+                                                              .usuario!);
+                                                  shouldSetState = true;
+                                                  // Find tipo usuario
+                                                  logFirebaseEvent(
+                                                      'Button_Findtipousuario');
+                                                  _model.qrfindTipoUsuarioResponse =
+                                                      await TipoUsuarioRecord
+                                                          .getDocumentOnce(_model
+                                                              .findGrupoUsuarioQrResponse!
+                                                              .tipoUsuario!);
+                                                  shouldSetState = true;
+                                                  // find objetos a entregar
+                                                  logFirebaseEvent(
+                                                      'Button_findobjetosaentregar');
+                                                  _model.qrfindObjetosAEntregarResponsee =
+                                                      await queryActividadObjetoAEntregarRecordOnce(
+                                                    parent: widget
+                                                        .grupoActividadDetalles
+                                                        ?.where((e) =>
+                                                            e.fecha ==
+                                                            functions.toInitDayHour(
+                                                                getCurrentTimestamp))
+                                                        .toList()
+                                                        .first
+                                                        .reference,
+                                                    queryBuilder:
+                                                        (actividadObjetoAEntregarRecord) =>
+                                                            actividadObjetoAEntregarRecord
+                                                                .where(
+                                                                  'grupo',
+                                                                  isEqualTo:
+                                                                      FFAppState()
+                                                                          .grupoSeleccionado,
+                                                                )
+                                                                .where(
+                                                                  'tipo_usuario',
+                                                                  isEqualTo: _model
+                                                                      .findGrupoUsuarioQrResponse
+                                                                      ?.tipoUsuario,
+                                                                )
+                                                                .where(
+                                                                  'grupo_actividad',
+                                                                  isEqualTo: widget
+                                                                      .grupoActividad
+                                                                      ?.reference,
+                                                                ),
+                                                  );
+                                                  shouldSetState = true;
+                                                  // open form asistencia
+                                                  logFirebaseEvent(
+                                                      'Button_openformasistencia');
+                                                  await showModalBottomSheet(
+                                                    isScrollControlled: true,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    isDismissible: false,
+                                                    enableDrag: false,
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return GestureDetector(
+                                                        onTap: () => _model
+                                                                .unfocusNode
+                                                                .canRequestFocus
+                                                            ? FocusScope.of(
+                                                                    context)
+                                                                .requestFocus(_model
+                                                                    .unfocusNode)
+                                                            : FocusScope.of(
+                                                                    context)
+                                                                .unfocus(),
+                                                        child: Padding(
+                                                          padding: MediaQuery
+                                                              .viewInsetsOf(
+                                                                  context),
+                                                          child: SizedBox(
+                                                            height: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .height *
+                                                                0.55,
+                                                            child:
+                                                                FormAsistenciaWidget(
+                                                              user: _model
+                                                                  .qrfindUserInfoResponse,
+                                                              action: FormAction
+                                                                  .create,
+                                                              grupoUsuario: _model
+                                                                  .findGrupoUsuarioQrResponse,
+                                                              tipoUsuario: _model
+                                                                  .qrfindTipoUsuarioResponse!,
+                                                              actividadObjetosAEntregar:
+                                                                  _model
+                                                                      .qrfindObjetosAEntregarResponsee,
+                                                              grupoActividadDetalle: widget
+                                                                  .grupoActividadDetalles!
+                                                                  .where((e) =>
+                                                                      e.fecha ==
+                                                                      functions
+                                                                          .toInitDayHour(
+                                                                              getCurrentTimestamp))
+                                                                  .toList()
+                                                                  .first,
+                                                              reloadChip:
+                                                                  () async {
+                                                                // Reload List Asistencia
+                                                                logFirebaseEvent(
+                                                                    'openformasistencia_ReloadListAsistencia');
+                                                                setState(() =>
+                                                                    _model.firestoreRequestCompleter1 =
+                                                                        null);
+                                                                await _model
+                                                                    .waitForFirestoreRequestCompleted1(
+                                                                        minWait:
+                                                                            2000,
+                                                                        maxWait:
+                                                                            10000);
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ).then((value) =>
+                                                      safeSetState(() {}));
+                                                } else {
+                                                  // Show user not access QR msg
+                                                  logFirebaseEvent(
+                                                      'Button_ShowusernotaccessQRmsg');
+                                                  await showDialog(
+                                                    context: context,
+                                                    builder: (dialogContext) {
+                                                      return Dialog(
+                                                        elevation: 0,
+                                                        insetPadding:
+                                                            EdgeInsets.zero,
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        alignment:
+                                                            const AlignmentDirectional(
+                                                                    0.0, 0.0)
+                                                                .resolve(
+                                                                    Directionality.of(
+                                                                        context)),
+                                                        child: GestureDetector(
+                                                          onTap: () => _model
+                                                                  .unfocusNode
+                                                                  .canRequestFocus
+                                                              ? FocusScope.of(
+                                                                      context)
+                                                                  .requestFocus(
+                                                                      _model
+                                                                          .unfocusNode)
+                                                              : FocusScope.of(
+                                                                      context)
+                                                                  .unfocus(),
+                                                          child: SizedBox(
+                                                            height:
+                                                                double.infinity,
+                                                            width:
+                                                                double.infinity,
+                                                            child:
+                                                                AlertModalWidget(
+                                                              message:
+                                                                  'El usuario no tiene acceso permitido.',
+                                                              icon: FaIcon(
+                                                                FontAwesomeIcons
+                                                                    .userTimes,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .error,
+                                                                size: 90.0,
+                                                              ),
+                                                              type: ToastType
+                                                                  .error,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ).then((value) =>
+                                                      setState(() {}));
+
+                                                  if (shouldSetState) {
+                                                    setState(() {});
+                                                  }
+                                                  return;
+                                                }
+                                              } else {
+                                                // Show user not follow the group QR msg
+                                                logFirebaseEvent(
+                                                    'Button_ShowusernotfollowthegroupQRmsg');
                                                 await showDialog(
                                                   context: context,
                                                   builder: (dialogContext) {
@@ -2573,10 +2671,10 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                           child:
                                                               AlertModalWidget(
                                                             message:
-                                                                'El usuario no tiene acceso permitido.',
-                                                            icon: FaIcon(
-                                                              FontAwesomeIcons
-                                                                  .userTimes,
+                                                                'El usuario escaneado no pertenece al grupo',
+                                                            icon: Icon(
+                                                              Icons
+                                                                  .person_off_rounded,
                                                               color: FlutterFlowTheme
                                                                       .of(context)
                                                                   .error,
@@ -2597,116 +2695,99 @@ class _DetalleActividadWidgetState extends State<DetalleActividadWidget>
                                                 }
                                                 return;
                                               }
-                                            } else {
-                                              // Show user not follow the group QR msg
-                                              logFirebaseEvent(
-                                                  'Button_ShowusernotfollowthegroupQRmsg');
-                                              await showDialog(
-                                                context: context,
-                                                builder: (dialogContext) {
-                                                  return Dialog(
-                                                    elevation: 0,
-                                                    insetPadding:
-                                                        EdgeInsets.zero,
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    alignment:
-                                                        const AlignmentDirectional(
-                                                                0.0, 0.0)
-                                                            .resolve(
-                                                                Directionality.of(
-                                                                    context)),
-                                                    child: GestureDetector(
-                                                      onTap: () => _model
-                                                              .unfocusNode
-                                                              .canRequestFocus
-                                                          ? FocusScope.of(
-                                                                  context)
-                                                              .requestFocus(_model
-                                                                  .unfocusNode)
-                                                          : FocusScope.of(
-                                                                  context)
-                                                              .unfocus(),
-                                                      child: SizedBox(
-                                                        height: double.infinity,
-                                                        width: double.infinity,
-                                                        child: AlertModalWidget(
-                                                          message:
-                                                              'El usuario escaneado no pertenece al grupo',
-                                                          icon: Icon(
-                                                            Icons
-                                                                .person_off_rounded,
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .error,
-                                                            size: 90.0,
-                                                          ),
-                                                          type: ToastType.error,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ).then(
-                                                  (value) => setState(() {}));
-
-                                              if (shouldSetState) {
-                                                setState(() {});
-                                              }
-                                              return;
                                             }
-                                          }
-                                        } else {
-                                          // Show bad QR msg
-                                          logFirebaseEvent(
-                                              'Button_ShowbadQRmsg');
-                                          await showDialog(
-                                            context: context,
-                                            builder: (dialogContext) {
-                                              return Dialog(
-                                                elevation: 0,
-                                                insetPadding: EdgeInsets.zero,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                alignment: const AlignmentDirectional(
-                                                        0.0, 0.0)
-                                                    .resolve(Directionality.of(
-                                                        context)),
-                                                child: GestureDetector(
-                                                  onTap: () => _model
-                                                          .unfocusNode
-                                                          .canRequestFocus
-                                                      ? FocusScope.of(context)
-                                                          .requestFocus(_model
-                                                              .unfocusNode)
-                                                      : FocusScope.of(context)
-                                                          .unfocus(),
-                                                  child: SizedBox(
-                                                    height: double.infinity,
-                                                    width: double.infinity,
-                                                    child: AlertModalWidget(
-                                                      message:
-                                                          'El QR escaneado no es valido',
-                                                      icon: Icon(
-                                                        Icons.qr_code_scanner,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .error,
-                                                        size: 90.0,
+                                          } else {
+                                            // Show bad QR msg
+                                            logFirebaseEvent(
+                                                'Button_ShowbadQRmsg');
+                                            await showDialog(
+                                              context: context,
+                                              builder: (dialogContext) {
+                                                return Dialog(
+                                                  elevation: 0,
+                                                  insetPadding: EdgeInsets.zero,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  alignment:
+                                                      const AlignmentDirectional(
+                                                              0.0, 0.0)
+                                                          .resolve(
+                                                              Directionality.of(
+                                                                  context)),
+                                                  child: GestureDetector(
+                                                    onTap: () => _model
+                                                            .unfocusNode
+                                                            .canRequestFocus
+                                                        ? FocusScope.of(context)
+                                                            .requestFocus(_model
+                                                                .unfocusNode)
+                                                        : FocusScope.of(context)
+                                                            .unfocus(),
+                                                    child: SizedBox(
+                                                      height: double.infinity,
+                                                      width: double.infinity,
+                                                      child: AlertModalWidget(
+                                                        message:
+                                                            'El QR escaneado no es valido',
+                                                        icon: Icon(
+                                                          Icons.qr_code_scanner,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .error,
+                                                          size: 90.0,
+                                                        ),
+                                                        type: ToastType.error,
                                                       ),
-                                                      type: ToastType.error,
                                                     ),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          ).then((value) => setState(() {}));
+                                                );
+                                              },
+                                            ).then((value) => setState(() {}));
 
+                                            if (shouldSetState) {
+                                              setState(() {});
+                                            }
+                                            return;
+                                          }
+                                        } else {
                                           if (shouldSetState) setState(() {});
                                           return;
                                         }
                                       } else {
+                                        // No pago Made
+                                        logFirebaseEvent('Button_NopagoMade');
+                                        await showDialog(
+                                          context: context,
+                                          builder: (dialogContext) {
+                                            return Dialog(
+                                              elevation: 0,
+                                              insetPadding: EdgeInsets.zero,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              alignment:
+                                                  const AlignmentDirectional(0.0, 0.0)
+                                                      .resolve(
+                                                          Directionality.of(
+                                                              context)),
+                                              child: GestureDetector(
+                                                onTap: () => _model.unfocusNode
+                                                        .canRequestFocus
+                                                    ? FocusScope.of(context)
+                                                        .requestFocus(
+                                                            _model.unfocusNode)
+                                                    : FocusScope.of(context)
+                                                        .unfocus(),
+                                                child: const SizedBox(
+                                                  height: double.infinity,
+                                                  width: double.infinity,
+                                                  child:
+                                                      SuspencionPorPagoModalWidget(),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ).then((value) => setState(() {}));
+
                                         if (shouldSetState) setState(() {});
                                         return;
                                       }

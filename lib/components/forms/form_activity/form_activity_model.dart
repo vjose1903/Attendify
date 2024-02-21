@@ -98,8 +98,10 @@ class FormActivityModel extends FlutterFlowModel<FormActivityWidget> {
   // State field(s) for RowChips widget.
   ScrollController? rowChips;
   // State field(s) for ChipsAcceso widget.
-  List<String>? chipsAccesoValues;
   FormFieldController<List<String>>? chipsAccesoValueController;
+  List<String>? get chipsAccesoValues => chipsAccesoValueController?.value;
+  set chipsAccesoValues(List<String>? val) =>
+      chipsAccesoValueController?.value = val;
   // State field(s) for NombreTxt widget.
   FocusNode? nombreTxtFocusNode;
   TextEditingController? nombreTxtController;

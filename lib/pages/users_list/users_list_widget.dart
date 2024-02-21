@@ -5,6 +5,7 @@ import '/components/delete_modal/delete_modal_widget.dart';
 import '/components/empty_list/empty_list_widget.dart';
 import '/components/forms/form_user/form_user_widget.dart';
 import '/components/qr_modal/qr_modal_widget.dart';
+import '/components/suspencion_por_pago_modal/suspencion_por_pago_modal_widget.dart';
 import '/flutter_flow/flutter_flow_choice_chips.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -175,8 +176,8 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                             ChipData('Administradores')
                           ],
                           onChanged: (val) async {
-                            setState(() =>
-                                _model.chipsTipoUsuarioValue = val?.first);
+                            setState(() => _model.chipsTipoUsuarioValue =
+                                val?.firstOrNull);
                             logFirebaseEvent(
                                 'USERS_LIST_ChipsTipoUsuario_ON_FORM_WIDG');
                             if (_model.chipsTipoUsuarioValue == 'Todos') {
@@ -524,161 +525,214 @@ class _UsersListWidgetState extends State<UsersListWidget> {
                                                         onTap: () async {
                                                           logFirebaseEvent(
                                                               'USERS_LIST_PAGE_Row_pd5m1pxp_ON_TAP');
-                                                          logFirebaseEvent(
-                                                              'Row_bottom_sheet');
-                                                          await showModalBottomSheet(
-                                                            isScrollControlled:
-                                                                true,
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            useSafeArea: true,
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return GestureDetector(
-                                                                onTap: () => _model
-                                                                        .unfocusNode
-                                                                        .canRequestFocus
-                                                                    ? FocusScope.of(
-                                                                            context)
-                                                                        .requestFocus(_model
-                                                                            .unfocusNode)
-                                                                    : FocusScope.of(
-                                                                            context)
-                                                                        .unfocus(),
-                                                                child: Padding(
-                                                                  padding: MediaQuery
-                                                                      .viewInsetsOf(
-                                                                          context),
+                                                          if (FFAppState()
+                                                              .pagoStatus) {
+                                                            logFirebaseEvent(
+                                                                'Row_bottom_sheet');
+                                                            await showModalBottomSheet(
+                                                              isScrollControlled:
+                                                                  true,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              useSafeArea: true,
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return GestureDetector(
+                                                                  onTap: () => _model
+                                                                          .unfocusNode
+                                                                          .canRequestFocus
+                                                                      ? FocusScope.of(
+                                                                              context)
+                                                                          .requestFocus(_model
+                                                                              .unfocusNode)
+                                                                      : FocusScope.of(
+                                                                              context)
+                                                                          .unfocus(),
                                                                   child:
-                                                                      SizedBox(
-                                                                    height:
-                                                                        MediaQuery.sizeOf(context).height *
-                                                                            0.4,
+                                                                      Padding(
+                                                                    padding: MediaQuery
+                                                                        .viewInsetsOf(
+                                                                            context),
                                                                     child:
-                                                                        ActionsDocumentWidget(
-                                                                      showQrBtn:
-                                                                          true,
-                                                                      editAction:
-                                                                          () async {
-                                                                        logFirebaseEvent(
-                                                                            '_bottom_sheet');
-                                                                        await showModalBottomSheet(
-                                                                          isScrollControlled:
-                                                                              true,
-                                                                          backgroundColor:
-                                                                              Colors.transparent,
-                                                                          isDismissible:
-                                                                              false,
-                                                                          enableDrag:
-                                                                              false,
-                                                                          useSafeArea:
-                                                                              true,
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (context) {
-                                                                            return GestureDetector(
-                                                                              onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                              child: Padding(
-                                                                                padding: MediaQuery.viewInsetsOf(context),
-                                                                                child: SizedBox(
-                                                                                  height: MediaQuery.sizeOf(context).height * 0.7,
-                                                                                  child: FormUserWidget(
-                                                                                    user: containerUsuariosRecord,
-                                                                                    action: FormAction.edit,
-                                                                                    grupoUsuario: listViewUserGrupoUsuarioRecord.reference,
-                                                                                    tipoUsuario: rowTipoUsuarioRecord,
-                                                                                    reloadChip: () async {
+                                                                        SizedBox(
+                                                                      height:
+                                                                          MediaQuery.sizeOf(context).height *
+                                                                              0.4,
+                                                                      child:
+                                                                          ActionsDocumentWidget(
+                                                                        showQrBtn:
+                                                                            true,
+                                                                        editAction:
+                                                                            () async {
+                                                                          logFirebaseEvent(
+                                                                              '_bottom_sheet');
+                                                                          await showModalBottomSheet(
+                                                                            isScrollControlled:
+                                                                                true,
+                                                                            backgroundColor:
+                                                                                Colors.transparent,
+                                                                            isDismissible:
+                                                                                false,
+                                                                            enableDrag:
+                                                                                false,
+                                                                            useSafeArea:
+                                                                                true,
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (context) {
+                                                                              return GestureDetector(
+                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                child: Padding(
+                                                                                  padding: MediaQuery.viewInsetsOf(context),
+                                                                                  child: SizedBox(
+                                                                                    height: MediaQuery.sizeOf(context).height * 0.7,
+                                                                                    child: FormUserWidget(
+                                                                                      user: containerUsuariosRecord,
+                                                                                      action: FormAction.edit,
+                                                                                      grupoUsuario: listViewUserGrupoUsuarioRecord.reference,
+                                                                                      tipoUsuario: rowTipoUsuarioRecord,
+                                                                                      reloadChip: () async {
+                                                                                        // Refresh Data user
+                                                                                        logFirebaseEvent('_RefreshDatauser');
+                                                                                        setState(() => _model.firestoreRequestCompleter = null);
+                                                                                        await _model.waitForFirestoreRequestCompleted(minWait: 2000, maxWait: 10000);
+                                                                                      },
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            },
+                                                                          ).then((value) =>
+                                                                              safeSetState(() {}));
+                                                                        },
+                                                                        deleteAction:
+                                                                            () async {
+                                                                          // Show delete modal
+                                                                          logFirebaseEvent(
+                                                                              '_Showdeletemodal');
+                                                                          await showDialog(
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (dialogContext) {
+                                                                              return Dialog(
+                                                                                elevation: 0,
+                                                                                insetPadding: EdgeInsets.zero,
+                                                                                backgroundColor: Colors.transparent,
+                                                                                alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                child: GestureDetector(
+                                                                                  onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                  child: DeleteModalWidget(
+                                                                                    deleteMsg: 'Esta acción borrará definitivamente al usuario:  ${valueOrDefault<String>(
+                                                                                      containerUsuariosRecord?.displayName,
+                                                                                      'Nombre no definido',
+                                                                                    )}, del grupo, ¿Desea Continuar?',
+                                                                                    title: 'Eliminar Usuario',
+                                                                                    deleteAction: () async {
+                                                                                      logFirebaseEvent('Showdeletemodal_backend_call');
+                                                                                      await listViewUserGrupoUsuarioRecord.reference.delete();
                                                                                       // Refresh Data user
-                                                                                      logFirebaseEvent('_RefreshDatauser');
+                                                                                      logFirebaseEvent('Showdeletemodal_RefreshDatauser');
                                                                                       setState(() => _model.firestoreRequestCompleter = null);
                                                                                       await _model.waitForFirestoreRequestCompleted(minWait: 2000, maxWait: 10000);
                                                                                     },
                                                                                   ),
                                                                                 ),
-                                                                              ),
-                                                                            );
-                                                                          },
-                                                                        ).then((value) =>
-                                                                            safeSetState(() {}));
-                                                                      },
-                                                                      deleteAction:
-                                                                          () async {
-                                                                        // Show delete modal
-                                                                        logFirebaseEvent(
-                                                                            '_Showdeletemodal');
-                                                                        await showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (dialogContext) {
-                                                                            return Dialog(
-                                                                              elevation: 0,
-                                                                              insetPadding: EdgeInsets.zero,
-                                                                              backgroundColor: Colors.transparent,
-                                                                              alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                              child: GestureDetector(
-                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                child: DeleteModalWidget(
-                                                                                  deleteMsg: 'Esta acción borrará definitivamente al usuario:  ${valueOrDefault<String>(
-                                                                                    containerUsuariosRecord?.displayName,
-                                                                                    'Nombre no definido',
-                                                                                  )}, del grupo, ¿Desea Continuar?',
-                                                                                  title: 'Eliminar Usuario',
-                                                                                  deleteAction: () async {
-                                                                                    logFirebaseEvent('Showdeletemodal_backend_call');
-                                                                                    await listViewUserGrupoUsuarioRecord.reference.delete();
-                                                                                    // Refresh Data user
-                                                                                    logFirebaseEvent('Showdeletemodal_RefreshDatauser');
-                                                                                    setState(() => _model.firestoreRequestCompleter = null);
-                                                                                    await _model.waitForFirestoreRequestCompleted(minWait: 2000, maxWait: 10000);
-                                                                                  },
-                                                                                ),
-                                                                              ),
-                                                                            );
-                                                                          },
-                                                                        ).then((value) =>
-                                                                            setState(() {}));
-                                                                      },
-                                                                      showQRAction:
-                                                                          () async {
-                                                                        logFirebaseEvent(
-                                                                            '_alert_dialog');
-                                                                        await showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (dialogContext) {
-                                                                            return Dialog(
-                                                                              elevation: 0,
-                                                                              insetPadding: EdgeInsets.zero,
-                                                                              backgroundColor: Colors.transparent,
-                                                                              alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
-                                                                              child: GestureDetector(
-                                                                                onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
-                                                                                child: SizedBox(
-                                                                                  height: double.infinity,
-                                                                                  width: double.infinity,
-                                                                                  child: QrModalWidget(
-                                                                                    user: containerUsuariosRecord!,
-                                                                                    grupoUsuario: listViewUserGrupoUsuarioRecord,
+                                                                              );
+                                                                            },
+                                                                          ).then((value) =>
+                                                                              setState(() {}));
+                                                                        },
+                                                                        showQRAction:
+                                                                            () async {
+                                                                          logFirebaseEvent(
+                                                                              '_alert_dialog');
+                                                                          await showDialog(
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (dialogContext) {
+                                                                              return Dialog(
+                                                                                elevation: 0,
+                                                                                insetPadding: EdgeInsets.zero,
+                                                                                backgroundColor: Colors.transparent,
+                                                                                alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                                child: GestureDetector(
+                                                                                  onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                                  child: SizedBox(
+                                                                                    height: double.infinity,
+                                                                                    width: double.infinity,
+                                                                                    child: QrModalWidget(
+                                                                                      user: containerUsuariosRecord!,
+                                                                                      grupoUsuario: listViewUserGrupoUsuarioRecord,
+                                                                                    ),
                                                                                   ),
                                                                                 ),
-                                                                              ),
-                                                                            );
-                                                                          },
-                                                                        ).then((value) =>
-                                                                            setState(() {}));
-                                                                      },
+                                                                              );
+                                                                            },
+                                                                          ).then((value) =>
+                                                                              setState(() {}));
+                                                                        },
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              );
-                                                            },
-                                                          ).then((value) =>
-                                                              safeSetState(
-                                                                  () {}));
+                                                                );
+                                                              },
+                                                            ).then((value) =>
+                                                                safeSetState(
+                                                                    () {}));
+                                                          } else {
+                                                            // No pago Made
+                                                            logFirebaseEvent(
+                                                                'Row_NopagoMade');
+                                                            await showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (dialogContext) {
+                                                                return Dialog(
+                                                                  elevation: 0,
+                                                                  insetPadding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  alignment: const AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0)
+                                                                      .resolve(
+                                                                          Directionality.of(
+                                                                              context)),
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap: () => _model
+                                                                            .unfocusNode
+                                                                            .canRequestFocus
+                                                                        ? FocusScope.of(context).requestFocus(_model
+                                                                            .unfocusNode)
+                                                                        : FocusScope.of(context)
+                                                                            .unfocus(),
+                                                                    child:
+                                                                        const SizedBox(
+                                                                      height: double
+                                                                          .infinity,
+                                                                      width: double
+                                                                          .infinity,
+                                                                      child:
+                                                                          SuspencionPorPagoModalWidget(),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ).then((value) =>
+                                                                setState(
+                                                                    () {}));
+
+                                                            return;
+                                                          }
                                                         },
                                                         child: Row(
                                                           mainAxisSize:

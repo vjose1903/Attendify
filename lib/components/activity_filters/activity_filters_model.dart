@@ -24,8 +24,10 @@ class ActivityFiltersModel extends FlutterFlowModel<ActivityFiltersWidget> {
   ///  State fields for stateful widgets in this component.
 
   // State field(s) for ChipsEstados widget.
-  List<String>? chipsEstadosValues;
   FormFieldController<List<String>>? chipsEstadosValueController;
+  List<String>? get chipsEstadosValues => chipsEstadosValueController?.value;
+  set chipsEstadosValues(List<String>? val) =>
+      chipsEstadosValueController?.value = val;
   // State field(s) for DesdeTxt widget.
   FocusNode? desdeTxtFocusNode;
   TextEditingController? desdeTxtController;

@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'dart:async';
 import 'detalle_actividad_widget.dart' show DetalleActividadWidget;
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
@@ -25,11 +26,15 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
 
   final unfocusNode = FocusNode();
   // State field(s) for accessChips widget.
-  List<String>? accessChipsValues;
   FormFieldController<List<String>>? accessChipsValueController;
+  List<String>? get accessChipsValues => accessChipsValueController?.value;
+  set accessChipsValues(List<String>? val) =>
+      accessChipsValueController?.value = val;
   // State field(s) for customTabs widget.
-  String? customTabsValue;
   FormFieldController<List<String>>? customTabsValueController;
+  String? get customTabsValue => customTabsValueController?.value?.firstOrNull;
+  set customTabsValue(String? val) =>
+      customTabsValueController?.value = val != null ? [val] : [];
   // State field(s) for PageView widget.
   PageController? pageViewController;
 
@@ -39,8 +44,11 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
       ? pageViewController!.page!.round()
       : 0;
   // State field(s) for DateAsistenciaChips widget.
-  String? dateAsistenciaChipsValue;
   FormFieldController<List<String>>? dateAsistenciaChipsValueController;
+  String? get dateAsistenciaChipsValue =>
+      dateAsistenciaChipsValueController?.value?.firstOrNull;
+  set dateAsistenciaChipsValue(String? val) =>
+      dateAsistenciaChipsValueController?.value = val != null ? [val] : [];
   Completer<List<AsistenciaRecord>>? firestoreRequestCompleter1;
   // State field(s) for searchAsistencia widget.
   FocusNode? searchAsistenciaFocusNode;
@@ -54,8 +62,11 @@ class DetalleActividadModel extends FlutterFlowModel<DetalleActividadWidget> {
   // Model for EmptyList component.
   late EmptyListModel emptyListModel1;
   // State field(s) for DateNotasChips widget.
-  String? dateNotasChipsValue;
   FormFieldController<List<String>>? dateNotasChipsValueController;
+  String? get dateNotasChipsValue =>
+      dateNotasChipsValueController?.value?.firstOrNull;
+  set dateNotasChipsValue(String? val) =>
+      dateNotasChipsValueController?.value = val != null ? [val] : [];
   Completer<List<ActividadComentarioRecord>>? firestoreRequestCompleter2;
   // Model for EmptyList component.
   late EmptyListModel emptyListModel2;

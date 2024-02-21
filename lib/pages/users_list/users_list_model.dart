@@ -16,8 +16,11 @@ class UsersListModel extends FlutterFlowModel<UsersListWidget> {
 
   final unfocusNode = FocusNode();
   // State field(s) for ChipsTipoUsuario widget.
-  String? chipsTipoUsuarioValue;
   FormFieldController<List<String>>? chipsTipoUsuarioValueController;
+  String? get chipsTipoUsuarioValue =>
+      chipsTipoUsuarioValueController?.value?.firstOrNull;
+  set chipsTipoUsuarioValue(String? val) =>
+      chipsTipoUsuarioValueController?.value = val != null ? [val] : [];
   // Stores action output result for [Custom Action - getTipoUsuarioByDescripcion] action in ChipsTipoUsuario widget.
   TipoUsuarioRecord? findTipoUsuario;
   Completer<List<GrupoUsuarioRecord>>? firestoreRequestCompleter;
